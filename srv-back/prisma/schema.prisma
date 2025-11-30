@@ -1,0 +1,310 @@
+// CellBlock Database Schema
+// Based on DBSCHEMA.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Users table - stores both inmates and wardens
+model User {
+  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                   String    @unique @db.VarChar(255)
+  hashedPassword          String?   @map("hashed_password") @db.VarChar(255)
+  displayName             String?   @map("display_name") @db.VarChar(100)
+  timezone                String    @default("UTC") @db.VarChar(50)
+  isEmailVerified         Boolean   @default(false) @map("is_email_verified")
+  emailVerificationToken  String?   @map("email_verification_token") @db.VarChar(255)
+  passwordResetToken      String?   @map("password_reset_token") @db.VarChar(255)
+  passwordResetExpires    DateTime? @map("password_reset_expires")
+  oauthProvider           String?   @map("oauth_provider") @db.VarChar(50)
+  oauthProviderId         String?   @map("oauth_provider_id") @db.VarChar(255)
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt               DateTime? @map("deleted_at")
+
+  // Relations
+  devices                 Device[]
+  timeBudgets             TimeBudget[]
+  whitelistItems          WhitelistItem[]
+  usageLogs               UsageLog[]
+  paroleGrantsAsInmate    ParoleGrant[]        @relation("InmateParoleGrants")
+  paroleGrantsAsWarden    ParoleGrant[]        @relation("WardenParoleGrants")
+  wardenRelationshipsAsInmate WardenRelationship[] @relation("InmateRelationships")
+  wardenRelationshipsAsWarden WardenRelationship[] @relation("WardenRelationships")
+  requestsAsRequester     Request[]            @relation("RequesterRequests")
+  requestsAsApprover      Request[]            @relation("ApproverRequests")
+  events                  Event[]              @relation("UserEvents")
+  actorEvents             Event[]              @relation("ActorEvents")
+  sessions                Session[]
+  notifications           Notification[]
+  pushTokens              PushToken[]
+
+  @@index([email])
+  @@index([deletedAt])
+  @@index([oauthProvider, oauthProviderId])
+  @@map("users")
+}
+
+// Devices table
+model Device {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String   @map("user_id") @db.Uuid
+  deviceFingerprint String   @unique @map("device_fingerprint") @db.VarChar(255)
+  platform          String   @db.VarChar(20)
+  deviceName        String?  @map("device_name") @db.VarChar(100)
+  osVersion         String?  @map("os_version") @db.VarChar(50)
+  appVersion        String?  @map("app_version") @db.VarChar(20)
+  firstSeen         DateTime @default(now()) @map("first_seen")
+  lastSeen          DateTime @default(now()) @map("last_seen")
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usageLogs         UsageLog[]
+  sessions          Session[]
+  pushTokens        PushToken[]
+
+  @@index([userId])
+  @@index([deviceFingerprint])
+  @@index([lastSeen])
+  @@map("devices")
+}
+
+// Warden relationships table
+model WardenRelationship {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  inmateId          String    @map("inmate_id") @db.Uuid
+  wardenId          String    @map("warden_id") @db.Uuid
+  status            String    @default("pending") @db.VarChar(20)
+  isPrimary         Boolean   @default(false) @map("is_primary")
+  invitationToken   String?   @map("invitation_token") @db.VarChar(255)
+  invitationSentAt  DateTime  @default(now()) @map("invitation_sent_at")
+  acceptedAt        DateTime? @map("accepted_at")
+  cancelledAt       DateTime? @map("cancelled_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  inmate            User @relation("InmateRelationships", fields: [inmateId], references: [id], onDelete: Cascade)
+  warden            User @relation("WardenRelationships", fields: [wardenId], references: [id], onDelete: Cascade)
+
+  @@unique([inmateId, wardenId])
+  @@index([inmateId])
+  @@index([wardenId])
+  @@index([status])
+  @@map("warden_relationships")
+}
+
+// Time budgets table
+model TimeBudget {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String   @map("user_id") @db.Uuid
+  dayOfWeek         Int?     @map("day_of_week")
+  isWeekend         Boolean? @map("is_weekend")
+  minutesAllowed    Int      @map("minutes_allowed")
+  weeklyMaxMinutes  Int?     @map("weekly_max_minutes")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dayOfWeek, isWeekend])
+  @@index([userId])
+  @@map("time_budgets")
+}
+
+// Whitelist items table
+model WhitelistItem {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  name                String   @db.VarChar(255)
+  iosBundleId         String?  @map("ios_bundle_id") @db.VarChar(255)
+  windowsDomain       String?  @map("windows_domain") @db.VarChar(255)
+  androidPackageName  String?  @map("android_package_name") @db.VarChar(255)
+  category            String   @default("custom") @db.VarChar(20)
+  isEnabled           Boolean  @default(true) @map("is_enabled")
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([iosBundleId])
+  @@index([windowsDomain])
+  @@index([category])
+  @@map("whitelist_items")
+}
+
+// Usage logs table
+model UsageLog {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  deviceId        String   @map("device_id") @db.Uuid
+  startTime       DateTime @map("start_time")
+  endTime         DateTime @map("end_time")
+  secondsUsed     Int      @map("seconds_used")
+  wasWhitelisted  Boolean  @default(false) @map("was_whitelisted")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device          Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([deviceId])
+  @@index([startTime])
+  @@index([createdAt])
+  @@map("usage_logs")
+}
+
+// Parole grants table
+model ParoleGrant {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  inmateId        String    @map("inmate_id") @db.Uuid
+  wardenId        String    @map("warden_id") @db.Uuid
+  type            String    @db.VarChar(20)
+  minutesGranted  Int?      @map("minutes_granted")
+  validUntil      DateTime? @map("valid_until")
+  reason          String?   @db.Text
+  grantedAt       DateTime  @default(now()) @map("granted_at")
+  expiresAt       DateTime? @map("expires_at")
+  isActive        Boolean   @default(true) @map("is_active")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  inmate          User @relation("InmateParoleGrants", fields: [inmateId], references: [id], onDelete: Cascade)
+  warden          User @relation("WardenParoleGrants", fields: [wardenId], references: [id], onDelete: Cascade)
+
+  @@index([inmateId])
+  @@index([wardenId])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("parole_grants")
+}
+
+// Requests table
+model Request {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requesterId       String   @map("requester_id") @db.Uuid
+  approverId        String?  @map("approver_id") @db.Uuid
+  type              String   @db.VarChar(50)
+  status            String   @default("pending") @db.VarChar(20)
+  requestData       Json     @map("request_data")
+  requesterComment  String?  @map("requester_comment") @db.Text
+  approverComment   String?  @map("approver_comment") @db.Text
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
+  expiresAt         DateTime @default(dbgenerated("NOW() + INTERVAL '3 days'")) @map("expires_at")
+
+  requester         User  @relation("RequesterRequests", fields: [requesterId], references: [id], onDelete: Cascade)
+  approver          User? @relation("ApproverRequests", fields: [approverId], references: [id])
+
+  @@index([requesterId])
+  @@index([approverId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("requests")
+}
+
+// Events table (audit log)
+model Event {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String?   @map("user_id") @db.Uuid
+  actorId     String?   @map("actor_id") @db.Uuid
+  eventType   String    @map("event_type") @db.VarChar(50)
+  eventData   Json?     @map("event_data")
+  ipAddress   String?   @map("ip_address") @db.Inet
+  userAgent   String?   @map("user_agent") @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user        User? @relation("UserEvents", fields: [userId], references: [id], onDelete: SetNull)
+  actor       User? @relation("ActorEvents", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([actorId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("events")
+}
+
+// Sessions table
+model Session {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId                String    @map("user_id") @db.Uuid
+  deviceId              String?   @map("device_id") @db.Uuid
+  refreshToken          String    @unique @map("refresh_token") @db.VarChar(255)
+  websocketConnectionId String?   @map("websocket_connection_id") @db.VarChar(255)
+  ipAddress             String?   @map("ip_address") @db.Inet
+  userAgent             String?   @map("user_agent") @db.Text
+  expiresAt             DateTime  @map("expires_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  lastActivity          DateTime  @default(now()) @map("last_activity")
+
+  user                  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device                Device? @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([deviceId])
+  @@index([refreshToken])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// Notifications table
+model Notification {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String    @map("user_id") @db.Uuid
+  type          String    @db.VarChar(50)
+  channel       String    @db.VarChar(50)
+  recipient     String    @db.VarChar(255)
+  subject       String?   @db.VarChar(255)
+  body          String    @db.Text
+  data          Json?
+  status        String    @default("pending") @db.VarChar(20)
+  sentAt        DateTime? @map("sent_at")
+  failedReason  String?   @map("failed_reason") @db.Text
+  retryCount    Int       @default(0) @map("retry_count")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// Push tokens table
+model PushToken {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  deviceId   String   @map("device_id") @db.Uuid
+  platform   String   @db.VarChar(20)
+  token      String   @db.Text
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device     Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, platform])
+  @@index([userId])
+  @@index([deviceId])
+  @@index([platform])
+  @@map("push_tokens")
+}
+
+// Default whitelist items table (master list)
+model DefaultWhitelistItem {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String   @db.VarChar(255)
+  iosBundleId         String?  @map("ios_bundle_id") @db.VarChar(255)
+  windowsDomain       String?  @map("windows_domain") @db.VarChar(255)
+  androidPackageName  String?  @map("android_package_name") @db.VarChar(255)
+  category            String   @db.VarChar(20)
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  @@map("default_whitelist_items")
+}
