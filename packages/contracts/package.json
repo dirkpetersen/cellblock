@@ -13,7 +13,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@cellblock/types": "workspace:*",
+    "@cellblock/types": "*",
     "typescript": "^5.3.3"
   }
 }
