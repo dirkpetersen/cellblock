@@ -5,6 +5,8 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { DevicesModule } from './modules/devices/devices.module';
+import { TimeModule } from './modules/time/time.module';
+import { WebsocketModule } from './modules/websocket/websocket.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -26,13 +28,13 @@ import { AppService } from './app.service';
     AuthModule,
     UsersModule,
     DevicesModule,
+    TimeModule,
+    WebsocketModule,
 
     // TODO: Add remaining modules
-    // TimeModule,
     // WhitelistModule,
     // WardenModule,
     // NotificationsModule,
-    // WebsocketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
