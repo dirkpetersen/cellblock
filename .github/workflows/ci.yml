@@ -1,0 +1,228 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  lint-and-typecheck:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: cd srv-back && npx prisma generate
+
+      - name: Build shared packages
+        run: npm run build --workspace=packages/types
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit --project tsconfig.json
+
+  test-backend:
+    name: Test Backend
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: cellblock
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: cellblock_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: cd srv-back && npx prisma generate
+
+      - name: Run database migrations
+        run: cd srv-back && npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://cellblock:testpassword@localhost:5432/cellblock_test
+
+      - name: Run backend tests
+        run: cd srv-back && npm run test
+        env:
+          DATABASE_URL: postgresql://cellblock:testpassword@localhost:5432/cellblock_test
+          JWT_SECRET: test-secret-key
+          NODE_ENV: test
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./srv-back/coverage/lcov.info
+          flags: backend
+
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test-backend]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: cd srv-back && npx prisma generate
+
+      - name: Build backend
+        run: cd srv-back && npm run build
+
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared packages
+        run: npm run build --workspace=packages/types
+
+      - name: Build frontend
+        run: cd srv-front && npm run build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3000/api/v1
+          NEXT_PUBLIC_WS_URL: http://localhost:3000
+
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: cellblock
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: cellblock_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Generate Prisma Client
+        run: cd srv-back && npx prisma generate
+
+      - name: Run migrations
+        run: cd srv-back && npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://cellblock:testpassword@localhost:5432/cellblock_test
+
+      - name: Start backend
+        run: cd srv-back && npm run dev &
+        env:
+          DATABASE_URL: postgresql://cellblock:testpassword@localhost:5432/cellblock_test
+          JWT_SECRET: test-secret-key
+          NODE_ENV: test
+          PORT: 3000
+
+      - name: Start frontend
+        run: cd srv-front && npm run dev &
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3000/api/v1
+          NEXT_PUBLIC_WS_URL: http://localhost:3000
+
+      - name: Wait for services
+        run: |
+          npx wait-on http://localhost:3000/api/v1/health -t 60000
+          npx wait-on http://localhost:3001 -t 60000
+
+      - name: Run Playwright tests
+        run: npm run test --workspace=tests
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/playwright-report/
+          retention-days: 30
+
+  all-checks-passed:
+    name: All Checks Passed
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test-backend, build-backend, build-frontend, e2e-tests]
+    if: always()
+
+    steps:
+      - name: Check all jobs
+        run: |
+          if [[ "${{ needs.lint-and-typecheck.result }}" != "success" ]] || \
+             [[ "${{ needs.test-backend.result }}" != "success" ]] || \
+             [[ "${{ needs.build-backend.result }}" != "success" ]] || \
+             [[ "${{ needs.build-frontend.result }}" != "success" ]] || \
+             [[ "${{ needs.e2e-tests.result }}" != "success" ]]; then
+            echo "Some checks failed"
+            exit 1
+          fi
+          echo "All checks passed!"
