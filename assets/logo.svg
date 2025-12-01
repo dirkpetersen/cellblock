@@ -1,0 +1,44 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background shield shape -->
+  <path d="M256 32L96 96V224C96 362 170 448 256 480C342 448 416 362 416 224V96L256 32Z"
+        fill="#0D9488" opacity="0.1"/>
+
+  <!-- Main shield outline -->
+  <path d="M256 48L112 104V224C112 348 178 425 256 454C334 425 400 348 400 224V104L256 48Z"
+        fill="none" stroke="#0D9488" stroke-width="8" stroke-linejoin="round"/>
+
+  <!-- Cell bars forming "C" -->
+  <!-- Left vertical bar -->
+  <rect x="160" y="160" width="20" height="192" rx="10" fill="#0D9488"/>
+
+  <!-- Top horizontal bars -->
+  <rect x="180" y="160" width="100" height="20" rx="10" fill="#0D9488"/>
+  <rect x="290" y="160" width="62" height="20" rx="10" fill="#0D9488"/>
+
+  <!-- Middle horizontal bars (shorter to form C) -->
+  <rect x="180" y="246" width="70" height="20" rx="10" fill="#0D9488"/>
+  <rect x="260" y="246" width="50" height="20" rx="10" fill="#0D9488"/>
+
+  <!-- Bottom horizontal bars -->
+  <rect x="180" y="332" width="100" height="20" rx="10" fill="#0D9488"/>
+  <rect x="290" y="332" width="62" height="20" rx="10" fill="#0D9488"/>
+
+  <!-- Right side bars forming "B" -->
+  <!-- Right vertical bar -->
+  <rect x="332" y="160" width="20" height="192" rx="10" fill="#475569"/>
+
+  <!-- Top curve of B -->
+  <path d="M332 180 Q352 160 372 180 Q382 190 382 210 Q382 230 372 240 L332 246"
+        fill="none" stroke="#475569" stroke-width="20" stroke-linecap="round"/>
+
+  <!-- Bottom curve of B -->
+  <path d="M332 266 Q352 246 382 266 Q392 276 392 296 Q392 316 382 326 Q372 336 352 332 L332 332"
+        fill="none" stroke="#475569" stroke-width="20" stroke-linecap="round"/>
+
+  <!-- Lock element (small padlock at bottom center) -->
+  <g transform="translate(236, 400)">
+    <rect x="0" y="12" width="40" height="28" rx="4" fill="#F59E0B"/>
+    <circle cx="20" cy="0" r="12" fill="none" stroke="#F59E0B" stroke-width="4"/>
+    <circle cx="20" cy="26" r="4" fill="#FFF"/>
+  </g>
+</svg>
