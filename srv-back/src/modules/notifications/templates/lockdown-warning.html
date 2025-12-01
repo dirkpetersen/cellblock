@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lockdown Warning - CellBlock</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; line-height: 1.6; color: #27272A; background-color: #F1F5F9; }
+    .email-wrapper { width: 100%; background-color: #F1F5F9; padding: 40px 20px; }
+    .email-container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+    .email-header { background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%); color: #FFFFFF; padding: 40px 30px; text-align: center; }
+    .email-header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+    .logo { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+    .email-body { padding: 40px 30px; }
+    .email-body p { margin: 0 0 16px 0; color: #475569; font-size: 16px; }
+    .alert-danger { padding: 16px; border-radius: 8px; margin: 20px 0; background-color: #FEE2E2; border-left: 4px solid #EF4444; color: #991B1B; }
+    .lockdown-box { background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; margin: 20px 0; }
+    .lockdown-box strong { color: #1E293B; }
+    .email-footer { background-color: #F8FAFC; padding: 30px; text-align: center; border-top: 1px solid #E2E8F0; }
+    .email-footer p { margin: 8px 0; color: #64748B; font-size: 14px; }
+    .text-muted { color: #94A3B8; font-size: 14px; }
+    @media only screen and (max-width: 600px) { .email-header, .email-body, .email-footer { padding: 20px !important; } }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-container">
+      <div class="email-header">
+        <div class="logo">CellBlock</div>
+        <h1>⛔ Lockdown Warning</h1>
+      </div>
+      <div class="email-body">
+        <div class="alert-danger">
+          <strong>Warning:</strong> Your warden has initiated a lockdown on your account.
+        </div>
+        <p>Your warden <strong>{{wardenName}}</strong> has triggered a lockdown.</p>
+        <div class="lockdown-box">
+          {{#if gracePeriodMinutes}}
+          <p><strong>Grace Period:</strong> {{gracePeriodMinutes}} minutes</p>
+          <p><strong>Lockdown Time:</strong> {{lockdownTime}}</p>
+          {{/if}}
+          {{#if reason}}
+          <p><strong>Reason:</strong> {{reason}}</p>
+          {{/if}}
+        </div>
+        {{#if gracePeriodMinutes}}
+        <p>You have <strong>{{gracePeriodMinutes}} minutes</strong> to wrap up what you're doing. After that, your time budget will be set to zero and your devices will be locked.</p>
+        {{/if}}
+        {{#if immediate}}
+        <p>This is an <strong>immediate lockdown</strong>. Your time budget has been set to zero and your devices will lock shortly.</p>
+        {{/if}}
+        <p>If you believe this was triggered in error, please reach out to your warden to discuss.</p>
+        <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 30px 0;">
+        <p class="text-muted">Remember: You can use Break Glass to regain control, but this will terminate all warden relationships.</p>
+      </div>
+      <div class="email-footer">
+        <p><strong>CellBlock</strong></p>
+        <p>Digital Wellbeing with Accountability</p>
+        <p class="text-muted">&copy; {{currentYear}} CellBlock. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

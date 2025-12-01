@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { UpdateUserInput } from '@cellblock/contracts';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService
+  ) {}
 
   /**
    * Find user by ID
@@ -150,9 +154,14 @@ export class UsersService {
       },
     });
 
-    // TODO: Send notifications to all wardens
-
+    // Send notifications to all wardens
     const user = await this.findById(userId);
+    const wardenEmails = wardens.map(w => w.warden.email);
+    await this.notificationsService.sendBreakGlassNotification(
+      wardenEmails,
+      user.displayName || user.email,
+      comment
+    );
 
     return {
       message: 'Break glass activated. All warden relationships have been terminated.',

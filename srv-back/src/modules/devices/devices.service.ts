@@ -181,4 +181,145 @@ export class DevicesService {
 
     return { offlineDevices: offlineDevices.length };
   }
+
+  /**
+   * Register or update push token for a device
+   */
+  async registerPushToken(
+    userId: string,
+    deviceId: string,
+    platform: string,
+    token: string
+  ) {
+    // Verify device belongs to user
+    const device = await this.getDeviceById(deviceId, userId);
+
+    // Check if token already exists for this device
+    const existingToken = await this.prisma.pushToken.findUnique({
+      where: {
+        deviceId_platform: {
+          deviceId: device.id,
+          platform,
+        },
+      },
+    });
+
+    if (existingToken) {
+      // Update existing token
+      const updated = await this.prisma.pushToken.update({
+        where: { id: existingToken.id },
+        data: {
+          token,
+          isActive: true,
+          updatedAt: new Date(),
+        },
+      });
+
+      this.logger.log(`Push token updated for device ${deviceId} (${platform})`);
+      return updated;
+    } else {
+      // Create new token
+      const newToken = await this.prisma.pushToken.create({
+        data: {
+          userId,
+          deviceId: device.id,
+          platform,
+          token,
+          isActive: true,
+        },
+      });
+
+      this.logger.log(`Push token registered for device ${deviceId} (${platform})`);
+
+      // Log event
+      await this.prisma.event.create({
+        data: {
+          userId,
+          eventType: 'push_token_registered',
+          eventData: {
+            deviceId,
+            platform,
+          },
+        },
+      });
+
+      return newToken;
+    }
+  }
+
+  /**
+   * Remove push token for a device
+   */
+  async removePushToken(userId: string, deviceId: string, platform: string) {
+    // Verify device belongs to user
+    await this.getDeviceById(deviceId, userId);
+
+    const token = await this.prisma.pushToken.findUnique({
+      where: {
+        deviceId_platform: {
+          deviceId,
+          platform,
+        },
+      },
+    });
+
+    if (!token) {
+      throw new NotFoundException('Push token not found');
+    }
+
+    // Soft delete by setting isActive to false
+    await this.prisma.pushToken.update({
+      where: { id: token.id },
+      data: { isActive: false },
+    });
+
+    this.logger.log(`Push token removed for device ${deviceId} (${platform})`);
+
+    return { message: 'Push token removed successfully' };
+  }
+
+  /**
+   * Get all push tokens for a device
+   */
+  async getDevicePushTokens(userId: string, deviceId: string) {
+    // Verify device belongs to user
+    await this.getDeviceById(deviceId, userId);
+
+    return this.prisma.pushToken.findMany({
+      where: {
+        deviceId,
+        isActive: true,
+      },
+      select: {
+        id: true,
+        platform: true,
+        createdAt: true,
+        updatedAt: true,
+        // Don't return the actual token for security
+      },
+    });
+  }
+
+  /**
+   * Clean up expired push tokens
+   * Run this periodically (daily)
+   */
+  async cleanupExpiredPushTokens() {
+    // Remove tokens that haven't been updated in 90 days
+    const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+
+    const result = await this.prisma.pushToken.updateMany({
+      where: {
+        isActive: true,
+        updatedAt: {
+          lt: ninetyDaysAgo,
+        },
+      },
+      data: { isActive: false },
+    });
+
+    this.logger.log(`Cleaned up ${result.count} expired push token(s)`);
+
+    return { cleaned: result.count };
+  }
 }

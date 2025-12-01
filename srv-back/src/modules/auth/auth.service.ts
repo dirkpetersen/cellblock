@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { SignupInput, LoginInput } from '@cellblock/contracts';
 import { randomBytes } from 'crypto';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,8 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private notificationsService: NotificationsService
   ) {}
 
   /**
@@ -61,7 +63,8 @@ export class AuthService {
 
     this.logger.log(`New user registered: ${user.email}`);
 
-    // TODO: Send verification email
+    // Send verification email
+    await this.notificationsService.sendVerificationEmail(user.email, emailVerificationToken);
 
     // Initialize default time budget (2 hours daily, 14 hours weekly)
     await this.createDefaultTimeBudget(user.id);
@@ -223,7 +226,8 @@ export class AuthService {
 
     this.logger.log(`Password reset requested: ${user.email}`);
 
-    // TODO: Send reset email
+    // Send reset email
+    await this.notificationsService.sendPasswordResetEmail(user.email, resetToken);
 
     return { message: 'If the email exists, a reset link has been sent' };
   }

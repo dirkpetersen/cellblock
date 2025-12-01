@@ -1,6 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { ApnsProvider } from './push-providers/apns.provider';
+import { WnsProvider } from './push-providers/wns.provider';
+import { ConsoleProvider } from './push-providers/console.provider';
+import { PushProvider, PushNotificationPayload } from './push-providers';
+import { IEmailProvider } from './email-providers/email-provider.interface';
+import { SendGridProvider } from './email-providers/sendgrid.provider';
+import { AwsSesProvider } from './email-providers/aws-ses.provider';
+import { ConsoleEmailProvider } from './email-providers/console.provider';
+import { EmailTemplateService } from './email-template.service';
 
 export interface EmailData {
   to: string;
@@ -13,16 +22,97 @@ export interface PushNotificationData {
   title: string;
   body: string;
   data?: Record<string, any>;
+  badge?: number;
+  sound?: string;
+  category?: string;
+  priority?: 'high' | 'normal';
 }
 
 @Injectable()
-export class NotificationsService {
+export class NotificationsService implements OnModuleInit {
   private readonly logger = new Logger(NotificationsService.name);
+  private pushProviders: Map<string, PushProvider> = new Map();
+  private emailProvider!: IEmailProvider;
 
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private apnsProvider: ApnsProvider,
+    private wnsProvider: WnsProvider,
+    private consoleProvider: ConsoleProvider,
+    private emailTemplateService: EmailTemplateService
   ) {}
+
+  /**
+   * Initialize providers on module init
+   */
+  async onModuleInit() {
+    // Initialize email provider
+    await this.initializeEmailProvider();
+
+    // Initialize push providers
+    this.logger.log('Initializing push notification providers...');
+
+    const providers = [this.apnsProvider, this.wnsProvider, this.consoleProvider];
+
+    for (const provider of providers) {
+      if (provider.enabled) {
+        try {
+          await provider.initialize();
+          this.pushProviders.set(provider.platform, provider);
+          this.logger.log(`${provider.platform} push provider registered`);
+        } catch (error) {
+          this.logger.error(
+            `Failed to initialize ${provider.platform} provider: ${(error as Error).message}`
+          );
+        }
+      }
+    }
+
+    this.logger.log(
+      `Push notification service initialized with ${this.pushProviders.size} provider(s)`
+    );
+  }
+
+  /**
+   * Initialize email provider based on environment configuration
+   */
+  private async initializeEmailProvider() {
+    const nodeEnv = this.configService.get('NODE_ENV');
+    const sendgridKey = this.configService.get('SENDGRID_API_KEY');
+    const awsAccessKey = this.configService.get('AWS_ACCESS_KEY_ID');
+
+    // Auto-detect provider based on environment variables
+    if (nodeEnv === 'development' || nodeEnv === 'test') {
+      // Use console provider in development/test
+      this.emailProvider = new ConsoleEmailProvider();
+      this.logger.log('Email provider: Console (Development)');
+    } else if (sendgridKey) {
+      // Prefer SendGrid if configured
+      this.emailProvider = new SendGridProvider(this.configService);
+      const verified = await this.emailProvider.verifyConnection();
+      if (verified) {
+        this.logger.log('Email provider: SendGrid (verified)');
+      } else {
+        this.logger.warn('SendGrid verification failed, falling back to Console provider');
+        this.emailProvider = new ConsoleEmailProvider();
+      }
+    } else if (awsAccessKey) {
+      // Use AWS SES if configured
+      this.emailProvider = new AwsSesProvider(this.configService);
+      const verified = await this.emailProvider.verifyConnection();
+      if (verified) {
+        this.logger.log('Email provider: AWS SES (verified)');
+      } else {
+        this.logger.warn('AWS SES verification failed, falling back to Console provider');
+        this.emailProvider = new ConsoleEmailProvider();
+      }
+    } else {
+      // Fallback to console provider
+      this.emailProvider = new ConsoleEmailProvider();
+      this.logger.log('Email provider: Console (no email service configured)');
+    }
+  }
 
   /**
    * Send email notification
@@ -43,9 +133,45 @@ export class NotificationsService {
 
     this.logger.log(`Email queued: ${notification.id} to ${emailData.to}`);
 
-    // TODO: Implement actual email sending with SendGrid/AWS SES
-    // For now, just mark as sent
-    await this.markNotificationSent(notification.id);
+    // Send email via provider
+    try {
+      const result = await this.emailProvider.sendEmail({
+        to: emailData.to,
+        subject: emailData.subject,
+        html: emailData.html,
+      });
+
+      if (result.success) {
+        await this.prisma.notification.update({
+          where: { id: notification.id },
+          data: {
+            status: 'sent',
+            sentAt: new Date(),
+          },
+        });
+        this.logger.log(`Email sent successfully: ${notification.id}`);
+      } else {
+        await this.prisma.notification.update({
+          where: { id: notification.id },
+          data: {
+            status: 'failed',
+            failedReason: result.error,
+            retryCount: 0,
+          },
+        });
+        this.logger.error(`Email failed to send: ${notification.id} - ${result.error}`);
+      }
+    } catch (error) {
+      await this.prisma.notification.update({
+        where: { id: notification.id },
+        data: {
+          status: 'failed',
+          failedReason: (error as Error).message,
+          retryCount: 0,
+        },
+      });
+      this.logger.error(`Email exception: ${notification.id} - ${(error as Error).message}`);
+    }
 
     return notification;
   }
@@ -64,30 +190,134 @@ export class NotificationsService {
 
     if (tokens.length === 0) {
       this.logger.warn(`No push tokens found for user ${pushData.userId}`);
-      return;
-    }
-
-    // Queue push notifications
-    for (const token of tokens) {
-      await this.prisma.notification.create({
-        data: {
-          userId: pushData.userId,
-          type: 'push',
-          channel: token.platform,
-          recipient: token.token,
-          subject: pushData.title,
-          body: pushData.body,
-          data: pushData.data,
-          status: 'pending',
-        },
-      });
+      return { sent: 0, failed: 0 };
     }
 
     this.logger.log(
-      `Push notifications queued for ${tokens.length} devices (user: ${pushData.userId})`
+      `Sending push notifications to ${tokens.length} device(s) for user ${pushData.userId}`
     );
 
-    // TODO: Implement actual push notification sending (APNs, WNS)
+    // Group tokens by platform
+    const tokensByPlatform = new Map<string, { token: string; tokenId: string }[]>();
+
+    for (const tokenRecord of tokens) {
+      if (!tokensByPlatform.has(tokenRecord.platform)) {
+        tokensByPlatform.set(tokenRecord.platform, []);
+      }
+      tokensByPlatform.get(tokenRecord.platform)!.push({
+        token: tokenRecord.token,
+        tokenId: tokenRecord.id,
+      });
+    }
+
+    // Build push payload
+    const payload: PushNotificationPayload = {
+      title: pushData.title,
+      body: pushData.body,
+      data: pushData.data,
+      badge: pushData.badge,
+      sound: pushData.sound,
+      category: pushData.category,
+      priority: pushData.priority || 'high',
+    };
+
+    let totalSent = 0;
+    let totalFailed = 0;
+    const tokensToDeactivate: string[] = [];
+
+    // Send to each platform
+    for (const [platform, platformTokens] of tokensByPlatform.entries()) {
+      const provider = this.pushProviders.get(platform);
+
+      if (!provider) {
+        this.logger.warn(`No push provider available for platform: ${platform}`);
+        totalFailed += platformTokens.length;
+        continue;
+      }
+
+      try {
+        // Send to all tokens for this platform
+        const results = await provider.sendToTokens(
+          platformTokens.map((t) => t.token),
+          payload
+        );
+
+        // Process results
+        for (let i = 0; i < results.length; i++) {
+          const result = results[i];
+          const tokenRecord = platformTokens[i];
+
+          if (result.success) {
+            totalSent++;
+
+            // Log successful notification
+            await this.prisma.notification.create({
+              data: {
+                userId: pushData.userId,
+                type: 'push',
+                channel: platform,
+                recipient: tokenRecord.token,
+                subject: pushData.title,
+                body: pushData.body,
+                data: pushData.data,
+                status: 'sent',
+                sentAt: new Date(),
+              },
+            }).catch((err) => {
+              this.logger.error(`Failed to log notification: ${err.message}`);
+            });
+          } else {
+            totalFailed++;
+
+            // Log failed notification
+            await this.prisma.notification.create({
+              data: {
+                userId: pushData.userId,
+                type: 'push',
+                channel: platform,
+                recipient: tokenRecord.token,
+                subject: pushData.title,
+                body: pushData.body,
+                data: pushData.data,
+                status: 'failed',
+                failedReason: result.error,
+                retryCount: 0,
+              },
+            }).catch((err) => {
+              this.logger.error(`Failed to log notification: ${err.message}`);
+            });
+
+            // Mark token for deactivation if expired
+            if (result.shouldDeactivateToken) {
+              tokensToDeactivate.push(tokenRecord.tokenId);
+            }
+          }
+        }
+      } catch (error) {
+        this.logger.error(
+          `Error sending push to ${platform}: ${(error as Error).message}`
+        );
+        totalFailed += platformTokens.length;
+      }
+    }
+
+    // Deactivate expired tokens
+    if (tokensToDeactivate.length > 0) {
+      await this.prisma.pushToken.updateMany({
+        where: { id: { in: tokensToDeactivate } },
+        data: { isActive: false },
+      });
+
+      this.logger.log(
+        `Deactivated ${tokensToDeactivate.length} expired push token(s)`
+      );
+    }
+
+    this.logger.log(
+      `Push notifications sent: ${totalSent} succeeded, ${totalFailed} failed (user: ${pushData.userId})`
+    );
+
+    return { sent: totalSent, failed: totalFailed };
   }
 
   /**
@@ -96,7 +326,7 @@ export class NotificationsService {
   async sendVerificationEmail(email: string, token: string) {
     const verifyUrl = `${this.configService.get('FRONTEND_URL')}/verify-email?token=${token}`;
 
-    const html = this.getEmailTemplate('verification', {
+    const html = await this.emailTemplateService.renderTemplate('verification', {
       verifyUrl,
     });
 
@@ -113,7 +343,7 @@ export class NotificationsService {
   async sendPasswordResetEmail(email: string, token: string) {
     const resetUrl = `${this.configService.get('FRONTEND_URL')}/reset-password?token=${token}`;
 
-    const html = this.getEmailTemplate('password-reset', {
+    const html = await this.emailTemplateService.renderTemplate('password-reset', {
       resetUrl,
     });
 
@@ -131,7 +361,7 @@ export class NotificationsService {
     const acceptUrl = `${this.configService.get('FRONTEND_URL')}/warden/accept?token=${token}`;
     const declineUrl = `${this.configService.get('FRONTEND_URL')}/warden/decline?token=${token}`;
 
-    const html = this.getEmailTemplate('warden-invitation', {
+    const html = await this.emailTemplateService.renderTemplate('warden-invitation', {
       inmateName,
       acceptUrl,
       declineUrl,
@@ -147,18 +377,37 @@ export class NotificationsService {
   /**
    * Send break glass notification to wardens
    */
-  async sendBreakGlassNotification(wardenEmails: string[], inmateName: string, comment?: string) {
-    for (const email of wardenEmails) {
-      const html = this.getEmailTemplate('break-glass', {
-        inmateName,
-        comment: comment || 'No reason provided',
-      });
+  async sendBreakGlassNotification(
+    wardenEmails: string[],
+    inmateName: string,
+    comment?: string
+  ) {
+    const html = await this.emailTemplateService.renderTemplate('break-glass', {
+      inmateName,
+      comment: comment || 'No reason provided',
+    });
 
+    // Send email to all wardens
+    for (const email of wardenEmails) {
       await this.sendEmail({
         to: email,
-        subject: `🚨 ${inmateName} has activated Break Glass`,
+        subject: `Break Glass Alert: ${inmateName}`,
         html,
       });
+    }
+
+    // Send push notifications to all wardens
+    for (const email of wardenEmails) {
+      const wardenUserId = await this.getUserIdByEmail(email);
+      if (wardenUserId) {
+        await this.sendPushNotification({
+          userId: wardenUserId,
+          title: 'Break Glass Alert',
+          body: `${inmateName} has activated Break Glass. ${comment || 'No reason provided'}`,
+          category: 'break_glass',
+          priority: 'high',
+        });
+      }
     }
   }
 
@@ -166,12 +415,9 @@ export class NotificationsService {
    * Send monthly usage report to warden
    */
   async sendMonthlyReport(wardenEmail: string, inmateName: string, usageData: any) {
-    const dashboardUrl = this.configService.get('FRONTEND_URL');
-
-    const html = this.getEmailTemplate('monthly-report', {
+    const html = await this.emailTemplateService.renderTemplate('monthly-report', {
       inmateName,
-      usageData,
-      dashboardUrl,
+      ...usageData,
     });
 
     return this.sendEmail({
@@ -213,7 +459,7 @@ export class NotificationsService {
           where: { id: notification.id },
           data: {
             status: 'failed',
-            failedReason: error.message,
+            failedReason: (error as Error).message,
             retryCount: notification.retryCount + 1,
           },
         });
@@ -224,88 +470,6 @@ export class NotificationsService {
   // ============================================================================
   // Private Helper Methods
   // ============================================================================
-
-  /**
-   * Get email template HTML
-   */
-  private getEmailTemplate(template: string, data: any): string {
-    // TODO: Implement proper email templates with HTML
-    // For now, return simple HTML
-
-    const baseStyles = `
-      <style>
-        body { font-family: Inter, sans-serif; line-height: 1.6; color: #27272A; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: #0D9488; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { background: #FAFAFA; padding: 30px; border-radius: 0 0 8px 8px; }
-        .button { display: inline-block; background: #0D9488; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 10px 5px; }
-        .footer { text-align: center; margin-top: 20px; color: #71717A; font-size: 14px; }
-      </style>
-    `;
-
-    switch (template) {
-      case 'verification':
-        return `
-          ${baseStyles}
-          <div class="container">
-            <div class="header"><h1>Verify Your Email</h1></div>
-            <div class="content">
-              <p>Welcome to CellBlock! Please verify your email address to complete registration.</p>
-              <p><a href="${data.verifyUrl}" class="button">Verify Email</a></p>
-              <p>If you didn't create this account, you can safely ignore this email.</p>
-            </div>
-            <div class="footer">CellBlock - Digital Wellbeing with Accountability</div>
-          </div>
-        `;
-
-      case 'warden-invitation':
-        return `
-          ${baseStyles}
-          <div class="container">
-            <div class="header"><h1>Warden Invitation</h1></div>
-            <div class="content">
-              <p><strong>${data.inmateName}</strong> has invited you to be their CellBlock Warden.</p>
-              <p>As a Warden, you'll help them stay accountable by approving changes to their time budget and whitelist.</p>
-              <p>
-                <a href="${data.acceptUrl}" class="button">Accept Invitation</a>
-                <a href="${data.declineUrl}" class="button" style="background: #6B7280;">Decline</a>
-              </p>
-            </div>
-            <div class="footer">CellBlock - Digital Wellbeing with Accountability</div>
-          </div>
-        `;
-
-      case 'break-glass':
-        return `
-          ${baseStyles}
-          <div class="container">
-            <div class="header" style="background: #F43F5E;"><h1>🚨 Break Glass Activated</h1></div>
-            <div class="content">
-              <p><strong>${data.inmateName}</strong> has activated Break Glass and is no longer under your supervision.</p>
-              <p><strong>Reason:</strong> ${data.comment}</p>
-              <p>Your warden relationship has been terminated. They can re-invite you if needed.</p>
-            </div>
-            <div class="footer">CellBlock - Digital Wellbeing with Accountability</div>
-          </div>
-        `;
-
-      default:
-        return `<html><body><p>${data.message || 'Notification from CellBlock'}</p></body></html>`;
-    }
-  }
-
-  /**
-   * Mark notification as sent
-   */
-  private async markNotificationSent(notificationId: string) {
-    await this.prisma.notification.update({
-      where: { id: notificationId },
-      data: {
-        status: 'sent',
-        sentAt: new Date(),
-      },
-    });
-  }
 
   /**
    * Get user ID by email

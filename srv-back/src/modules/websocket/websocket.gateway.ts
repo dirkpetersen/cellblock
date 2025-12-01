@@ -8,10 +8,11 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger } from '@nestjs/common';
+import { Logger, Inject, forwardRef } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { TimeService } from '../time/time.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { HeartbeatSchema } from '@cellblock/contracts';
 
 @WebSocketGateway({
@@ -32,7 +33,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
-    private timeService: TimeService
+    private timeService: TimeService,
+    @Inject(forwardRef(() => NotificationsService))
+    private notificationsService: NotificationsService
   ) {}
 
   async handleConnection(client: Socket) {
@@ -142,11 +145,27 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
           message: 'You have 15 minutes of screen time left today.',
           remainingSeconds: 900,
         });
+
+        // Send push notification if user is not connected
+        this.sendPushIfOffline(userId, {
+          title: 'Time Warning',
+          body: 'You have 15 minutes of screen time left today.',
+          category: 'time_warning',
+          priority: 'high',
+        });
       } else if (timeStatus.remainingSeconds === 300) {
         this.sendToUser(userId, 'warning', {
           type: '5_minute',
           message: 'Your screen time will expire in 5 minutes.',
           remainingSeconds: 300,
+        });
+
+        // Send push notification if user is not connected
+        this.sendPushIfOffline(userId, {
+          title: 'Time Warning',
+          body: 'Your screen time will expire in 5 minutes.',
+          category: 'time_warning',
+          priority: 'high',
         });
       }
     } catch (error) {
@@ -188,5 +207,32 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    */
   sendWhitelistChange(userId: string, action: 'added' | 'removed', item: any) {
     this.sendToUser(userId, 'whitelist_change', { action, item });
+  }
+
+  /**
+   * Send push notification if user is not connected via WebSocket
+   */
+  private async sendPushIfOffline(
+    userId: string,
+    notification: {
+      title: string;
+      body: string;
+      category?: string;
+      priority?: 'high' | 'normal';
+    }
+  ) {
+    // Check if user has any active WebSocket connections
+    const isOnline = this.connectedUsers.has(userId);
+
+    if (!isOnline) {
+      // User is offline, send push notification
+      await this.notificationsService.sendPushNotification({
+        userId,
+        title: notification.title,
+        body: notification.body,
+        category: notification.category,
+        priority: notification.priority,
+      });
+    }
   }
 }

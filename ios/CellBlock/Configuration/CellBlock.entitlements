@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Groups for data sharing -->
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.com.cellblock.app</string>
+    </array>
+
+    <!-- Keychain Access Groups -->
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)com.cellblock.app</string>
+    </array>
+
+    <!-- Family Controls (Phase 1 - Screen Time API) -->
+    <!-- Note: This requires approval from Apple Developer Portal -->
+    <key>com.apple.developer.family-controls</key>
+    <true/>
+
+    <!-- Push Notifications -->
+    <key>aps-environment</key>
+    <string>development</string>
+
+    <!-- Background Processing -->
+    <key>com.apple.developer.networking.networkextension</key>
+    <array>
+        <string>app-proxy-provider</string>
+    </array>
+</dict>
+</plist>

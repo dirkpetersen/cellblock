@@ -4,8 +4,11 @@ import {
   BadRequestException,
   ForbiddenException,
   Logger,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import {
   InviteWardenInput,
   ApproveRequestInput,
@@ -18,7 +21,11 @@ import { randomBytes } from 'crypto';
 export class WardenService {
   private readonly logger = new Logger(WardenService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => NotificationsService))
+    private notificationsService: NotificationsService
+  ) {}
 
   /**
    * Invite a warden (send email invitation)
@@ -79,7 +86,16 @@ export class WardenService {
 
     this.logger.log(`Warden invitation sent: ${relationship.id} to ${data.email}`);
 
-    // TODO: Send invitation email
+    // Send invitation email
+    const inmate = await this.prisma.user.findUnique({
+      where: { id: inmateId },
+      select: { displayName: true },
+    });
+    await this.notificationsService.sendWardenInvitation(
+      data.email,
+      inmate?.displayName || 'A CellBlock user',
+      invitationToken
+    );
 
     // Log event
     await this.prisma.event.create({
@@ -254,7 +270,16 @@ export class WardenService {
       await this.executeRequest(request);
     }
 
-    // TODO: Notify inmate of decision
+    // Send push notification to inmate
+    await this.notificationsService.sendPushNotification({
+      userId: request.requesterId,
+      title: data.approved ? 'Request Approved' : 'Request Denied',
+      body: data.approved
+        ? 'Your request has been approved by your warden.'
+        : `Your request was denied. ${data.comment || ''}`,
+      category: 'warden_request',
+      priority: 'high',
+    });
 
     return {
       message: `Request ${data.approved ? 'approved' : 'denied'} successfully`,
@@ -322,8 +347,21 @@ export class WardenService {
       },
     });
 
+    // Send push notification to inmate
+    const paroleMessage =
+      data.type === 'minutes'
+        ? `You have been granted ${data.value} minutes of emergency time.`
+        : `You have been granted time until ${new Date(data.value as string).toLocaleString()}.`;
+
+    await this.notificationsService.sendPushNotification({
+      userId: data.inmateId,
+      title: 'Parole Granted',
+      body: paroleMessage + (data.reason ? ` Reason: ${data.reason}` : ''),
+      category: 'parole_granted',
+      priority: 'high',
+    });
+
     // TODO: Send WebSocket unlock command to inmate
-    // TODO: Send notification to inmate
 
     return {
       message: 'Emergency time granted successfully',
@@ -367,7 +405,15 @@ export class WardenService {
 
     // If grace period, schedule the lockdown
     if (data.gracePeriodMinutes && data.gracePeriodMinutes > 0) {
-      // TODO: Send warning notification with grace period timer
+      // Send warning notification with grace period timer
+      await this.notificationsService.sendPushNotification({
+        userId: data.inmateId,
+        title: 'Lockdown Warning',
+        body: `Your warden has initiated a lockdown. You have ${data.gracePeriodMinutes} minutes remaining.${data.reason ? ` Reason: ${data.reason}` : ''}`,
+        category: 'lockdown',
+        priority: 'high',
+      });
+
       // TODO: Schedule lock command after grace period
 
       return {
@@ -375,7 +421,15 @@ export class WardenService {
         gracePeriodMinutes: data.gracePeriodMinutes,
       };
     } else {
-      // Immediate lockdown - send lock command via WebSocket
+      // Immediate lockdown
+      await this.notificationsService.sendPushNotification({
+        userId: data.inmateId,
+        title: 'Lockdown',
+        body: `Your warden has initiated an immediate lockdown.${data.reason ? ` Reason: ${data.reason}` : ''}`,
+        category: 'lockdown',
+        priority: 'high',
+      });
+
       // TODO: Send WebSocket lock command
 
       return {

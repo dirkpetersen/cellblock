@@ -49,4 +49,45 @@ export class DevicesController {
   async removeDevice(@Req() req: any, @Param('id') deviceId: string) {
     return this.devicesService.removeDevice(deviceId, req.user.id);
   }
+
+  /**
+   * Register push token for a device
+   */
+  @Post(':id/push-token')
+  async registerPushToken(
+    @Req() req: any,
+    @Param('id') deviceId: string,
+    @Body() body: { platform: string; token: string }
+  ) {
+    if (!body.platform || !body.token) {
+      throw new Error('Platform and token are required');
+    }
+
+    return this.devicesService.registerPushToken(
+      req.user.id,
+      deviceId,
+      body.platform,
+      body.token
+    );
+  }
+
+  /**
+   * Remove push token for a device
+   */
+  @Delete(':id/push-token/:platform')
+  async removePushToken(
+    @Req() req: any,
+    @Param('id') deviceId: string,
+    @Param('platform') platform: string
+  ) {
+    return this.devicesService.removePushToken(req.user.id, deviceId, platform);
+  }
+
+  /**
+   * Get push tokens for a device
+   */
+  @Get(':id/push-tokens')
+  async getDevicePushTokens(@Req() req: any, @Param('id') deviceId: string) {
+    return this.devicesService.getDevicePushTokens(req.user.id, deviceId);
+  }
 }
