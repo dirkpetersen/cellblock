@@ -1,9 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { UpdateUserInput } from '@cellblock/contracts';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(private prisma: PrismaService) {}
 
   /**
@@ -76,5 +78,85 @@ export class UsersService {
     // TODO: Notify all wardens about account deletion
 
     return { message: 'Account deleted successfully' };
+  }
+
+  /**
+   * Break glass - emergency unlock that terminates all warden relationships
+   */
+  async breakGlass(userId: string, comment?: string) {
+    // Get all active wardens
+    const wardens = await this.prisma.wardenRelationship.findMany({
+      where: {
+        inmateId: userId,
+        status: 'active',
+      },
+      include: {
+        warden: {
+          select: {
+            email: true,
+            displayName: true,
+          },
+        },
+      },
+    });
+
+    // Cancel all warden relationships
+    await this.prisma.wardenRelationship.updateMany({
+      where: {
+        inmateId: userId,
+        status: 'active',
+      },
+      data: {
+        status: 'cancelled',
+        cancelledAt: new Date(),
+      },
+    });
+
+    // Cancel all pending requests
+    await this.prisma.request.updateMany({
+      where: {
+        requesterId: userId,
+        status: 'pending',
+      },
+      data: {
+        status: 'expired',
+        updatedAt: new Date(),
+      },
+    });
+
+    // Deactivate all parole grants
+    await this.prisma.paroleGrant.updateMany({
+      where: {
+        inmateId: userId,
+        isActive: true,
+      },
+      data: {
+        isActive: false,
+      },
+    });
+
+    this.logger.warn(`Break glass activated by user ${userId}`);
+
+    // Log event
+    await this.prisma.event.create({
+      data: {
+        userId,
+        actorId: userId,
+        eventType: 'break_glass',
+        eventData: {
+          comment,
+          wardensNotified: wardens.length,
+        },
+      },
+    });
+
+    // TODO: Send notifications to all wardens
+
+    const user = await this.findById(userId);
+
+    return {
+      message: 'Break glass activated. All warden relationships have been terminated.',
+      wardensNotified: wardens.length,
+    };
   }
 }

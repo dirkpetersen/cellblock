@@ -9,6 +9,7 @@ import { TimeModule } from './modules/time/time.module';
 import { WebsocketModule } from './modules/websocket/websocket.module';
 import { WhitelistModule } from './modules/whitelist/whitelist.module';
 import { WardenModule } from './modules/warden/warden.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -34,9 +35,7 @@ import { AppService } from './app.service';
     WebsocketModule,
     WhitelistModule,
     WardenModule,
-
-    // TODO: Add remaining modules
-    // NotificationsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
