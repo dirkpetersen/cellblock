@@ -2,7 +2,7 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { HeartbeatInput, TimeBudgetConfigInput } from '@cellblock/contracts';
 
-interface TimeStatus {
+export interface TimeStatus {
   remainingSeconds: number;
   weeklyRemaining: number;
   dailyLimit: number;

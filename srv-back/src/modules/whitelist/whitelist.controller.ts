@@ -16,7 +16,7 @@ export class WhitelistController {
    * Get all whitelist items
    */
   @Get()
-  async getWhitelist(@Req() req: any, @Query('platform') platform?: string) {
+  async getWhitelist(@Req() req: any, @Query('platform') _platform?: string) {
     return this.whitelistService.getUserWhitelist(req.user.id);
   }
 

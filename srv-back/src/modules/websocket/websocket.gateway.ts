@@ -8,7 +8,7 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { TimeService } from '../time/time.service';
@@ -22,7 +22,7 @@ import { HeartbeatSchema } from '@cellblock/contracts';
 })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  server: Server;
+  server!: Server;
 
   private readonly logger = new Logger(WebsocketGateway.name);
 
@@ -75,7 +75,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
       const timeStatus = await this.timeService.getTimeStatus(userId);
       client.emit('time_update', timeStatus);
     } catch (error) {
-      this.logger.error(`Connection error: ${error.message}`);
+      this.logger.error(`Connection error: ${(error as Error).message}`);
       client.disconnect();
     }
   }
@@ -149,7 +149,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
         });
       }
     } catch (error) {
-      this.logger.error(`Heartbeat error: ${error.message}`);
+      this.logger.error(`Heartbeat error: ${(error as Error).message}`);
       client.emit('error', { message: 'Failed to process heartbeat' });
     }
   }

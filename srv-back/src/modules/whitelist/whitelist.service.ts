@@ -158,12 +158,12 @@ export class WhitelistService {
       throw new NotFoundException('Whitelist item not found');
     }
 
-    if (item.category !== 'healthy') {
-      throw new BadRequestException('Only healthy apps can be toggled');
-    }
-
     if (item.category === 'utility') {
       throw new ForbiddenException('Utility apps cannot be disabled');
+    }
+
+    if (item.category !== 'healthy') {
+      throw new BadRequestException('Only healthy apps can be toggled');
     }
 
     const hasActiveWarden = await this.hasActiveWarden(userId);

@@ -542,7 +542,7 @@ export class WardenService {
 
       // TODO: Send WebSocket config update to user
     } catch (error) {
-      this.logger.error(`Failed to execute request ${request.id}: ${error.message}`);
+      this.logger.error(`Failed to execute request ${request.id}: ${(error as Error).message}`);
     }
   }
 }

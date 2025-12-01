@@ -25,7 +25,7 @@ export class ScheduledJobsService {
       await this.prisma.cleanupExpiredData();
       this.logger.log('Daily cleanup completed successfully');
     } catch (error) {
-      this.logger.error(`Daily cleanup failed: ${error.message}`);
+      this.logger.error(`Daily cleanup failed: ${(error as Error).message}`);
     }
   }
 
@@ -40,21 +40,21 @@ export class ScheduledJobsService {
       const result = await this.devicesService.checkOfflineDevices();
       this.logger.log(`Found ${result.offlineDevices} offline devices`);
     } catch (error) {
-      this.logger.error(`Offline device check failed: ${error.message}`);
+      this.logger.error(`Offline device check failed: ${(error as Error).message}`);
     }
   }
 
   /**
    * Retry failed notifications - runs every 15 minutes
    */
-  @Cron(CronExpression.EVERY_15_MINUTES)
+  @Cron('0 */15 * * * *')
   async retryFailedNotifications() {
     this.logger.log('Retrying failed notifications...');
 
     try {
       await this.notificationsService.retryFailedNotifications();
     } catch (error) {
-      this.logger.error(`Notification retry failed: ${error.message}`);
+      this.logger.error(`Notification retry failed: ${(error as Error).message}`);
     }
   }
 
@@ -91,7 +91,7 @@ export class ScheduledJobsService {
 
       this.logger.log(`Sent ${relationships.length} monthly reports`);
     } catch (error) {
-      this.logger.error(`Monthly reports failed: ${error.message}`);
+      this.logger.error(`Monthly reports failed: ${(error as Error).message}`);
     }
   }
 
@@ -141,7 +141,7 @@ export class ScheduledJobsService {
 
       this.logger.log(`Sent warden reminders to ${usersWithoutWardens.length} users`);
     } catch (error) {
-      this.logger.error(`Warden reminders failed: ${error.message}`);
+      this.logger.error(`Warden reminders failed: ${(error as Error).message}`);
     }
   }
 
