@@ -46,26 +46,20 @@ export function TimeDisplay({
         <Clock
           className={cn(
             'h-5 w-5',
-            isCritical
-              ? 'text-danger-500'
-              : isLow
-              ? 'text-accent-500'
-              : 'text-primary-500'
+            isCritical ? 'text-danger-500' : isLow ? 'text-accent-500' : 'text-primary-500'
           )}
         />
       )}
       <div>
-        {label && (
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 mb-0.5">{label}</p>
-        )}
+        {label && <p className="text-xs text-zinc-600 dark:text-zinc-400 mb-0.5">{label}</p>}
         <p
           className={cn(
             'font-mono text-lg font-semibold',
             isCritical
               ? 'text-danger-600 dark:text-danger-400'
               : isLow
-              ? 'text-accent-600 dark:text-accent-400'
-              : 'text-zinc-900 dark:text-zinc-100'
+                ? 'text-accent-600 dark:text-accent-400'
+                : 'text-zinc-900 dark:text-zinc-100'
           )}
         >
           {timeStr}

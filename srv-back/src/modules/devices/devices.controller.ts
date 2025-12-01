@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RegisterDeviceSchema, RemoveDeviceSchema, UpdateDeviceSchema } from '@cellblock/contracts';
+import { RegisterDeviceSchema, UpdateDeviceSchema } from '@cellblock/contracts';
 
 @Controller('devices')
 @UseGuards(JwtAuthGuard)
@@ -63,12 +63,7 @@ export class DevicesController {
       throw new Error('Platform and token are required');
     }
 
-    return this.devicesService.registerPushToken(
-      req.user.id,
-      deviceId,
-      body.platform,
-      body.token
-    );
+    return this.devicesService.registerPushToken(req.user.id, deviceId, body.platform, body.token);
   }
 
   /**

@@ -89,9 +89,7 @@ export default function OnboardingWhitelistPage() {
         <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 p-8 md:p-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Shield className="w-8 h-8 text-success-600 dark:text-success-400" />
-            <h1 className="text-3xl md:text-4xl font-bold text-center">
-              Review Healthy Apps
-            </h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-center">Review Healthy Apps</h1>
           </div>
           <p className="text-lg text-center text-zinc-600 dark:text-zinc-400 mb-8">
             These are essential apps that will always be available, regardless of your time budget.
@@ -166,9 +164,9 @@ export default function OnboardingWhitelistPage() {
           {/* Note */}
           <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 mb-8">
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              <strong>Note:</strong> After onboarding, you can add more apps to your whitelist.
-              All other apps will be blocked by default until you explicitly whitelist them or
-              your warden approves access.
+              <strong>Note:</strong> After onboarding, you can add more apps to your whitelist. All
+              other apps will be blocked by default until you explicitly whitelist them or your
+              warden approves access.
             </p>
           </div>
 

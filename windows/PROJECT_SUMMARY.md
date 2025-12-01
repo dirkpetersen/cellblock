@@ -13,17 +13,21 @@ Complete Windows client implementation for CellBlock digital wellbeing applicati
 ### 1. Solution Structure (3 Projects)
 
 #### CellBlock.Shared (Class Library)
+
 Shared code used by both Service and UI projects.
 
 **Models:**
+
 - `ApiModels.cs` - API data structures (Device, User, WhitelistItem, etc.)
 - `WebSocketModels.cs` - WebSocket event payloads (Heartbeat, TimeUpdate, etc.)
 
 **Configuration:**
+
 - `AppConfig.cs` - Application configuration class
 - `Constants.cs` - Application-wide constants
 
 **Utilities:**
+
 - `DeviceFingerprint.cs` - Device identification (MAC + Machine GUID)
 - `SecureStorage.cs` - Encrypted registry storage using DPAPI
 
@@ -32,13 +36,16 @@ Shared code used by both Service and UI projects.
 ---
 
 #### CellBlock.Service (Windows Service)
+
 Background service running as SYSTEM for privileged operations.
 
 **Core Files:**
+
 - `Program.cs` - Service host configuration
 - `CellBlockWorker.cs` - Main background worker
 
 **Services:**
+
 - `ConfigurationService.cs` - Config management and encrypted storage
 - `WebSocketService.cs` - Backend connection with Socket.io
 - `HostsFileManager.cs` - Domain blocking via hosts file
@@ -46,6 +53,7 @@ Background service running as SYSTEM for privileged operations.
 - `NamedPipeServer.cs` - IPC server for UI communication
 
 **Key Features:**
+
 - Auto-start on Windows boot
 - Runs as LocalSystem account
 - WebSocket client with auto-reconnect
@@ -59,23 +67,28 @@ Background service running as SYSTEM for privileged operations.
 ---
 
 #### CellBlock.UI (WPF Application)
+
 User-facing tray application running as current user.
 
 **XAML Files:**
+
 - `App.xaml` - Application resources and styles
 - `MainWindow.xaml` - Status window UI
 - `SettingsWindow.xaml` - Settings dialog UI
 
 **Code Files:**
+
 - `App.xaml.cs` - Application startup logic
 - `MainWindow.xaml.cs` - Status window logic
 - `SettingsWindow.xaml.cs` - Settings logic
 - `TrayIconManager.cs` - System tray integration
 
 **Services:**
+
 - `ServiceClient.cs` - Named Pipe client for service communication
 
 **Key Features:**
+
 - System tray icon with tooltip
 - Status window with connection indicator
 - Settings for configuration
@@ -90,6 +103,7 @@ User-facing tray application running as current user.
 ### 2. Additional Resources
 
 **HTML:**
+
 - `blocked.html` - Blocked page shown when domain is blocked
   - Responsive design
   - Teal brand color (#0D9488)
@@ -98,12 +112,14 @@ User-facing tray application running as current user.
   - Usage tips
 
 **Configuration:**
+
 - `CellBlock.sln` - Visual Studio solution file
 - `Directory.Build.props` - Shared build properties
 - `.editorconfig` - Code style configuration
 - `.gitignore` - Git exclusions
 
 **Documentation:**
+
 - `README.md` - Project overview and quick start
 - `BUILD.md` - Comprehensive build instructions
 - `INSTALL.md` - Detailed installation guide
@@ -133,12 +149,14 @@ User-facing tray application running as current user.
 ## Key Implementation Details
 
 ### Device Fingerprinting
+
 ```
 Format: [MAC-HASH]-[MACHINE-GUID]
 Example: A1B2C3D4E5F6G7H8-12345678-90AB-CDEF-1234-567890ABCDEF
 ```
 
 ### Hosts File Blocking
+
 ```
 # CellBlock Managed - START
 127.0.0.1 facebook.com # CellBlock Managed
@@ -147,6 +165,7 @@ Example: A1B2C3D4E5F6G7H8-12345678-90AB-CDEF-1234-567890ABCDEF
 ```
 
 ### Registry Storage
+
 ```
 Key: HKLM\SOFTWARE\CellBlock
 Values:
@@ -160,12 +179,14 @@ Values:
 ```
 
 ### Named Pipe Protocol
+
 ```json
 Request:  {"command": "get_status"}
 Response: {"success": true, "data": {...}}
 ```
 
 ### WebSocket Events
+
 ```
 Client → Server: heartbeat (every 60s)
 Server → Client: time_update, lock_command, unlock_command, warning
@@ -176,16 +197,19 @@ Server → Client: time_update, lock_command, unlock_command, warning
 ### NuGet Packages Used
 
 **CellBlock.Shared:**
+
 - System.Text.Json 8.0.5
 - System.Management 8.0.0
 
 **CellBlock.Service:**
+
 - Microsoft.Extensions.Hosting 8.0.1
 - Microsoft.Extensions.Hosting.WindowsServices 8.0.1
 - SocketIOClient 3.1.2
 - System.IO.Pipes 8.0.0
 
 **CellBlock.UI:**
+
 - Hardcodet.NotifyIcon.Wpf 1.1.0
 - System.IO.Pipes 8.0.0
 
@@ -194,6 +218,7 @@ Server → Client: time_update, lock_command, unlock_command, warning
 ### On Windows 11 Host (User's Machine)
 
 1. **Build the Solution**
+
    ```bash
    cd /mnt/c/Users/[Username]/gh/cellblock/windows
    dotnet restore
@@ -201,17 +226,21 @@ Server → Client: time_update, lock_command, unlock_command, warning
    ```
 
 2. **Run Service (Console Mode for Testing)**
+
    ```cmd
    cd CellBlock.Service\bin\Debug\net8.0-windows
    CellBlock.Service.exe
    ```
+
    Expected: Service starts, logs to console, generates device fingerprint
 
 3. **Run UI Application**
+
    ```cmd
    cd CellBlock.UI\bin\Debug\net8.0-windows
    CellBlock.UI.exe
    ```
+
    Expected: Tray icon appears, main window opens
 
 4. **Test Service-UI Communication**
@@ -259,6 +288,7 @@ The following tests require backend API to be running:
 ### Code TODOs
 
 Search codebase for `// TODO:` comments:
+
 - Active window detection in `WebSocketService.cs`
 - Configuration save in `SettingsWindow.xaml.cs`
 - Time display from service in `TrayIconManager.cs`
@@ -310,6 +340,7 @@ See [INSTALL.md](INSTALL.md) for detailed steps.
 ### Manual Tests (15+ Test Cases)
 
 See [TESTING.md](TESTING.md) for complete procedures:
+
 - Service installation
 - UI launch
 - Service-UI communication
@@ -328,6 +359,7 @@ See [TESTING.md](TESTING.md) for complete procedures:
 ### Unit Tests (TODO)
 
 Framework in place, tests to be written:
+
 - Device fingerprint generation
 - Secure storage encryption
 - Hosts file parsing
@@ -338,6 +370,7 @@ Framework in place, tests to be written:
 See [BUILD.md](BUILD.md) for comprehensive instructions.
 
 **Quick Build:**
+
 ```bash
 cd cellblock/windows
 dotnet restore CellBlock.sln
@@ -345,6 +378,7 @@ dotnet build CellBlock.sln --configuration Release
 ```
 
 **Publish for Distribution:**
+
 ```bash
 dotnet publish CellBlock.Service/CellBlock.Service.csproj -c Release -r win-x64
 dotnet publish CellBlock.UI/CellBlock.UI.csproj -c Release -r win-x64
@@ -370,6 +404,7 @@ Download from: https://dotnet.microsoft.com/download/dotnet/8.0
 ### 3. Build on Windows
 
 Open PowerShell as Administrator:
+
 ```powershell
 cd C:\Users\[YourUsername]\cellblock-windows
 dotnet restore
@@ -379,6 +414,7 @@ dotnet build --configuration Release
 ### 4. Create Icon (Optional)
 
 Create or download an icon file:
+
 - Size: 256x256 or 32x32
 - Format: .ico
 - Save as: `CellBlock.UI\Resources\icon.ico`
@@ -386,6 +422,7 @@ Create or download an icon file:
 ### 5. Test Service Locally
 
 Run service in console mode first (admin PowerShell):
+
 ```powershell
 cd CellBlock.Service\bin\Release\net8.0-windows
 .\CellBlock.Service.exe
@@ -394,6 +431,7 @@ cd CellBlock.Service\bin\Release\net8.0-windows
 ### 6. Test UI
 
 Run UI (normal PowerShell):
+
 ```powershell
 cd CellBlock.UI\bin\Release\net8.0-windows
 .\CellBlock.UI.exe
@@ -406,6 +444,7 @@ Follow [INSTALL.md](INSTALL.md) for production installation.
 ### 8. Connect to Backend
 
 Ensure backend is running:
+
 ```bash
 # In WSL (separate terminal)
 cd cellblock/srv-back
@@ -419,6 +458,7 @@ Then authenticate service via UI Settings.
 ### Why Separate Service and UI?
 
 **Rationale:**
+
 - Service needs SYSTEM privileges (hosts file, registry)
 - UI needs user context (tray icon, clipboard)
 - Service persists if UI is killed
@@ -427,6 +467,7 @@ Then authenticate service via UI Settings.
 ### Why Hosts File for MVP?
 
 **Rationale:**
+
 - Simple implementation
 - No driver signing required
 - Easy to debug
@@ -437,6 +478,7 @@ Then authenticate service via UI Settings.
 ### Why Named Pipes for IPC?
 
 **Rationale:**
+
 - Native Windows mechanism
 - Secure and efficient
 - Low overhead
@@ -447,6 +489,7 @@ Then authenticate service via UI Settings.
 ### Why SocketIOClient?
 
 **Rationale:**
+
 - Backend uses Socket.io protocol
 - Auto-reconnect built-in
 - Event-based API
@@ -455,11 +498,13 @@ Then authenticate service via UI Settings.
 ## Success Criteria
 
 ### Build Success
+
 - [x] Solution compiles without errors
 - [x] No warnings in Release build
 - [x] All dependencies resolved
 
 ### Functional Requirements
+
 - [x] Service can start and stop
 - [x] UI displays tray icon
 - [x] Service-UI communication works
@@ -469,6 +514,7 @@ Then authenticate service via UI Settings.
 - [x] WebSocket client implemented
 
 ### Documentation
+
 - [x] Build instructions complete
 - [x] Installation guide complete
 - [x] Testing procedures documented
@@ -484,6 +530,7 @@ Then authenticate service via UI Settings.
 ### Issue: Service Won't Start
 
 **Diagnosis:**
+
 - Check .NET 8 Runtime installed
 - Run as Administrator
 - Check Event Viewer logs
@@ -495,6 +542,7 @@ Then authenticate service via UI Settings.
 ### Issue: WebSocket Won't Connect
 
 **Diagnosis:**
+
 - Backend running?
 - Firewall blocking?
 - Correct URL in config?
@@ -511,12 +559,14 @@ Then authenticate service via UI Settings.
 ## Production Readiness
 
 ### Ready for MVP Testing
+
 - [x] Core functionality complete
 - [x] Error handling implemented
 - [x] Logging in place
 - [x] Documentation complete
 
 ### Not Ready for Production
+
 - [ ] No automated tests
 - [ ] No installer (MSI)
 - [ ] No code signing

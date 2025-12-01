@@ -72,11 +72,13 @@ Follow instructions in [BUILD.md](BUILD.md) to build from source.
 ### Step 2: Prepare Installation Directory
 
 1. Create installation directory:
+
    ```
    C:\Program Files\CellBlock\
    ```
 
 2. Create data directory:
+
    ```
    C:\ProgramData\CellBlock\
    ```
@@ -134,6 +136,7 @@ Get-Service -Name "CellBlockService"
 ### Service Configuration
 
 The service will:
+
 - Start automatically on Windows boot
 - Run as LocalSystem account
 - Create registry entries in `HKLM\SOFTWARE\CellBlock`
@@ -201,6 +204,7 @@ Simply double-click `CellBlock.UI.exe` to start the tray application.
 ### Service Configuration
 
 Configuration is stored in Windows Registry:
+
 - Key: `HKLM\SOFTWARE\CellBlock`
 - Values are encrypted using Windows DPAPI
 
@@ -248,6 +252,7 @@ For MVP, authentication must be done through:
 ### 3. Device Registration
 
 On first connection:
+
 - Service generates device fingerprint automatically
 - Device registers with backend
 - Device ID is stored in registry
@@ -280,6 +285,7 @@ Should show `RUNNING`
 ### Check WebSocket Connection
 
 In Service logs (Event Viewer), look for:
+
 ```
 WebSocket connected
 Heartbeat sent
@@ -401,6 +407,7 @@ sc delete CellBlockService
 ### 3. Clean Up Files
 
 Delete installation directory:
+
 ```
 C:\Program Files\CellBlock\
 C:\ProgramData\CellBlock\
@@ -466,6 +473,7 @@ CellBlock.Service.exe --console
 ## Support
 
 For installation issues:
+
 - Check Event Viewer: `eventvwr.msc`
 - Review service logs
 - GitHub Issues: https://github.com/dirkpetersen/cellblock/issues

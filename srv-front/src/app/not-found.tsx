@@ -14,9 +14,7 @@ export default function NotFound() {
 
         {/* Card */}
         <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 p-8 text-center">
-          <div className="text-8xl font-bold text-primary-600 dark:text-primary-400 mb-4">
-            404
-          </div>
+          <div className="text-8xl font-bold text-primary-600 dark:text-primary-400 mb-4">404</div>
           <h1 className="text-2xl font-bold mb-2">Page Not Found</h1>
           <p className="text-zinc-600 dark:text-zinc-400 mb-8">
             The page you're looking for doesn't exist or has been moved.

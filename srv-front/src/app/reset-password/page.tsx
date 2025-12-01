@@ -67,7 +67,9 @@ export default function ResetPasswordPage() {
       setSuccess(true);
       setTimeout(() => router.push('/login'), 3000);
     } catch (err) {
-      setError((err as Error).message || 'Failed to reset password. The link may be invalid or expired.');
+      setError(
+        (err as Error).message || 'Failed to reset password. The link may be invalid or expired.'
+      );
     }
   };
 
@@ -160,8 +162,8 @@ export default function ResetPasswordPage() {
                         passwordStrength.strength <= 25
                           ? 'text-danger-600 dark:text-danger-400'
                           : passwordStrength.strength <= 50
-                          ? 'text-accent-600 dark:text-accent-400'
-                          : 'text-success-600 dark:text-success-400'
+                            ? 'text-accent-600 dark:text-accent-400'
+                            : 'text-success-600 dark:text-success-400'
                       }`}
                     >
                       {passwordStrength.label}
@@ -202,7 +204,11 @@ export default function ResetPasswordPage() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                 >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
               {confirmPassword && password !== confirmPassword && (

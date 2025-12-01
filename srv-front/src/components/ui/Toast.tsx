@@ -63,13 +63,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
-function ToastContainer({
-  toasts,
-  onClose,
-}: {
-  toasts: Toast[];
-  onClose: (id: string) => void;
-}) {
+function ToastContainer({ toasts, onClose }: { toasts: Toast[]; onClose: (id: string) => void }) {
   if (toasts.length === 0) return null;
 
   return (

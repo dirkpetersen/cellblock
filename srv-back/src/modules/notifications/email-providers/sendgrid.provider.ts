@@ -1,10 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  IEmailProvider,
-  EmailMessage,
-  EmailSendResult,
-} from './email-provider.interface';
+import { IEmailProvider, EmailMessage, EmailSendResult } from './email-provider.interface';
 
 @Injectable()
 export class SendGridProvider implements IEmailProvider {
@@ -15,8 +11,7 @@ export class SendGridProvider implements IEmailProvider {
   constructor(private configService: ConfigService) {
     this.apiKey = this.configService.get<string>('SENDGRID_API_KEY') || '';
     this.fromEmail =
-      this.configService.get<string>('SENDGRID_FROM_EMAIL') ||
-      'noreply@cellblock.app';
+      this.configService.get<string>('SENDGRID_FROM_EMAIL') || 'noreply@cellblock.app';
   }
 
   async sendEmail(message: EmailMessage): Promise<EmailSendResult> {
@@ -81,9 +76,7 @@ export class SendGridProvider implements IEmailProvider {
         messageId,
       };
     } catch (error) {
-      this.logger.error(
-        `Failed to send email via SendGrid: ${(error as Error).message}`
-      );
+      this.logger.error(`Failed to send email via SendGrid: ${(error as Error).message}`);
       return {
         success: false,
         error: (error as Error).message,
@@ -103,9 +96,7 @@ export class SendGridProvider implements IEmailProvider {
 
       return response.ok;
     } catch (error) {
-      this.logger.error(
-        `SendGrid connection verification failed: ${(error as Error).message}`
-      );
+      this.logger.error(`SendGrid connection verification failed: ${(error as Error).message}`);
       return false;
     }
   }

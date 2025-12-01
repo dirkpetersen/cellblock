@@ -1,9 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  IEmailProvider,
-  EmailMessage,
-  EmailSendResult,
-} from './email-provider.interface';
+import { IEmailProvider, EmailMessage, EmailSendResult } from './email-provider.interface';
 
 /**
  * Console email provider for development/testing

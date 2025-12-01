@@ -32,10 +32,7 @@ export abstract class PushProvider {
   /**
    * Send push notification to a single device token
    */
-  abstract sendToToken(
-    token: string,
-    payload: PushNotificationPayload
-  ): Promise<PushSendResult>;
+  abstract sendToToken(token: string, payload: PushNotificationPayload): Promise<PushSendResult>;
 
   /**
    * Send push notification to multiple device tokens

@@ -17,6 +17,7 @@
 ## Implementation Checklist
 
 ### Core Components
+
 - [x] Project structure created
 - [x] Swift Package Manager configuration
 - [x] Info.plist with all required permissions
@@ -24,6 +25,7 @@
 - [x] .gitignore for Xcode/iOS
 
 ### Models
+
 - [x] User, Device, TimeBudget, TimeStatus
 - [x] WhitelistItem, WardenRelationship
 - [x] Request, ParoleGrant, UsageLog, Event
@@ -31,6 +33,7 @@
 - [x] Codable conformance with AnyCodable helper
 
 ### Services
+
 - [x] **AuthService** - JWT authentication, token management
 - [x] **WebSocketService** - Real-time Socket.IO communication
 - [x] **HeartbeatService** - 60-second heartbeat system
@@ -41,6 +44,7 @@
 - [x] **NotificationService** - Push and local notifications
 
 ### Views
+
 - [x] **LoginView** - Email/password authentication
 - [x] **DashboardView** - Time countdown, progress ring, status
 - [x] **WhitelistView** - Manage whitelist items
@@ -49,6 +53,7 @@
 - [x] **ContentView** - Main navigation and tab bar
 
 ### Main App
+
 - [x] **CellBlockApp** - App entry point
 - [x] **AppDelegate** - Lifecycle management
 - [x] Background task registration
@@ -59,6 +64,7 @@
 ### Features Implemented
 
 #### Authentication
+
 - [x] JWT-based login/signup
 - [x] Token storage in UserDefaults
 - [x] Automatic token refresh on 401
@@ -66,6 +72,7 @@
 - [x] User session management
 
 #### Real-Time Communication
+
 - [x] WebSocket connection using URLSessionWebSocketTask
 - [x] Socket.IO protocol support
 - [x] Event handling (time_update, lock_command, etc.)
@@ -73,6 +80,7 @@
 - [x] Heartbeat via WebSocket + REST fallback
 
 #### Time Tracking
+
 - [x] Real-time countdown timer
 - [x] Progress ring visualization
 - [x] Server sync every heartbeat
@@ -81,6 +89,7 @@
 - [x] Time formatting utilities
 
 #### Screen Time Integration (Phase 1)
+
 - [x] Authorization request flow
 - [x] Block "Social Networking" category
 - [x] Enable/disable blocking
@@ -89,6 +98,7 @@
 - [x] Device-only requirement noted
 
 #### Whitelist Management
+
 - [x] Fetch whitelist from API
 - [x] Add new whitelist items
 - [x] Remove whitelist items
@@ -97,18 +107,21 @@
 - [x] iOS bundle ID input
 
 #### Warden System
+
 - [x] Fetch warden relationships
 - [x] Invite warden by email
 - [x] Status indicators (active, pending, etc.)
 - [x] Primary warden designation
 
 #### Device Management
+
 - [x] Unique device fingerprint (identifierForVendor)
 - [x] Device registration on first launch
 - [x] Device info collection (name, OS, app version)
 - [x] Device ID storage
 
 #### Push Notifications
+
 - [x] APNs registration
 - [x] Push token handling
 - [x] Local notification display
@@ -116,6 +129,7 @@
 - [x] Notification event routing
 
 #### Background Processing
+
 - [x] BGAppRefreshTask registration
 - [x] Background heartbeat
 - [x] App state monitoring (foreground/background)
@@ -123,6 +137,7 @@
 - [x] Scheduled background tasks
 
 ### UI/UX Features
+
 - [x] SwiftUI declarative UI
 - [x] Dark mode support (automatic)
 - [x] Responsive layouts
@@ -135,12 +150,14 @@
 - [x] Lock banner overlay
 
 ### Testing
+
 - [x] Unit tests for AuthService
 - [x] Unit tests for TimeTrackingService
 - [x] Test structure for all services
 - [x] XCTest framework setup
 
 ### Documentation
+
 - [x] README.md - Project overview
 - [x] BUILD.md - Build instructions
 - [x] ARCHITECTURE.md - Architecture deep dive
@@ -151,6 +168,7 @@
 ## What Can Be Tested on macOS
 
 ### Simulator Testing
+
 The following features work in the iOS Simulator without a physical device:
 
 1. **UI Components**
@@ -206,15 +224,18 @@ The following require testing on a real iPhone/iPad:
 ### Phase 1 (Implemented)
 
 **Approach:**
+
 - Use `ManagedSettings` framework
 - Request authorization via `AuthorizationCenter`
 - Shield "Social Networking" category
 - Simple on/off blocking
 
 **Code Location:**
+
 - `CellBlock/Sources/Services/ScreenTimeService.swift`
 
 **Key Methods:**
+
 ```swift
 func requestAuthorization() async throws
 func enableBlocking() async
@@ -222,6 +243,7 @@ func disableBlocking() async
 ```
 
 **Limitations:**
+
 - Only blocks predefined categories
 - Not persistent if app is killed
 - No custom whitelist support
@@ -230,10 +252,12 @@ func disableBlocking() async
 ### Phase 2 (Planned)
 
 **Requirements:**
+
 - Family Controls entitlement (requires Apple approval)
 - DeviceActivityMonitorExtension target
 
 **Features:**
+
 - Block all apps except whitelist
 - Persistent blocking (survives app kill)
 - DeviceActivity monitoring
@@ -295,29 +319,36 @@ See ARCHITECTURE.md for detailed Phase 2 plan.
 ## Configuration Required Before Building
 
 ### 1. Backend URL
+
 Update in two files:
 
 **AuthService.swift:**
+
 ```swift
 init(baseURL: String = "YOUR_BACKEND_URL")
 ```
 
 **WebSocketService.swift:**
+
 ```swift
 init(baseURL: String = "YOUR_WEBSOCKET_URL")
 ```
 
 ### 2. Bundle Identifier
+
 Change `com.cellblock.app` to your unique identifier in:
+
 - Xcode project settings
 - Info.plist
 
 ### 3. Code Signing
+
 - Open project in Xcode
 - Select development team
 - Let Xcode generate provisioning profiles
 
 ### 4. Family Controls Entitlement
+
 - Already configured in CellBlock.entitlements
 - Apply for approval at Apple Developer Portal
 - Link: https://developer.apple.com/contact/request/family-controls-distribution/
@@ -333,6 +364,7 @@ open Package.swift  # Opens in Xcode
 ```
 
 Then in Xcode:
+
 1. Select target (simulator or device)
 2. Press Cmd + R to build and run
 
@@ -355,6 +387,7 @@ See BUILD.md for comprehensive build instructions.
 ## Testing Checklist
 
 ### Simulator Testing
+
 - [ ] App launches without crashing
 - [ ] Login screen displays correctly
 - [ ] Can navigate to all tabs
@@ -365,6 +398,7 @@ See BUILD.md for comprehensive build instructions.
 - [ ] Whitelist CRUD operations work
 
 ### Physical Device Testing
+
 - [ ] Screen Time authorization request works
 - [ ] Push notification registration succeeds
 - [ ] Background refresh executes
@@ -374,6 +408,7 @@ See BUILD.md for comprehensive build instructions.
 - [ ] Lock banner appears when time expires
 
 ### Integration Testing
+
 - [ ] Login with real backend
 - [ ] Register device successfully
 - [ ] Heartbeat updates time status
@@ -406,6 +441,7 @@ class MyService: ObservableObject {
 ```
 
 **Benefits:**
+
 - Single source of truth
 - Easy to test
 - No dependency injection needed (for MVP)
@@ -423,12 +459,14 @@ JSON    Socket.IO    Socket.IO
 ```
 
 **Events:**
+
 - Client → Server: `heartbeat`
 - Server → Client: `time_update`, `lock_command`, `unlock_command`
 
 ## Recommendations for Next Steps
 
 ### Immediate (Pre-Launch)
+
 1. Test on physical device
 2. Request Family Controls entitlement
 3. Set up APNs certificates
@@ -436,6 +474,7 @@ JSON    Socket.IO    Socket.IO
 5. Add crash reporting
 
 ### Short Term
+
 1. Implement Phase 2 Screen Time (full whitelist)
 2. Add Keychain storage
 3. Improve offline handling
@@ -443,6 +482,7 @@ JSON    Socket.IO    Socket.IO
 5. Set up TestFlight
 
 ### Long Term
+
 1. Apple Watch app
 2. Home screen widget
 3. Shortcuts integration
@@ -452,20 +492,24 @@ JSON    Socket.IO    Socket.IO
 ## Support & Resources
 
 **Documentation:**
+
 - README.md - Quick start
 - BUILD.md - Build instructions
 - ARCHITECTURE.md - Technical details
 
 **Backend:**
+
 - See `../srv-back/README.md`
 - Ensure backend is running on port 3000
 
 **Apple Documentation:**
+
 - [Screen Time API](https://developer.apple.com/documentation/screetime)
 - [SwiftUI](https://developer.apple.com/documentation/swiftui)
 - [Background Tasks](https://developer.apple.com/documentation/backgroundtasks)
 
 **Third-Party:**
+
 - [Socket.IO Swift Client](https://github.com/socketio/socket.io-client-swift)
 
 ## Conclusion
@@ -487,6 +531,7 @@ The app can be built and run in the simulator for UI/UX testing, but **Screen Ti
 ---
 
 **Questions or Issues?**
+
 - See BUILD.md for troubleshooting
 - Check ARCHITECTURE.md for technical details
 - Review code comments for implementation notes

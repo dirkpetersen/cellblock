@@ -35,8 +35,7 @@ export function ProgressIndicator({ steps, currentStep, className }: ProgressInd
                   <div
                     className={cn(
                       'w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all',
-                      isCompleted &&
-                        'bg-primary-600 text-white dark:bg-primary-500',
+                      isCompleted && 'bg-primary-600 text-white dark:bg-primary-500',
                       isCurrent &&
                         'bg-primary-600 text-white dark:bg-primary-500 ring-4 ring-primary-200 dark:ring-primary-900',
                       !isCompleted &&
@@ -44,18 +43,14 @@ export function ProgressIndicator({ steps, currentStep, className }: ProgressInd
                         'bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400'
                     )}
                   >
-                    {isCompleted ? (
-                      <Check className="w-5 h-5" />
-                    ) : (
-                      <span>{index + 1}</span>
-                    )}
+                    {isCompleted ? <Check className="w-5 h-5" /> : <span>{index + 1}</span>}
                   </div>
                   {/* Label */}
                   <div className="mt-2 text-center">
                     <p
                       className={cn(
                         'text-sm font-medium',
-                        (isCompleted || isCurrent)
+                        isCompleted || isCurrent
                           ? 'text-zinc-900 dark:text-zinc-100'
                           : 'text-zinc-500 dark:text-zinc-500'
                       )}
@@ -95,9 +90,7 @@ export function ProgressIndicator({ steps, currentStep, className }: ProgressInd
           <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
             Step {currentStep + 1} of {steps.length}
           </p>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            {steps[currentStep].label}
-          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">{steps[currentStep].label}</p>
         </div>
         <div className="h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
           <div

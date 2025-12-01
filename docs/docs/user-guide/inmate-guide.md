@@ -13,9 +13,9 @@ When you open CellBlock or visit the web dashboard, you'll see your current stat
 - Large countdown timer showing remaining minutes
 - Updates in real-time as you use your devices
 - Color coding:
-    - Green: More than 30 minutes remaining
-    - Yellow: 15-30 minutes remaining
-    - Red: Less than 15 minutes remaining
+  - Green: More than 30 minutes remaining
+  - Yellow: 15-30 minutes remaining
+  - Red: Less than 15 minutes remaining
 
 **Windows System Tray:**
 
@@ -52,9 +52,9 @@ Set limits for each day of the week:
 
 1. Go to **Settings → Time Budget**
 2. Choose your schedule type:
-    - **Uniform**: Same limit every day
-    - **Weekday/Weekend**: Different limits for weekdays vs weekends
-    - **Custom**: Unique limit for each day
+   - **Uniform**: Same limit every day
+   - **Weekday/Weekend**: Different limits for weekdays vs weekends
+   - **Custom**: Unique limit for each day
 3. Adjust sliders to set minutes (0-300 per day)
 4. Click **Save Changes**
 
@@ -82,7 +82,7 @@ Prevents excessive use even if daily limits allow it:
 3. When weekly limit is exhausted, all remaining days are locked
 
 !!! warning "Weekly Limit Priority"
-    If you exhaust your weekly limit mid-week, you'll be locked out even if daily budgets remain. Plan accordingly!
+If you exhaust your weekly limit mid-week, you'll be locked out even if daily budgets remain. Plan accordingly!
 
 ### Requesting Changes
 
@@ -108,7 +108,7 @@ Your budget resets at midnight in your configured timezone:
 3. Click **Save**
 
 !!! info "Traveling?"
-    Your budget resets at midnight in your configured timezone, not your current location. If you travel temporarily, keep your home timezone. If you relocate permanently, update your timezone.
+Your budget resets at midnight in your configured timezone, not your current location. If you travel temporarily, keep your home timezone. If you relocate permanently, update your timezone.
 
 ## Managing Whitelist
 
@@ -149,14 +149,14 @@ Apps and websites you add yourself:
 1. Go to **Settings → Whitelist**
 2. Click **Add Custom Item**
 3. Enter details:
-    - **Name**: Display name (e.g., "Work Slack")
-    - **iOS Bundle ID** (if iOS): e.g., `com.tinyspeck.chatlyio`
-    - **Windows Domain** (if Windows): e.g., `slack.com`
+   - **Name**: Display name (e.g., "Work Slack")
+   - **iOS Bundle ID** (if iOS): e.g., `com.tinyspeck.chatlyio`
+   - **Windows Domain** (if Windows): e.g., `slack.com`
 4. Add a comment explaining why (required after warden accepts)
 5. Click **Add to Whitelist**
 
 !!! tip "Finding Bundle IDs"
-    On iOS, you can find bundle IDs by:
+On iOS, you can find bundle IDs by:
 
     1. Search Google for "[app name] bundle ID"
     2. Use apps like "My Bundle ID" from App Store
@@ -170,11 +170,13 @@ After your warden accepts:
 2. Fill in the details
 3. **Write a clear comment** explaining why you need it:
 
-    Good example:
-    > "Need Zoom (us.zoom.videomeetings) for daily standup meetings with my remote team. Meetings are 9-9:30 AM Monday through Friday."
+   Good example:
 
-    Bad example:
-    > "need this"
+   > "Need Zoom (us.zoom.videomeetings) for daily standup meetings with my remote team. Meetings are 9-9:30 AM Monday through Friday."
+
+   Bad example:
+
+   > "need this"
 
 4. Click **Request Addition**
 5. Wait for warden approval (they have 3 days to respond)
@@ -191,7 +193,7 @@ To remove a custom item you previously added:
 5. If no warden: Removed immediately
 
 !!! note "Warden-Added Items"
-    Your warden can add items directly to your whitelist. These appear in your list and you can't remove them without warden approval.
+Your warden can add items directly to your whitelist. These appear in your list and you can't remove them without warden approval.
 
 ## Inviting Wardens
 
@@ -206,8 +208,9 @@ Your main warden who receives all notifications:
 3. Enter their email address
 4. Add a personal message (optional):
 
-    Example:
-    > "Hey Sarah! Would you be willing to be my warden on CellBlock? I'm trying to reduce my phone usage and need someone to help keep me accountable. You'd get notifications when I request changes and can grant me emergency time if needed. Thanks!"
+   Example:
+
+   > "Hey Sarah! Would you be willing to be my warden on CellBlock? I'm trying to reduce my phone usage and need someone to help keep me accountable. You'd get notifications when I request changes and can grant me emergency time if needed. Thanks!"
 
 5. Click **Send Invitation**
 
@@ -215,12 +218,12 @@ Your main warden who receives all notifications:
 
 - Your warden receives an email with accept/decline links
 - Until they accept:
-    - You can change settings freely
-    - No approval required for changes
+  - You can change settings freely
+  - No approval required for changes
 - After they accept:
-    - All whitelist changes require their approval
-    - All time budget changes require their approval
-    - They can grant parole or trigger lockdowns
+  - All whitelist changes require their approval
+  - All time budget changes require their approval
+  - They can grant parole or trigger lockdowns
 
 ### Backup Wardens
 
@@ -264,7 +267,7 @@ To remove a warden:
 - Both you and the removed warden receive email notifications
 
 !!! warning "Impact of Removing Wardens"
-    If you remove all wardens, you return to "no warden" mode where you can change settings freely. This reduces accountability significantly.
+If you remove all wardens, you return to "no warden" mode where you can change settings freely. This reduces accountability significantly.
 
 ## Understanding Warnings and Lockdowns
 
@@ -292,7 +295,7 @@ When 5 minutes remain:
 - **Widget** (iOS): Red background
 
 !!! tip "Warning Sounds"
-    Enable notification sounds in Settings → Notifications to ensure you hear warnings even when device is locked.
+Enable notification sounds in Settings → Notifications to ensure you hear warnings even when device is locked.
 
 ### Lockdown Mode
 
@@ -358,8 +361,9 @@ If you need extra time urgently, request parole from your warden.
 2. Click **Request Parole** button
 3. Explain why you need extra time:
 
-    Example:
-    > "Urgent work deadline tonight - need 2 hours extra to finish project presentation for 9 AM meeting tomorrow."
+   Example:
+
+   > "Urgent work deadline tonight - need 2 hours extra to finish project presentation for 9 AM meeting tomorrow."
 
 4. Suggest amount: "X minutes" or "Until [time]"
 5. Click **Send Request**
@@ -396,7 +400,7 @@ Unlock until specific date/time:
 - Time used still counts toward weekly limit
 
 !!! info "Parole Replacement"
-    If your warden grants new parole while previous parole is active, the new one replaces the old one (not cumulative).
+If your warden grants new parole while previous parole is active, the new one replaces the old one (not cumulative).
 
 ### After Parole Expires
 
@@ -427,7 +431,7 @@ Break Glass is the nuclear option - it immediately unlocks all devices but perma
 - Want to binge content "just this once"
 
 !!! danger "Consequences"
-    Break Glass is permanent and irreversible:
+Break Glass is permanent and irreversible:
 
     - All warden relationships immediately ended
     - All pending requests cancelled
@@ -442,8 +446,9 @@ Break Glass is the nuclear option - it immediately unlocks all devices but perma
 3. Read the consequences carefully
 4. Optionally add a comment for wardens:
 
-    Example:
-    > "Family emergency - need unrestricted access. Will reach out later to explain. Thanks for your help so far."
+   Example:
+
+   > "Family emergency - need unrestricted access. Will reach out later to explain. Thanks for your help so far."
 
 5. Type "BREAK GLASS" to confirm
 6. Click **Confirm Break Glass**
@@ -476,10 +481,10 @@ CellBlock tracks all devices connected to your account and synchronizes time usa
 
 1. Go to **Settings → Devices**
 2. See all registered devices:
-    - Device name (e.g., "John's iPhone")
-    - Platform (iOS/Windows/Android)
-    - Last active timestamp
-    - Currently active indicator
+   - Device name (e.g., "John's iPhone")
+   - Platform (iOS/Windows/Android)
+   - Last active timestamp
+   - Currently active indicator
 
 ### Adding a New Device
 
@@ -491,7 +496,7 @@ CellBlock automatically registers new devices:
 4. Appears in device list within 30 seconds
 
 !!! info "Device Limit"
-    You can have up to 12 devices connected. This covers multiple phones, computers, tablets, etc.
+You can have up to 12 devices connected. This covers multiple phones, computers, tablets, etc.
 
 ### Removing Old Devices
 
@@ -555,10 +560,10 @@ Track your screen time patterns over time to identify trends and improve habits.
 
 1. Go to **Dashboard → Usage**
 2. View today's usage:
-    - Total time used
-    - Time remaining
-    - Usage by time of day (graph)
-    - Active devices
+   - Total time used
+   - Time remaining
+   - Usage by time of day (graph)
+   - Active devices
 
 ### Weekly Overview
 
@@ -585,11 +590,11 @@ Download your usage data:
 1. Go to **Settings → Privacy**
 2. Click **Download My Data**
 3. Receive ZIP file containing:
-    - `usage_logs.csv` - Time usage by day and device
-    - `whitelist.csv` - Your whitelisted apps/domains
-    - `wardens.csv` - Warden relationships
-    - `parole_grants.csv` - Emergency time granted
-    - `requests.csv` - All your requests and their status
+   - `usage_logs.csv` - Time usage by day and device
+   - `whitelist.csv` - Your whitelisted apps/domains
+   - `wardens.csv` - Warden relationships
+   - `parole_grants.csv` - Emergency time granted
+   - `requests.csv` - All your requests and their status
 
 ### Data Retention
 
@@ -605,10 +610,10 @@ Update your account information:
 
 1. Go to **Settings → Profile**
 2. Update:
-    - Display name
-    - Email address (requires verification)
-    - Profile picture (optional)
-    - Timezone
+   - Display name
+   - Email address (requires verification)
+   - Profile picture (optional)
+   - Timezone
 
 ### Password and Security
 
@@ -616,10 +621,10 @@ Change your password or enable two-factor authentication:
 
 1. Go to **Settings → Security**
 2. **Change Password**:
-    - Enter current password
-    - Enter new password (min 8 characters)
-    - Confirm new password
-    - Click **Update Password**
+   - Enter current password
+   - Enter new password (min 8 characters)
+   - Confirm new password
+   - Click **Update Password**
 
 ### Notification Preferences
 
@@ -627,12 +632,12 @@ Control which notifications you receive:
 
 1. Go to **Settings → Notifications**
 2. Toggle individual notification types:
-    - Time warnings (15 min, 5 min)
-    - Warden responses to requests
-    - Parole grants
-    - Lockdown notifications
-    - Weekly usage summaries
-    - Warden invitation reminders
+   - Time warnings (15 min, 5 min)
+   - Warden responses to requests
+   - Parole grants
+   - Lockdown notifications
+   - Weekly usage summaries
+   - Warden invitation reminders
 
 ### Account Deletion
 
@@ -640,15 +645,15 @@ To permanently delete your account:
 
 1. Go to **Settings → Account → Delete Account**
 2. Read the consequences:
-    - All wardens notified
-    - All warden relationships ended
-    - Data retained for 30 days (soft delete)
-    - After 30 days, permanently purged
+   - All wardens notified
+   - All warden relationships ended
+   - Data retained for 30 days (soft delete)
+   - After 30 days, permanently purged
 3. Enter your password to confirm
 4. Click **Delete Account**
 
 !!! warning "Irreversible After 30 Days"
-    You have 30 days to contact support to recover your account. After 30 days, deletion is permanent and irreversible.
+You have 30 days to contact support to recover your account. After 30 days, deletion is permanent and irreversible.
 
 ## Tips for Success
 
@@ -770,10 +775,10 @@ Acknowledge improvements:
 
 - CellBlock app itself is always accessible
 - If iOS shows Screen Time shield on CellBlock:
-    1. Go to iOS Settings → Screen Time
-    2. Tap App Limits
-    3. Remove any limit on CellBlock
-    4. Restart iPhone
+  1. Go to iOS Settings → Screen Time
+  2. Tap App Limits
+  3. Remove any limit on CellBlock
+  4. Restart iPhone
 
 ---
 
@@ -786,4 +791,4 @@ Acknowledge improvements:
 ---
 
 !!! success "You're All Set!"
-    You now know everything you need to use CellBlock effectively. Remember: the goal is sustainable digital wellbeing, not perfection. Be patient with yourself as you adjust to new limits.
+You now know everything you need to use CellBlock effectively. Remember: the goal is sustainable digital wellbeing, not perfection. Be patient with yourself as you adjust to new limits.

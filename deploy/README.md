@@ -12,6 +12,7 @@ sudo ./deploy/setup-production.sh
 ```
 
 This will:
+
 - Install Node.js 18, PostgreSQL 15, Nginx, Certbot
 - Create cellblock user
 - Configure PostgreSQL database
@@ -38,6 +39,7 @@ nano srv-back/.env
 ```
 
 Required variables:
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `JWT_SECRET` - Random secret (generate with `openssl rand -base64 32`)
 - `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
@@ -52,6 +54,7 @@ Required variables:
 ```
 
 This will:
+
 - Install npm dependencies
 - Generate Prisma client
 - Run database migrations
@@ -158,11 +161,13 @@ npx prisma migrate deploy
 ## Scaling
 
 ### Vertical Scaling
+
 - Upgrade EC2 instance type
 - Increase PostgreSQL shared_buffers
 - Adjust Node.js memory limits
 
 ### Horizontal Scaling (Future)
+
 - Migrate to AWS Aurora (RDS)
 - Add read replicas
 - Use Redis for rate limiting and sessions
@@ -227,17 +232,20 @@ sudo systemctl restart cellblock-backend
 ## Maintenance
 
 ### Weekly
+
 - Check disk space: `df -h`
 - Review logs for errors
 - Monitor database size
 
 ### Monthly
+
 - Review and rotate logs
 - Check SSL certificate expiry
 - Review database backups
 - Update system packages: `sudo apt update && sudo apt upgrade`
 
 ### Quarterly
+
 - Review and optimize database
 - Analyze usage patterns
 - Plan capacity upgrades
@@ -245,5 +253,6 @@ sudo systemctl restart cellblock-backend
 ## Support
 
 For issues, see:
+
 - **Documentation:** https://dirkpetersen.github.io/cellblock
 - **Issues:** https://github.com/dirkpetersen/cellblock/issues

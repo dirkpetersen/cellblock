@@ -5,11 +5,7 @@ import { TimeModule } from '../time/time.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
-  imports: [
-    JwtModule,
-    TimeModule,
-    forwardRef(() => NotificationsModule),
-  ],
+  imports: [JwtModule, TimeModule, forwardRef(() => NotificationsModule)],
   providers: [WebsocketGateway],
   exports: [WebsocketGateway],
 })

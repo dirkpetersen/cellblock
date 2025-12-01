@@ -556,11 +556,13 @@ Test before deploying to production.
 If deployment fails:
 
 1. **Stop service:**
+
    ```bash
    sudo systemctl stop cellblock-backend
    ```
 
 2. **Revert code:**
+
    ```bash
    cd /var/www/cellblock
    git checkout previous-stable-commit
@@ -570,6 +572,7 @@ If deployment fails:
    ```
 
 3. **Rollback database (if needed):**
+
    ```bash
    # Restore from backup
    gunzip -c /var/backups/cellblock/cellblock_backup_YYYYMMDD_HHMMSS.sql.gz | sudo -u postgres psql cellblock

@@ -59,8 +59,8 @@ export default function OnboardingWardenPage() {
             </div>
             <h1 className="text-2xl font-bold mb-2">Invitation Sent!</h1>
             <p className="text-zinc-600 dark:text-zinc-400">
-              We've sent an invitation to <strong>{email}</strong>. They'll be your warden once
-              they accept.
+              We've sent an invitation to <strong>{email}</strong>. They'll be your warden once they
+              accept.
             </p>
           </div>
         </div>
@@ -78,9 +78,7 @@ export default function OnboardingWardenPage() {
         <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 p-8 md:p-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Users className="w-8 h-8 text-accent-600 dark:text-accent-400" />
-            <h1 className="text-3xl md:text-4xl font-bold text-center">
-              Invite Your Warden
-            </h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-center">Invite Your Warden</h1>
           </div>
           <p className="text-lg text-center text-zinc-600 dark:text-zinc-400 mb-8">
             Choose someone you trust to help keep you accountable (optional but highly recommended)
@@ -101,9 +99,7 @@ export default function OnboardingWardenPage() {
               </li>
               <li className="flex items-start gap-2">
                 <Shield className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>
-                  Can approve or deny your requests for temporary access to blocked apps
-                </span>
+                <span>Can approve or deny your requests for temporary access to blocked apps</span>
               </li>
               <li className="flex items-start gap-2">
                 <Shield className="w-4 h-4 mt-0.5 flex-shrink-0" />
@@ -111,9 +107,7 @@ export default function OnboardingWardenPage() {
               </li>
               <li className="flex items-start gap-2">
                 <Shield className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>
-                  Can trigger emergency lockdown if they notice concerning usage patterns
-                </span>
+                <span>Can trigger emergency lockdown if they notice concerning usage patterns</span>
               </li>
             </ul>
           </div>
@@ -160,18 +154,16 @@ export default function OnboardingWardenPage() {
                 className="w-full px-4 py-2.5 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100"
                 placeholder="Hey! I'm using CellBlock to improve my digital wellbeing. Would you be my accountability partner?"
               />
-              <p className="mt-1.5 text-xs text-zinc-500">
-                Add a personal note to your invitation
-              </p>
+              <p className="mt-1.5 text-xs text-zinc-500">Add a personal note to your invitation</p>
             </div>
           </div>
 
           {/* Alternative Option */}
           <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 mb-8">
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              <strong>Not ready to invite someone?</strong> You can skip this step and add a
-              warden later from your dashboard. However, without a warden, you'll be able to
-              modify your own settings, which may reduce accountability.
+              <strong>Not ready to invite someone?</strong> You can skip this step and add a warden
+              later from your dashboard. However, without a warden, you'll be able to modify your
+              own settings, which may reduce accountability.
             </p>
           </div>
 

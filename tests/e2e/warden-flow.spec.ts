@@ -185,9 +185,12 @@ test.describe('Warden Request Approval', () => {
     await page.goto('/warden/requests');
 
     // Find whitelist request
-    const requestCard = page.locator('[data-testid="request-card"]').filter({
-      hasText: 'Whitelist Request',
-    }).first();
+    const requestCard = page
+      .locator('[data-testid="request-card"]')
+      .filter({
+        hasText: 'Whitelist Request',
+      })
+      .first();
 
     // View request details
     await requestCard.click();
@@ -215,9 +218,12 @@ test.describe('Warden Request Approval', () => {
 
     await page.goto('/warden/requests');
 
-    const requestCard = page.locator('[data-testid="request-card"]').filter({
-      hasText: 'Budget Increase',
-    }).first();
+    const requestCard = page
+      .locator('[data-testid="request-card"]')
+      .filter({
+        hasText: 'Budget Increase',
+      })
+      .first();
 
     await requestCard.click();
 

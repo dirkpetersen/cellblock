@@ -54,6 +54,7 @@ The push notification system allows CellBlock to send real-time alerts to users'
 ### 1. APNs Provider (iOS)
 
 **Features:**
+
 - JWT-based authentication using .p8 key file
 - Automatic token caching and refresh
 - Batch notification support
@@ -62,6 +63,7 @@ The push notification system allows CellBlock to send real-time alerts to users'
 - Production and sandbox mode
 
 **Configuration:**
+
 ```env
 APNS_KEY_ID=ABC123XYZ
 APNS_TEAM_ID=DEF456UVW
@@ -71,6 +73,7 @@ APNS_PRODUCTION=false
 ```
 
 **Setup Steps:**
+
 1. Create an APNs key in Apple Developer Portal
 2. Download the .p8 key file
 3. Place it in `/app/keys/` or specify custom path
@@ -78,11 +81,13 @@ APNS_PRODUCTION=false
 5. Restart server
 
 **Token Format:**
+
 - 64-character hex string (e.g., `abcd1234...`)
 
 ### 2. WNS Provider (Windows)
 
 **Features:**
+
 - OAuth 2.0 authentication
 - Access token caching
 - Toast and badge notifications
@@ -91,12 +96,14 @@ APNS_PRODUCTION=false
 - Automatic expired URI cleanup
 
 **Configuration:**
+
 ```env
 WNS_CLIENT_ID=ms-app://s-1-15-2-...
 WNS_CLIENT_SECRET=your-secret-key
 ```
 
 **Setup Steps:**
+
 1. Register app in Windows Dev Center
 2. Get Package SID (Client ID)
 3. Generate client secret
@@ -104,17 +111,20 @@ WNS_CLIENT_SECRET=your-secret-key
 5. Restart server
 
 **Token Format:**
+
 - Full channel URI (e.g., `https://notify.windows.com/...`)
 
 ### 3. Console Provider (Development)
 
 **Features:**
+
 - Logs notifications to console instead of sending
 - Enabled automatically in development mode
 - No configuration required
 - Great for testing notification logic
 
 **Configuration:**
+
 ```env
 PUSH_CONSOLE_ENABLED=true
 NODE_ENV=development
@@ -168,11 +178,13 @@ Content-Type: application/json
 ```
 
 **Platform values:**
+
 - `ios` - For APNs (iOS devices)
 - `windows` - For WNS (Windows devices)
 - `console` - For console provider (testing)
 
 **Response:**
+
 ```json
 {
   "id": "token-uuid",
@@ -193,6 +205,7 @@ Authorization: Bearer <jwt-token>
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Push token removed successfully"
@@ -207,6 +220,7 @@ Authorization: Bearer <jwt-token>
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -225,6 +239,7 @@ Authorization: Bearer <jwt-token>
 Sent when user's screen time is running low.
 
 **15-minute warning:**
+
 ```json
 {
   "title": "Time Warning",
@@ -235,6 +250,7 @@ Sent when user's screen time is running low.
 ```
 
 **5-minute warning:**
+
 ```json
 {
   "title": "Time Warning",
@@ -247,6 +263,7 @@ Sent when user's screen time is running low.
 ### 2. Warden Requests
 
 **Request Approved:**
+
 ```json
 {
   "title": "Request Approved",
@@ -257,6 +274,7 @@ Sent when user's screen time is running low.
 ```
 
 **Request Denied:**
+
 ```json
 {
   "title": "Request Denied",
@@ -280,6 +298,7 @@ Sent when user's screen time is running low.
 ### 4. Lockdown
 
 **With grace period:**
+
 ```json
 {
   "title": "Lockdown Warning",
@@ -290,6 +309,7 @@ Sent when user's screen time is running low.
 ```
 
 **Immediate:**
+
 ```json
 {
   "title": "Lockdown",
@@ -376,6 +396,7 @@ LIMIT 10;
 5. Check device for notification
 
 **Troubleshooting:**
+
 - Use sandbox mode (`APNS_PRODUCTION=false`) for development builds
 - Use production mode (`APNS_PRODUCTION=true`) for TestFlight/App Store builds
 - Verify device token format (64 hex characters)
@@ -391,6 +412,7 @@ LIMIT 10;
 6. Check device for toast notification
 
 **Troubleshooting:**
+
 - Ensure app is associated with Windows Store
 - Verify Package SID matches WNS_CLIENT_ID
 - Check channel URI hasn't expired (they expire every 30 days)
@@ -409,7 +431,7 @@ await this.notificationsService.sendPushNotification({
   category: 'test',
   priority: 'high',
   badge: 1,
-  sound: 'default'
+  sound: 'default',
 });
 ```
 
@@ -431,6 +453,7 @@ this.logger.log(`Console enabled: ${this.consoleProvider.enabled}`);
 **Error:** `APNs key file not found`
 
 **Solutions:**
+
 - Check APNS_KEY_PATH is correct
 - Verify .p8 file exists and is readable
 - Try placing file in `/app/keys/apns-key.p8`
@@ -441,6 +464,7 @@ this.logger.log(`Console enabled: ${this.consoleProvider.enabled}`);
 **Error:** `WNS authentication failed`
 
 **Solutions:**
+
 - Verify WNS_CLIENT_ID is correct Package SID
 - Check WNS_CLIENT_SECRET is valid
 - Ensure no extra whitespace in environment variables
@@ -451,6 +475,7 @@ this.logger.log(`Console enabled: ${this.consoleProvider.enabled}`);
 **Issue:** Expired tokens still receiving notifications
 
 **Solutions:**
+
 - Check `shouldDeactivateToken` logic in providers
 - Verify database unique constraint on `deviceId_platform`
 - Run cleanup job: `devicesService.cleanupExpiredPushTokens()`
@@ -458,6 +483,7 @@ this.logger.log(`Console enabled: ${this.consoleProvider.enabled}`);
 #### 4. Notifications Not Sending
 
 **Checklist:**
+
 - [ ] Push provider is enabled (`provider.enabled === true`)
 - [ ] Push token is registered and active
 - [ ] User has active push tokens in database
@@ -468,6 +494,7 @@ this.logger.log(`Console enabled: ${this.consoleProvider.enabled}`);
 #### 5. Console Provider Not Working
 
 **Solutions:**
+
 - Set `PUSH_CONSOLE_ENABLED=true`
 - Set `NODE_ENV=development`
 - Restart server to reload config
@@ -538,17 +565,20 @@ async getPushHealth() {
 ### Periodic Tasks
 
 **Daily:**
+
 ```typescript
 // Clean up expired push tokens
 await devicesService.cleanupExpiredPushTokens();
 ```
 
 **Weekly:**
+
 - Review failed notification logs
 - Check provider error rates
 - Monitor token activation rates
 
 **Monthly:**
+
 - Rotate WNS client secrets (if needed)
 - Review APNs certificate expiration
 - Audit push notification performance
@@ -556,16 +586,19 @@ await devicesService.cleanupExpiredPushTokens();
 ## Resources
 
 ### APNs (iOS)
+
 - [APNs Overview](https://developer.apple.com/documentation/usernotifications)
 - [Establishing a Token-Based Connection to APNs](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_token-based_connection_to_apns)
 - [Generating a Remote Notification](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification)
 
 ### WNS (Windows)
+
 - [WNS Overview](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/windows-push-notification-services--wns--overview)
 - [Request, create, and save a notification channel](https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/request-create-save-notification-channel)
-- [Authenticating your service](https://docs.microsoft.com/en-us/previous-versions/windows/apps/hh465407(v=win.10))
+- [Authenticating your service](<https://docs.microsoft.com/en-us/previous-versions/windows/apps/hh465407(v=win.10)>)
 
 ### Testing Tools
+
 - [APNs Tester](https://github.com/onmyway133/PushNotifications) (macOS app)
 - [WNS Test Tool](https://apps.microsoft.com/store/detail/windows-notification-tester/9NBLGGH4R58J)
 - [Pusher](https://github.com/noodlewerk/NWPusher) (APNs testing tool)

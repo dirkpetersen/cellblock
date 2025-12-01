@@ -185,12 +185,7 @@ export class DevicesService {
   /**
    * Register or update push token for a device
    */
-  async registerPushToken(
-    userId: string,
-    deviceId: string,
-    platform: string,
-    token: string
-  ) {
+  async registerPushToken(userId: string, deviceId: string, platform: string, token: string) {
     // Verify device belongs to user
     const device = await this.getDeviceById(deviceId, userId);
 

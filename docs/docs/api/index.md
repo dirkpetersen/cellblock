@@ -170,8 +170,8 @@ import { io } from 'socket.io-client';
 
 const socket = io('https://api.cellblock.app', {
   auth: {
-    token: 'your-jwt-token'
-  }
+    token: 'your-jwt-token',
+  },
 });
 
 socket.on('connect', () => {
@@ -189,30 +189,30 @@ See [WebSocket Events](websocket.md) for complete event documentation.
 
 ### Common Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/auth/login` | POST | Login with email/password |
-| `/auth/register` | POST | Create new account |
-| `/user/profile` | GET | Get user profile |
-| `/time-budget` | GET | Get time budget configuration |
-| `/time-budget` | PUT | Update time budget (requires warden approval) |
-| `/whitelist` | GET | Get whitelist items |
-| `/whitelist` | POST | Add whitelist item (requires warden approval) |
-| `/wardens` | GET | Get warden relationships |
-| `/wardens/invite` | POST | Invite a warden |
-| `/requests` | GET | Get pending requests |
-| `/usage/logs` | GET | Get usage history |
+| Endpoint          | Method | Description                                   |
+| ----------------- | ------ | --------------------------------------------- |
+| `/auth/login`     | POST   | Login with email/password                     |
+| `/auth/register`  | POST   | Create new account                            |
+| `/user/profile`   | GET    | Get user profile                              |
+| `/time-budget`    | GET    | Get time budget configuration                 |
+| `/time-budget`    | PUT    | Update time budget (requires warden approval) |
+| `/whitelist`      | GET    | Get whitelist items                           |
+| `/whitelist`      | POST   | Add whitelist item (requires warden approval) |
+| `/wardens`        | GET    | Get warden relationships                      |
+| `/wardens/invite` | POST   | Invite a warden                               |
+| `/requests`       | GET    | Get pending requests                          |
+| `/usage/logs`     | GET    | Get usage history                             |
 
 ### Warden Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/warden/inmates` | GET | Get all supervised inmates |
-| `/warden/requests` | GET | Get pending requests from inmates |
-| `/warden/requests/:id/approve` | POST | Approve a request |
-| `/warden/requests/:id/deny` | POST | Deny a request |
-| `/warden/parole` | POST | Grant emergency time to inmate |
-| `/warden/lockdown` | POST | Trigger lockdown for inmate |
+| Endpoint                       | Method | Description                       |
+| ------------------------------ | ------ | --------------------------------- |
+| `/warden/inmates`              | GET    | Get all supervised inmates        |
+| `/warden/requests`             | GET    | Get pending requests from inmates |
+| `/warden/requests/:id/approve` | POST   | Approve a request                 |
+| `/warden/requests/:id/deny`    | POST   | Deny a request                    |
+| `/warden/parole`               | POST   | Grant emergency time to inmate    |
+| `/warden/lockdown`             | POST   | Trigger lockdown for inmate       |
 
 ## SDKs and Libraries
 

@@ -90,14 +90,10 @@ export function Modal({
           <div className="flex items-start justify-between px-6 py-4 border-b border-zinc-200 dark:border-zinc-700">
             <div>
               {title && (
-                <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-                  {title}
-                </h2>
+                <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">{title}</h2>
               )}
               {description && (
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {description}
-                </p>
+                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
               )}
             </div>
             {!hideCloseButton && (
@@ -112,9 +108,7 @@ export function Modal({
         )}
 
         {/* Content */}
-        <div className="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-          {children}
-        </div>
+        <div className="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">{children}</div>
       </div>
     </div>,
     document.body

@@ -9,6 +9,7 @@ Comprehensive testing infrastructure has been set up for the CellBlock project, 
 ### 1. Test Infrastructure
 
 #### Configuration Files
+
 - **`package.json`** - Test workspace configuration with all dependencies
 - **`tsconfig.json`** - TypeScript configuration for tests
 - **`jest.config.js`** - Jest configuration for unit & integration tests
@@ -17,6 +18,7 @@ Comprehensive testing infrastructure has been set up for the CellBlock project, 
 - **`.env.test`** - Environment variables for test execution
 
 #### Dependencies Installed
+
 - `@playwright/test` - E2E testing framework
 - `jest` & `ts-jest` - Unit/integration testing
 - `supertest` - HTTP assertions for API tests
@@ -27,12 +29,14 @@ Comprehensive testing infrastructure has been set up for the CellBlock project, 
 ### 2. Test Utilities (`/tests/utils/`)
 
 #### `test-database.ts`
+
 - Database connection management
 - Clean database helper
 - Database reset functionality
 - Raw SQL execution for edge cases
 
 #### `factories.ts`
+
 - **UserFactory** - Create test users (inmates/wardens)
 - **DeviceFactory** - Create test devices
 - **TimeBudgetFactory** - Create time budgets
@@ -43,6 +47,7 @@ Comprehensive testing infrastructure has been set up for the CellBlock project, 
 All factories use Faker for realistic test data.
 
 #### `auth-helper.ts`
+
 - Login user helper
 - Register user helper
 - JWT token management
@@ -51,6 +56,7 @@ All factories use Faker for realistic test data.
 - Password reset helpers
 
 #### `websocket-helper.ts`
+
 - Create WebSocket client
 - Wait for connection
 - Wait for specific events
@@ -61,11 +67,13 @@ All factories use Faker for realistic test data.
 ### 3. Test Fixtures (`/tests/fixtures/`)
 
 #### `users.json`
+
 - 3 test inmates (verified, unverified)
 - 2 test wardens
 - Pre-configured credentials
 
 #### `whitelist-items.json`
+
 - 8 essential apps (Maps, Banking, Calculator, etc.)
 - 6 healthy apps (Spotify, Audible, etc.)
 - 5 work apps (Slack, Teams, Zoom, etc.)
@@ -74,6 +82,7 @@ All factories use Faker for realistic test data.
 ### 4. Seed Scripts (`/tests/seeds/`)
 
 #### `test-seed.ts`
+
 - Seeds test database with realistic data
 - Creates users, devices, budgets, whitelist items
 - Creates usage logs
@@ -83,6 +92,7 @@ All factories use Faker for realistic test data.
 ### 5. Unit Tests (`/tests/unit/`)
 
 #### `time-calculation.spec.ts` (40+ tests)
+
 - ✅ Heartbeat processing
 - ✅ Time deduction for non-whitelisted apps
 - ✅ No deduction for whitelisted apps
@@ -97,6 +107,7 @@ All factories use Faker for realistic test data.
 **Coverage Target**: >90% of time service
 
 #### `parole-grant.spec.ts` (15+ tests)
+
 - ✅ Parole type: minutes (grant X minutes from now)
 - ✅ Parole type: until (grant access until specific datetime)
 - ✅ Parole expiration logic
@@ -104,6 +115,7 @@ All factories use Faker for realistic test data.
 - ✅ Break glass usage limits
 
 #### `simultaneous-device.spec.ts` (15+ tests)
+
 - ✅ Device activity window detection (45 seconds)
 - ✅ Wall clock time deduction (not per-device)
 - ✅ Time delta calculation between heartbeats
@@ -115,6 +127,7 @@ All factories use Faker for realistic test data.
 ### 6. Integration Tests (`/tests/integration/`)
 
 #### `auth-api.spec.ts` (20+ tests)
+
 - ✅ User registration (success, duplicate email, weak password)
 - ✅ User login (success, wrong password, non-existent user)
 - ✅ Token refresh (valid, invalid token)
@@ -126,6 +139,7 @@ All factories use Faker for realistic test data.
 **API Coverage**: 100% of auth endpoints
 
 #### `time-api.spec.ts` (15+ tests)
+
 - ✅ Process heartbeat (whitelisted, non-whitelisted)
 - ✅ Lock user when budget exhausted
 - ✅ Show active parole in status
@@ -139,6 +153,7 @@ All factories use Faker for realistic test data.
 ### 7. E2E Tests (`/tests/e2e/`)
 
 #### `user-signup-flow.spec.ts` (10+ tests)
+
 - ✅ Complete signup and verification flow
 - ✅ Error handling for duplicate email
 - ✅ Password strength validation
@@ -151,6 +166,7 @@ All factories use Faker for realistic test data.
 - ✅ Expired reset token handling
 
 #### `warden-flow.spec.ts` (20+ tests)
+
 - ✅ Send warden invitation
 - ✅ Prevent inviting more than 4 wardens
 - ✅ Cancel pending invitation
@@ -168,6 +184,7 @@ All factories use Faker for realistic test data.
 - ✅ Schedule delayed lockdown
 
 #### `time-budget-lockdown.spec.ts` (15+ tests)
+
 - ✅ Display remaining time on dashboard
 - ✅ 15-minute warning notification
 - ✅ 5-minute critical warning
@@ -188,12 +205,14 @@ All factories use Faker for realistic test data.
 ### 8. CI/CD Integration
 
 #### Updated `.github/workflows/ci.yml`
+
 - **test-unit** job - Runs unit tests (fast, no database)
 - **test-integration** job - Runs integration tests (with PostgreSQL)
 - **test-backend** job - Existing backend tests (legacy)
 - **e2e-tests** job - Runs Playwright tests (full stack)
 
 #### Test Execution Order
+
 1. Lint and type check
 2. Unit tests (parallel)
 3. Integration tests (parallel)
@@ -204,6 +223,7 @@ All factories use Faker for realistic test data.
 8. All checks passed gate
 
 #### Coverage Reporting
+
 - Unit test coverage → Codecov (flag: `unit-tests`)
 - Integration test coverage → Codecov (flag: `integration-tests`)
 - Backend coverage → Codecov (flag: `backend`)
@@ -212,7 +232,9 @@ All factories use Faker for realistic test data.
 ### 9. Documentation
 
 #### `TESTING-GUIDE.md`
+
 Comprehensive guide covering:
+
 - Overview of test infrastructure
 - How to run all types of tests
 - Environment setup
@@ -223,17 +245,20 @@ Comprehensive guide covering:
 - Coverage targets
 
 #### `README.md` (Updated)
+
 Updated with test suite information and instructions.
 
 ## Test Statistics
 
 ### Test Counts
+
 - **Unit Tests**: 70+ tests
 - **Integration Tests**: 35+ tests
 - **E2E Tests**: 45+ tests
 - **Total**: 150+ tests
 
 ### Files Created
+
 - Configuration files: 6
 - Utility files: 5
 - Fixture files: 2
@@ -246,6 +271,7 @@ Updated with test suite information and instructions.
 **Total**: 24 new files
 
 ### Lines of Code
+
 - Test code: ~4,500 lines
 - Utility code: ~1,200 lines
 - Configuration: ~300 lines
@@ -293,20 +319,24 @@ npm run test:e2e:ui --workspace=tests
 ## Coverage Targets
 
 ### Backend Coverage
+
 - **Target**: >80%
 - **Current**: TBD (run `npm run test:cov` to measure)
 
 ### Frontend Coverage
+
 - **Target**: >70%
 - **Current**: TBD (run frontend tests)
 
 ### Critical Path Coverage
+
 - **Target**: 100%
 - **Current**: 100% (all critical user flows covered in E2E tests)
 
 ## What's Tested
 
 ### Backend Logic ✅
+
 - Time budget calculation and enforcement
 - Heartbeat processing
 - Simultaneous device detection
@@ -316,6 +346,7 @@ npm run test:e2e:ui --workspace=tests
 - Timezone handling
 
 ### API Endpoints ✅
+
 - Authentication (register, login, logout, refresh, verify)
 - Time tracking (heartbeat, status, usage logs)
 - Time budget configuration
@@ -323,6 +354,7 @@ npm run test:e2e:ui --workspace=tests
 - Password reset flow
 
 ### User Flows ✅
+
 - User signup → email verification → login
 - Warden invitation → acceptance → approval
 - Time budget countdown → warnings → lockdown
@@ -334,6 +366,7 @@ npm run test:e2e:ui --workspace=tests
 ## What's NOT Tested Yet
 
 ### Backend
+
 - Warden service unit tests (can add)
 - Whitelist service unit tests (can add)
 - WebSocket service unit tests (can add)
@@ -341,12 +374,14 @@ npm run test:e2e:ui --workspace=tests
 - Push notification service (can add)
 
 ### Integration
+
 - Whitelist API endpoints (should add)
 - Warden API endpoints beyond acceptance (should add)
 - Device registration API (should add)
 - WebSocket events integration (should add)
 
 ### E2E
+
 - Mobile app client flows (iOS/Windows/Android)
 - Cross-device synchronization visual tests
 - Network error handling
@@ -355,6 +390,7 @@ npm run test:e2e:ui --workspace=tests
 ## Next Steps
 
 ### Immediate
+
 1. ✅ Run `npm install` in tests workspace
 2. ✅ Install Playwright browsers
 3. ✅ Set up test database
@@ -364,6 +400,7 @@ npm run test:e2e:ui --workspace=tests
 7. ⏳ Generate coverage report
 
 ### Short-term
+
 1. Add missing unit tests for warden/whitelist services
 2. Add missing integration tests for whitelist/warden APIs
 3. Add WebSocket event integration tests
@@ -371,6 +408,7 @@ npm run test:e2e:ui --workspace=tests
 5. Increase coverage to >80%
 
 ### Long-term
+
 1. Add frontend unit tests (React components)
 2. Add frontend integration tests
 3. Add visual regression tests
@@ -382,18 +420,21 @@ npm run test:e2e:ui --workspace=tests
 ## Maintenance
 
 ### When to Run Tests
+
 - **Before committing**: Run unit tests
 - **Before pushing**: Run integration tests
 - **Before PR**: Run all tests including E2E
 - **CI/CD**: Automatic on push/PR
 
 ### Updating Tests
+
 - Update tests when API changes
 - Update fixtures when data models change
 - Update E2E tests when UI changes
 - Keep test utilities in sync with main code
 
 ### Test Data Management
+
 - Use factories for new test data
 - Keep fixtures realistic but fake
 - Clean database between test runs
@@ -402,6 +443,7 @@ npm run test:e2e:ui --workspace=tests
 ## Success Metrics
 
 ### Test Suite Health
+
 - ✅ All tests passing
 - ✅ Coverage > target thresholds
 - ✅ CI/CD pipeline green
@@ -410,6 +452,7 @@ npm run test:e2e:ui --workspace=tests
 - ✅ Acceptable E2E tests (<10min total)
 
 ### Code Quality
+
 - ✅ Tests are readable and maintainable
 - ✅ Tests use clear naming conventions
 - ✅ Tests follow AAA pattern
@@ -417,6 +460,7 @@ npm run test:e2e:ui --workspace=tests
 - ✅ Tests use utilities and factories
 
 ### Developer Experience
+
 - ✅ Easy to run tests locally
 - ✅ Clear error messages when tests fail
 - ✅ Fast feedback loop

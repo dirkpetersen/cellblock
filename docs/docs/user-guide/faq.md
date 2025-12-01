@@ -101,7 +101,7 @@ Yes! In fact, you should install on all your devices for the best experience. Yo
 6. Your warden will be notified after 7 days of inactivity
 
 !!! warning "Warden Notification"
-    Uninstalling CellBlock automatically cancels your warden relationship after 7 days of inactivity. Your warden receives notifications at 30 minutes and 7 days of silence.
+Uninstalling CellBlock automatically cancels your warden relationship after 7 days of inactivity. Your warden receives notifications at 30 minutes and 7 days of silence.
 
 ## Time Budgets and Usage
 
@@ -246,9 +246,9 @@ Alternatively, use **Break Glass** for true emergencies (ends warden relationshi
 1. Go to Settings → Whitelist
 2. Click **Add Custom Item**
 3. Fill in details:
-    - Name (e.g., "Work Slack")
-    - iOS Bundle ID (e.g., `com.tinyspeck.chatlyio`) if iOS
-    - Windows Domain (e.g., `slack.com`) if Windows
+   - Name (e.g., "Work Slack")
+   - iOS Bundle ID (e.g., `com.tinyspeck.chatlyio`) if iOS
+   - Windows Domain (e.g., `slack.com`) if Windows
 4. Add comment explaining why you need it
 5. Click **Add to Whitelist**
 
@@ -359,30 +359,30 @@ Yes! You can have up to 4 wardens:
 - Screenshots or real-time monitoring
 
 !!! success "Privacy-First Design"
-    CellBlock tracks time usage patterns, not content. Your warden sees how much time you use, not what you do with it.
+CellBlock tracks time usage patterns, not content. Your warden sees how much time you use, not what you do with it.
 
 ### What if my warden denies everything?
 
 If your warden is too strict:
 
 1. **Communicate directly**
-    - Explain why you need approved items
-    - Discuss whether base time limits are too low
-    - Clarify your goals and expectations
+   - Explain why you need approved items
+   - Discuss whether base time limits are too low
+   - Clarify your goals and expectations
 
 2. **Request backup warden**
-    - Add backup wardens who might be more understanding
-    - Any warden can approve (you only need one)
+   - Add backup wardens who might be more understanding
+   - Any warden can approve (you only need one)
 
 3. **Remove and replace warden**
-    - Add a backup warden first
-    - Then remove overly strict primary warden
-    - Backup becomes new primary
+   - Add a backup warden first
+   - Then remove overly strict primary warden
+   - Backup becomes new primary
 
 4. **Break glass**
-    - Nuclear option: Ends all warden relationships
-    - Immediate full access
-    - Use only if warden is abusive or unreasonable
+   - Nuclear option: Ends all warden relationships
+   - Immediate full access
+   - Use only if warden is abusive or unreasonable
 
 ### Can my warden abuse their power?
 
@@ -572,11 +572,11 @@ Yes:
 1. Go to Settings → Privacy
 2. Click **Download My Data**
 3. Receive ZIP file with CSVs:
-    - usage_logs.csv
-    - whitelist.csv
-    - wardens.csv
-    - parole_grants.csv
-    - requests.csv
+   - usage_logs.csv
+   - whitelist.csv
+   - wardens.csv
+   - parole_grants.csv
+   - requests.csv
 
 ### How long is data retained?
 
@@ -716,29 +716,29 @@ Generally no. The purpose of CellBlock is to reduce recreational screen time.
 ### How do I build a good relationship with my warden?
 
 1. **Communicate your goals clearly**
-    - Explain why you're using CellBlock
-    - Share your struggles and motivations
-    - Set expectations together
+   - Explain why you're using CellBlock
+   - Share your struggles and motivations
+   - Set expectations together
 
 2. **Provide context in requests**
-    - Don't just request - explain why
-    - Help warden make informed decisions
-    - Be honest about wants vs needs
+   - Don't just request - explain why
+   - Help warden make informed decisions
+   - Be honest about wants vs needs
 
 3. **Accept denials gracefully**
-    - Remember you asked them to enforce limits
-    - Don't pressure or guilt-trip
-    - If you disagree, discuss calmly
+   - Remember you asked them to enforce limits
+   - Don't pressure or guilt-trip
+   - If you disagree, discuss calmly
 
 4. **Show appreciation**
-    - Thank them for their time
-    - Acknowledge when their enforcement helps
-    - Share your progress
+   - Thank them for their time
+   - Acknowledge when their enforcement helps
+   - Share your progress
 
 5. **Check in regularly**
-    - Don't only contact when requesting things
-    - Share wins and challenges
-    - Update them on goals or life changes
+   - Don't only contact when requesting things
+   - Share wins and challenges
+   - Update them on goals or life changes
 
 ### When should I use Break Glass?
 
@@ -758,7 +758,7 @@ Generally no. The purpose of CellBlock is to reduce recreational screen time.
 - Want to binge content "just this once"
 
 !!! danger "Break Glass is Permanent"
-    Break Glass immediately ends ALL warden relationships. Use only for serious situations. Consider requesting parole first.
+Break Glass immediately ends ALL warden relationships. Use only for serious situations. Consider requesting parole first.
 
 ---
 
@@ -766,8 +766,8 @@ Generally no. The purpose of CellBlock is to reduce recreational screen time.
 
 - **Search this documentation** using the search bar above
 - **Check other guides:**
-    - [Getting Started](getting-started.md)
-    - [Inmate Guide](inmate-guide.md)
-    - [Warden Guide](warden-guide.md)
+  - [Getting Started](getting-started.md)
+  - [Inmate Guide](inmate-guide.md)
+  - [Warden Guide](warden-guide.md)
 - **Community Support:** [GitHub Discussions](https://github.com/dirkpetersen/cellblock/discussions)
 - **Report Bugs:** [GitHub Issues](https://github.com/dirkpetersen/cellblock/issues)

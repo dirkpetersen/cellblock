@@ -5,12 +5,14 @@ This guide will walk you through installing CellBlock and completing your initia
 ## System Requirements
 
 ### iOS
+
 - iOS 16.0 or later
 - iPhone or iPad
 - Active internet connection
 - Apple ID for app installation
 
 ### Windows
+
 - Windows 10 (version 1809 or later) or Windows 11
 - Administrator privileges for installation
 - Active internet connection
@@ -110,7 +112,7 @@ This guide will walk you through installing CellBlock and completing your initia
     4. You'll be automatically logged in
 
 !!! tip "Email Verification"
-    You must verify your email before using CellBlock. Check your spam folder if you don't see the verification email within a few minutes.
+You must verify your email before using CellBlock. Check your spam folder if you don't see the verification email within a few minutes.
 
 ## Initial Setup Wizard
 
@@ -121,22 +123,22 @@ After creating your account, you'll go through a guided setup process.
 Choose how much recreational screen time you want each day.
 
 1. **Daily Limit**
-    - Drag the slider to set your daily limit (0-300 minutes)
-    - Default: 120 minutes (2 hours)
-    - Color coding:
-        - Green: 0-120 minutes (healthy)
-        - Yellow: 121-240 minutes (moderate)
-        - Red: 241-300 minutes (high)
+   - Drag the slider to set your daily limit (0-300 minutes)
+   - Default: 120 minutes (2 hours)
+   - Color coding:
+     - Green: 0-120 minutes (healthy)
+     - Yellow: 121-240 minutes (moderate)
+     - Red: 241-300 minutes (high)
 
 2. **Weekly Limit**
-    - Set your maximum weekly usage
-    - Default: 840 minutes (14 hours)
-    - Must be greater than or equal to your daily limit
+   - Set your maximum weekly usage
+   - Default: 840 minutes (14 hours)
+   - Must be greater than or equal to your daily limit
 
 3. **Schedule Options**
-    - **Uniform**: Same limit every day
-    - **Weekday/Weekend**: Different limits for weekdays vs weekends
-    - **Custom**: Set different limits for each day
+   - **Uniform**: Same limit every day
+   - **Weekday/Weekend**: Different limits for weekdays vs weekends
+   - **Custom**: Set different limits for each day
 
 !!! example "Example Configurations"
 
@@ -207,7 +209,7 @@ Less distracting audio and reading apps. Pre-enabled but can be disabled:
 3. Click **Continue**
 
 !!! note "Warden Approval"
-    After you invite a warden, toggling healthy apps will require their approval. Until then, you can change them freely.
+After you invite a warden, toggling healthy apps will require their approval. Until then, you can change them freely.
 
 ### Step 3: Set Your Timezone
 
@@ -215,12 +217,12 @@ Your daily time budget resets at midnight in your configured timezone.
 
 1. CellBlock detects your current timezone automatically
 2. To change it:
-    - Click **Change Timezone**
-    - Search for your city or select from the list
-    - Click **Save**
+   - Click **Change Timezone**
+   - Search for your city or select from the list
+   - Click **Save**
 
 !!! tip "Timezone Handling"
-    If you travel across timezones, your budget resets at midnight in your configured timezone, not your current location. Update your timezone in settings if you move permanently.
+If you travel across timezones, your budget resets at midnight in your configured timezone, not your current location. Update your timezone in settings if you move permanently.
 
 ### Step 4: Invite Your Warden (Optional)
 
@@ -238,7 +240,7 @@ A warden provides accountability by approving your settings changes.
 - After they accept, all changes require their approval
 
 !!! info "Multiple Wardens"
-    You can have up to 4 wardens (1 primary + 3 backups). Add backups in Settings → Wardens after completing setup.
+You can have up to 4 wardens (1 primary + 3 backups). Add backups in Settings → Wardens after completing setup.
 
 **No Warden Yet?**
 
@@ -283,9 +285,9 @@ Now that you've completed setup:
 **Solutions:**
 
 1. Check that CellBlock service is running:
-    - Open Task Manager (Ctrl+Shift+Esc)
-    - Go to Services tab
-    - Find "CellBlockService" and verify it's Running
+   - Open Task Manager (Ctrl+Shift+Esc)
+   - Go to Services tab
+   - Find "CellBlockService" and verify it's Running
 2. If stopped, restart your computer
 3. Check Windows Firewall isn't blocking CellBlock
 4. Run CellBlock as administrator

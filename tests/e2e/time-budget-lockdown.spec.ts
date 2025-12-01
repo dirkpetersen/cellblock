@@ -69,7 +69,7 @@ test.describe('Time Budget Flow', () => {
     await page.waitForTimeout(2000);
 
     // Should show lockdown screen
-    await expect(page.locator('text=Time\'s Up!')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator("text=Time's Up!")).toBeVisible({ timeout: 15000 });
     await expect(page.locator('text=Your daily time limit has been reached')).toBeVisible();
 
     // Should show options

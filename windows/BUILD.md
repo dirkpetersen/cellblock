@@ -67,6 +67,7 @@ dotnet restore CellBlock.sln
 ```
 
 This will download all required NuGet packages:
+
 - SocketIOClient (WebSocket communication)
 - Microsoft.Extensions.Hosting (Service infrastructure)
 - Hardcodet.NotifyIcon.Wpf (System tray support)
@@ -228,6 +229,7 @@ dotnet publish CellBlock.UI/CellBlock.UI.csproj \
 ### Issue: "Package Restore Failed"
 
 **Solution:**
+
 ```bash
 dotnet nuget locals all --clear
 dotnet restore --force
@@ -240,6 +242,7 @@ dotnet restore --force
 ### Issue: Missing System.Management
 
 **Solution:**
+
 ```bash
 dotnet add CellBlock.Shared package System.Management --version 8.0.0
 ```
@@ -247,6 +250,7 @@ dotnet add CellBlock.Shared package System.Management --version 8.0.0
 ### Issue: WPF Designer Not Loading
 
 **Solution:**
+
 1. Close Visual Studio
 2. Delete `.vs` folder in solution directory
 3. Reopen Visual Studio
@@ -257,6 +261,7 @@ dotnet add CellBlock.Shared package System.Management --version 8.0.0
 ### Release Build Optimizations
 
 The `Directory.Build.props` file configures release builds to:
+
 - Remove debug symbols (`<DebugType>none</DebugType>`)
 - Enable compiler optimizations
 - Reduce file size
@@ -291,6 +296,7 @@ If you encounter build errors:
 ## Support
 
 For build issues:
+
 - Check GitHub Issues: https://github.com/dirkpetersen/cellblock/issues
 - Review error logs in `bin/Debug` or `bin/Release`
 - Consult Visual Studio Error List panel

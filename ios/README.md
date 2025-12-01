@@ -26,6 +26,7 @@ Swift iOS client for CellBlock digital wellbeing application.
 ### Build Instructions
 
 1. Open project:
+
    ```bash
    cd ios
    open Package.swift
@@ -126,16 +127,19 @@ struct DashboardView: View {
 **Status**: Implemented and ready to test
 
 **Features**:
+
 - Request Screen Time authorization
 - Block "Social Networking" category when time expires
 - Simple on/off blocking via ManagedSettings
 
 **Limitations**:
+
 - Only blocks predefined categories (not full whitelist)
 - Blocking not persistent if app is killed
 - Requires physical device to test
 
 **Testing**:
+
 ```swift
 // Request authorization
 try await ScreenTimeService.shared.requestAuthorization()
@@ -150,10 +154,12 @@ await ScreenTimeService.shared.disableBlocking()
 ### Phase 2 (Future - Full Enforcement)
 
 **Requirements**:
+
 - Family Controls entitlement from Apple
 - DeviceActivityMonitorExtension target
 
 **Features**:
+
 - Block all apps except whitelist
 - Persistent blocking (survives app kill and reboot)
 - DeviceActivity monitoring
@@ -177,6 +183,7 @@ init(baseURL: String = "https://api.yourdomain.com")
 ### 2. Bundle Identifier
 
 Update in Xcode project settings and `Info.plist`:
+
 - Default: `com.cellblock.app`
 - Change to your unique identifier
 
@@ -188,6 +195,7 @@ Update in Xcode project settings and `Info.plist`:
 ### 4. Entitlements
 
 **Already configured in `CellBlock.entitlements`:**
+
 - App Groups: `group.com.cellblock.app`
 - Family Controls: `com.apple.developer.family-controls`
 - Push Notifications: APNs development
@@ -244,9 +252,11 @@ xcodebuild -scheme CellBlock \
 ### WebSocket Events
 
 **Client → Server:**
+
 - `heartbeat` - Send heartbeat with device status
 
 **Server → Client:**
+
 - `time_update` - Time status changed
 - `lock_command` - Device should lock
 - `unlock_command` - Device unlocked (parole granted)
@@ -300,21 +310,25 @@ xcodebuild -scheme CellBlock \
 ### Common Issues
 
 **WebSocket Connection Fails**
+
 - Check backend is running
 - Verify URL is correct
 - Check Info.plist App Transport Security settings
 
 **Screen Time Authorization Fails**
+
 - Must use physical device with iOS 16+
 - Check entitlements file is included
 - Verify FamilyControls framework is linked
 
 **Build Fails**
+
 - Clean build folder (Cmd + Shift + K)
 - Delete derived data
 - Run `xcodebuild -resolvePackageDependencies`
 
 **Token Expired**
+
 - Logout and login again
 - Check token refresh logic
 

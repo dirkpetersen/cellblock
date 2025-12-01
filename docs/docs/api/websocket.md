@@ -15,9 +15,9 @@ import { io } from 'socket.io-client';
 
 const socket = io('https://api.cellblock.app', {
   auth: {
-    token: 'your-jwt-access-token'
+    token: 'your-jwt-access-token',
   },
-  transports: ['websocket', 'polling']
+  transports: ['websocket', 'polling'],
 });
 
 socket.on('connect', () => {
@@ -81,7 +81,7 @@ After connecting, authenticate with your JWT token:
 
 ```javascript
 socket.emit('authenticate', {
-  token: 'your-jwt-access-token'
+  token: 'your-jwt-access-token',
 });
 ```
 
@@ -133,7 +133,7 @@ setInterval(() => {
   socket.emit('heartbeat', {
     deviceId: 'device-123',
     isWhitelisted: getCurrentAppIsWhitelisted(),
-    clientTimestamp: new Date().toISOString()
+    clientTimestamp: new Date().toISOString(),
   });
 }, 30000); // Every 30 seconds
 ```
@@ -502,7 +502,7 @@ function startHeartbeats() {
       socket.emit('heartbeat', {
         deviceId: getDeviceId(),
         isWhitelisted: false,
-        clientTimestamp: new Date().toISOString()
+        clientTimestamp: new Date().toISOString(),
       });
     }
   }, 30000); // Every 30 seconds
@@ -625,7 +625,7 @@ describe('WebSocket Events', () => {
 
   beforeEach((done) => {
     socket = io('http://localhost:3000', {
-      auth: { token: testToken }
+      auth: { token: testToken },
     });
     socket.on('connect', done);
   });
@@ -644,7 +644,7 @@ describe('WebSocket Events', () => {
     socket.emit('heartbeat', {
       deviceId: 'test-device',
       isWhitelisted: false,
-      clientTimestamp: new Date().toISOString()
+      clientTimestamp: new Date().toISOString(),
     });
   });
 });
@@ -664,7 +664,7 @@ describe('WebSocket Events', () => {
 4. Try polling transport first:
    ```javascript
    const socket = io(url, {
-     transports: ['polling', 'websocket']
+     transports: ['polling', 'websocket'],
    });
    ```
 

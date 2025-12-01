@@ -156,7 +156,7 @@ export class UsersService {
 
     // Send notifications to all wardens
     const user = await this.findById(userId);
-    const wardenEmails = wardens.map(w => w.warden.email);
+    const wardenEmails = wardens.map((w) => w.warden.email);
     await this.notificationsService.sendBreakGlassNotification(
       wardenEmails,
       user.displayName || user.email,

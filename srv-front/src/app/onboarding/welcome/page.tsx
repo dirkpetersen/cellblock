@@ -34,9 +34,7 @@ export default function OnboardingWelcomePage() {
             </div>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">
-            Welcome to CellBlock!
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">Welcome to CellBlock!</h1>
           <p className="text-lg text-center text-zinc-600 dark:text-zinc-400 mb-12">
             Let's get you set up for digital wellbeing success. This will only take a few minutes.
           </p>
@@ -97,8 +95,8 @@ export default function OnboardingWelcomePage() {
               <li className="flex items-start gap-2">
                 <span className="text-primary-600 dark:text-primary-400 mt-0.5">•</span>
                 <span>
-                  <strong>Warden Accountability:</strong> Your warden can approve temporary
-                  access and help you stay on track.
+                  <strong>Warden Accountability:</strong> Your warden can approve temporary access
+                  and help you stay on track.
                 </span>
               </li>
               <li className="flex items-start gap-2">

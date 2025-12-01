@@ -53,8 +53,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input';
 
-export interface TextareaProps
-  extends InputHTMLAttributes<HTMLTextAreaElement> {
+export interface TextareaProps extends InputHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
   helperText?: string;

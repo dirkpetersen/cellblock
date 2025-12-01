@@ -1,10 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  PushProvider,
-  PushNotificationPayload,
-  PushSendResult,
-} from './push-provider.interface';
+import { PushProvider, PushNotificationPayload, PushSendResult } from './push-provider.interface';
 import * as https from 'https';
 
 /**
@@ -56,9 +52,7 @@ export class WnsProvider extends PushProvider {
       await this.authenticate();
       this.logger.log('WNS provider initialized successfully');
     } catch (error) {
-      this.logger.error(
-        `Failed to initialize WNS provider: ${(error as Error).message}`
-      );
+      this.logger.error(`Failed to initialize WNS provider: ${(error as Error).message}`);
       throw error;
     }
   }
@@ -66,10 +60,7 @@ export class WnsProvider extends PushProvider {
   /**
    * Send push notification to a single channel URI
    */
-  async sendToToken(
-    channelUri: string,
-    payload: PushNotificationPayload
-  ): Promise<PushSendResult> {
+  async sendToToken(channelUri: string, payload: PushNotificationPayload): Promise<PushSendResult> {
     if (!this.enabled) {
       return {
         success: false,
@@ -91,18 +82,14 @@ export class WnsProvider extends PushProvider {
       const response = await this.sendToWns(channelUri, toastXml, 'wns/toast');
 
       if (response.success) {
-        this.logger.debug(
-          `Push sent to Windows device: ${channelUri.substring(0, 30)}...`
-        );
+        this.logger.debug(`Push sent to Windows device: ${channelUri.substring(0, 30)}...`);
         return {
           success: true,
           token: channelUri,
           platform: this.platform,
         };
       } else {
-        this.logger.warn(
-          `Failed to send push to Windows device: ${response.error}`
-        );
+        this.logger.warn(`Failed to send push to Windows device: ${response.error}`);
         return {
           success: false,
           token: channelUri,
@@ -112,9 +99,7 @@ export class WnsProvider extends PushProvider {
         };
       }
     } catch (error) {
-      this.logger.error(
-        `Error sending push to Windows device: ${(error as Error).message}`
-      );
+      this.logger.error(`Error sending push to Windows device: ${(error as Error).message}`);
       return {
         success: false,
         token: channelUri,
@@ -285,7 +270,7 @@ export class WnsProvider extends PushProvider {
         headers: {
           'Content-Type': 'text/xml',
           'Content-Length': Buffer.byteLength(content),
-          'Authorization': `Bearer ${this.accessToken}`,
+          Authorization: `Bearer ${this.accessToken}`,
           'X-WNS-Type': notificationType,
         },
       };

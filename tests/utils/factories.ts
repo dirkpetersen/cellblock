@@ -112,7 +112,8 @@ export class DeviceFactory {
    * Create a test device
    */
   static async create(options: CreateDeviceOptions): Promise<Device> {
-    const platform = options.platform || faker.helpers.arrayElement(['ios', 'windows', 'android', 'macos']);
+    const platform =
+      options.platform || faker.helpers.arrayElement(['ios', 'windows', 'android', 'macos']);
 
     return prisma.device.create({
       data: {
@@ -322,7 +323,11 @@ export class WardenRelationshipFactory {
   /**
    * Create a warden relationship
    */
-  static async create(inmateId: string, wardenId: string, status: 'pending' | 'active' | 'cancelled' = 'active') {
+  static async create(
+    inmateId: string,
+    wardenId: string,
+    status: 'pending' | 'active' | 'cancelled' = 'active'
+  ) {
     return prisma.wardenRelationship.create({
       data: {
         inmateId,
@@ -356,7 +361,12 @@ export class UsageLogFactory {
   /**
    * Create a usage log entry
    */
-  static async create(userId: string, deviceId: string, secondsUsed: number = 60, wasWhitelisted: boolean = false) {
+  static async create(
+    userId: string,
+    deviceId: string,
+    secondsUsed: number = 60,
+    wasWhitelisted: boolean = false
+  ) {
     const endTime = new Date();
     const startTime = new Date(endTime.getTime() - secondsUsed * 1000);
 

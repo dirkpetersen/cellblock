@@ -22,7 +22,12 @@ export default function TermsOfServicePage() {
             <div>
               <h1 className="text-3xl md:text-4xl font-bold">Terms of Service</h1>
               <p className="text-zinc-600 dark:text-zinc-400 text-sm">
-                Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                Last updated:{' '}
+                {new Date().toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
               </p>
             </div>
           </div>
@@ -42,8 +47,8 @@ export default function TermsOfServicePage() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4">2. Description of Service</h2>
             <p className="text-zinc-600 dark:text-zinc-400 mb-4">
-              CellBlock is a digital wellbeing application that helps users manage their screen
-              time through:
+              CellBlock is a digital wellbeing application that helps users manage their screen time
+              through:
             </p>
             <ul className="list-disc pl-6 text-zinc-600 dark:text-zinc-400 space-y-2">
               <li>Time budget management for recreational applications</li>
@@ -86,7 +91,10 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-bold mb-4">5. Data Collection and Privacy</h2>
             <p className="text-zinc-600 dark:text-zinc-400 mb-4">
               We collect and process data as described in our{' '}
-              <Link href="/privacy" className="text-primary-600 dark:text-primary-400 hover:underline">
+              <Link
+                href="/privacy"
+                className="text-primary-600 dark:text-primary-400 hover:underline"
+              >
                 Privacy Policy
               </Link>
               . This includes usage data, device information, and application access patterns
@@ -119,8 +127,8 @@ export default function TermsOfServicePage() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4">8. Break Glass Feature</h2>
             <p className="text-zinc-600 dark:text-zinc-400 mb-4">
-              The "break glass" emergency override feature is provided for genuine emergencies. Abuse
-              of this feature may result in account suspension or termination.
+              The "break glass" emergency override feature is provided for genuine emergencies.
+              Abuse of this feature may result in account suspension or termination.
             </p>
           </section>
 

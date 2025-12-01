@@ -7,15 +7,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Shield,
-  CheckCircle,
-  XCircle,
-  User,
-  Bell,
-  Lock,
-  Unlock,
-} from 'lucide-react';
+import { Shield, CheckCircle, XCircle, User, Bell, Lock, Unlock } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import {
   useInmates,
@@ -87,10 +79,7 @@ export default function WardenDashboardPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                onClick={() => router.push('/dashboard')}
-              >
+              <Button variant="ghost" onClick={() => router.push('/dashboard')}>
                 My Dashboard
               </Button>
               <Button variant="ghost" onClick={() => logout()}>
@@ -254,9 +243,7 @@ function InmatesList({
 }) {
   if (inmates.length === 0) {
     return (
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        No inmates under supervision yet.
-      </p>
+      <p className="text-sm text-zinc-600 dark:text-zinc-400">No inmates under supervision yet.</p>
     );
   }
 
@@ -266,10 +253,10 @@ function InmatesList({
         const status: Status = inmate.activeParole
           ? 'parole'
           : inmate.isLocked
-          ? 'locked'
-          : inmate.isOnline
-          ? 'active'
-          : 'offline';
+            ? 'locked'
+            : inmate.isOnline
+              ? 'active'
+              : 'offline';
 
         return (
           <div
@@ -337,9 +324,7 @@ function InmateDetails({ inmate }: { inmate: any }) {
     <div className="space-y-4">
       <div>
         <p className="text-xs text-zinc-600 dark:text-zinc-400 mb-1">Email</p>
-        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          {inmate.email}
-        </p>
+        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{inmate.email}</p>
       </div>
 
       {inmate.timeStatus && (
@@ -364,10 +349,7 @@ function InmateDetails({ inmate }: { inmate: any }) {
           <p className="text-xs text-zinc-600 dark:text-zinc-400 mb-2">Devices</p>
           <div className="space-y-1">
             {inmate.devices.map((device: any) => (
-              <div
-                key={device.id}
-                className="text-sm text-zinc-900 dark:text-zinc-100"
-              >
+              <div key={device.id} className="text-sm text-zinc-900 dark:text-zinc-100">
                 {device.deviceName || 'Unnamed'} ({device.platform})
               </div>
             ))}
@@ -387,9 +369,7 @@ function RequestsList({
   onSelectRequest: (request: any) => void;
 }) {
   if (requests.length === 0) {
-    return (
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">No pending requests</p>
-    );
+    return <p className="text-sm text-zinc-600 dark:text-zinc-400">No pending requests</p>;
   }
 
   return (
@@ -520,11 +500,7 @@ function ParoleModal({
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          variant="success"
-          onClick={handleGrant}
-          isLoading={grantParole.isPending}
-        >
+        <Button variant="success" onClick={handleGrant} isLoading={grantParole.isPending}>
           <Unlock className="h-4 w-4 mr-2" />
           Grant Parole
         </Button>
@@ -606,11 +582,7 @@ function LockdownModal({
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          variant="danger"
-          onClick={handleLockdown}
-          isLoading={triggerLockdown.isPending}
-        >
+        <Button variant="danger" onClick={handleLockdown} isLoading={triggerLockdown.isPending}>
           <Lock className="h-4 w-4 mr-2" />
           Trigger Lockdown
         </Button>
@@ -670,27 +642,19 @@ function RequestModal({
     >
       <div className="space-y-4">
         <div>
-          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-            Request Type
-          </p>
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Request Type</p>
           <Badge variant="warning">{request.type}</Badge>
         </div>
 
         {request.description && (
           <div>
-            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              Description
-            </p>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              {request.description}
-            </p>
+            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Description</p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">{request.description}</p>
           </div>
         )}
 
         <div>
-          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-            Requested
-          </p>
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Requested</p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             {formatDate(request.createdAt)}
           </p>

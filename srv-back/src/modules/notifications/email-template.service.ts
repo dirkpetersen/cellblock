@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -13,7 +12,7 @@ export class EmailTemplateService {
   private templateCache: Map<string, string> = new Map();
   private readonly templatesDir: string;
 
-  constructor(private configService: ConfigService) {
+  constructor() {
     this.templatesDir = path.join(__dirname, 'templates');
   }
 
@@ -57,9 +56,7 @@ export class EmailTemplateService {
 
       return rendered;
     } catch (error) {
-      this.logger.error(
-        `Failed to render template ${templateName}: ${(error as Error).message}`
-      );
+      this.logger.error(`Failed to render template ${templateName}: ${(error as Error).message}`);
       throw error;
     }
   }

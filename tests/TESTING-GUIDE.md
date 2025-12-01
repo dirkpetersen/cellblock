@@ -146,12 +146,14 @@ Test individual functions and business logic in isolation.
 **Location**: `/tests/unit/`
 
 **Examples**:
+
 - Time calculation logic
 - Budget enforcement rules
 - Parole grant logic
 - Simultaneous device detection
 
 **Run Command**:
+
 ```bash
 npm run test:unit --workspace=tests
 ```
@@ -163,12 +165,14 @@ Test API endpoints and service interactions with real database.
 **Location**: `/tests/integration/`
 
 **Examples**:
+
 - Authentication API (register, login, logout)
 - Time budget API (heartbeat, status, budget updates)
 - Warden API (invitations, approvals)
 - Whitelist API (add, remove, request)
 
 **Run Command**:
+
 ```bash
 npm run test:integration --workspace=tests
 ```
@@ -182,6 +186,7 @@ Test complete user journeys using Playwright with real browser.
 **Location**: `/tests/e2e/`
 
 **Examples**:
+
 - User signup and email verification
 - Warden invitation and acceptance
 - Time budget countdown and lockdown
@@ -190,11 +195,13 @@ Test complete user journeys using Playwright with real browser.
 - Parole grant flow
 
 **Run Command**:
+
 ```bash
 npm run test:e2e --workspace=tests
 ```
 
 **Browsers Tested**:
+
 - Chromium (Desktop)
 - Firefox (Desktop)
 - WebKit/Safari (Desktop)
@@ -212,11 +219,9 @@ describe('TimeService', () => {
   it('should deduct time for non-whitelisted apps', async () => {
     const timeService = new TimeService(mockPrisma);
 
-    const result = await timeService.processHeartbeat(
-      userId,
-      deviceId,
-      { isWhitelistedApp: false }
-    );
+    const result = await timeService.processHeartbeat(userId, deviceId, {
+      isWhitelistedApp: false,
+    });
 
     expect(result.remainingSeconds).toBeLessThan(3600);
   });
@@ -309,6 +314,7 @@ coverageThreshold: {
 ### GitHub Actions Workflow
 
 Tests run automatically on:
+
 - Push to `main` or `dev` branches
 - Pull requests to `main` or `dev`
 - Scheduled nightly runs (optional)
@@ -385,6 +391,7 @@ npx playwright --version
 #### Timeout Errors
 
 Increase timeout in test:
+
 ```typescript
 test('slow test', async ({ page }) => {
   test.setTimeout(60000); // 60 seconds
@@ -393,6 +400,7 @@ test('slow test', async ({ page }) => {
 ```
 
 Or globally in `playwright.config.ts`:
+
 ```typescript
 timeout: 60000,
 ```
@@ -430,6 +438,7 @@ npx playwright test --debug user-signup-flow.spec.ts
 ### Logs
 
 Enable verbose logging:
+
 ```bash
 DEBUG=* npm run test:integration --workspace=tests
 ```

@@ -40,12 +40,14 @@ Internal development notes, design decisions, and technical details for maintain
 **Decision:** Split into service and UI rather than single application
 
 **Rationale:**
+
 - Service runs as SYSTEM for privileged operations (hosts file, registry)
 - UI runs as user for proper tray icon integration
 - Service persists even if UI is killed
 - Follows Windows best practices for background tasks
 
 **Alternatives Considered:**
+
 - Single elevated application (rejected: poor UX, always runs as admin)
 - UI with background worker (rejected: can be killed by user)
 
@@ -54,12 +56,14 @@ Internal development notes, design decisions, and technical details for maintain
 **Decision:** Use hosts file for domain blocking in Phase 1
 
 **Rationale:**
+
 - Simple to implement
 - No kernel driver required
 - Works immediately
 - Easy to debug and verify
 
 **Limitations:**
+
 - Can't block HTTPS selectively
 - Can be bypassed with DNS over HTTPS
 - Domain-level only, not URL-level
@@ -72,6 +76,7 @@ Internal development notes, design decisions, and technical details for maintain
 **Decision:** Use Named Pipes for service-UI communication
 
 **Rationale:**
+
 - Native Windows IPC mechanism
 - Secure (can restrict access)
 - Low overhead
@@ -79,6 +84,7 @@ Internal development notes, design decisions, and technical details for maintain
 - Easy to implement
 
 **Alternatives Considered:**
+
 - HTTP server in service (rejected: overkill, security issues)
 - Shared memory (rejected: complex, race conditions)
 - Windows Messages (rejected: requires window handle)
@@ -88,6 +94,7 @@ Internal development notes, design decisions, and technical details for maintain
 **Decision:** Use Windows Data Protection API for encrypting tokens
 
 **Rationale:**
+
 - Built-in Windows encryption
 - Machine-scoped (no user password needed)
 - Automatic key management
@@ -100,6 +107,7 @@ Internal development notes, design decisions, and technical details for maintain
 **Decision:** Combine MAC address hash with Windows Machine GUID
 
 **Rationale:**
+
 - MAC address: tied to network hardware
 - Machine GUID: persists across network changes
 - Hash MAC for privacy
@@ -222,6 +230,7 @@ CheckForTampering() {
 ### Named Pipe Protocol
 
 **Request Format (JSON):**
+
 ```json
 {
   "command": "get_status" | "set_auth" | "clear_auth",
@@ -233,6 +242,7 @@ CheckForTampering() {
 ```
 
 **Response Format (JSON):**
+
 ```json
 {
   "success": true,
@@ -246,16 +256,19 @@ CheckForTampering() {
 ### NuGet Packages
 
 **CellBlock.Shared:**
+
 - `System.Text.Json` - JSON serialization
 - `System.Management` - WMI for MAC address
 
 **CellBlock.Service:**
+
 - `Microsoft.Extensions.Hosting` - Service host framework
 - `Microsoft.Extensions.Hosting.WindowsServices` - Windows Service support
 - `SocketIOClient` - WebSocket client (Socket.io protocol)
 - `System.IO.Pipes` - Named Pipe IPC
 
 **CellBlock.UI:**
+
 - `Hardcodet.NotifyIcon.Wpf` - System tray icon support
 - `System.IO.Pipes` - Named Pipe IPC
 
@@ -264,6 +277,7 @@ CheckForTampering() {
 **Decision:** Use SocketIOClient library
 
 **Rationale:**
+
 - Backend uses Socket.io (Socket.io protocol, not raw WebSocket)
 - Handles reconnection automatically
 - Supports auth in handshake
@@ -276,11 +290,13 @@ CheckForTampering() {
 ### Threat Model
 
 **Threats In Scope (MVP):**
+
 - Casual user trying to bypass by killing UI
 - User manually editing hosts file
 - User deleting registry keys
 
 **Threats Out of Scope (Phase 2):**
+
 - Determined attacker with admin rights
 - Kernel-level bypasses (safe mode, driver tampering)
 - Network-level bypasses (VPN, DNS over HTTPS)
@@ -346,6 +362,7 @@ CheckForTampering() {
 - **Combined:** ~200 MB total
 
 **Optimization Opportunities:**
+
 - Use WeakReference for cached data
 - Dispose WebSocket messages promptly
 - Lazy-load UI resources
@@ -357,6 +374,7 @@ CheckForTampering() {
 **Coverage Target:** 80%
 
 **Key Test Areas:**
+
 - Device fingerprint generation
 - Secure storage encryption/decryption
 - Hosts file parsing and modification
@@ -368,6 +386,7 @@ CheckForTampering() {
 ### Integration Tests (TODO)
 
 **Scenarios:**
+
 - Service startup and shutdown
 - WebSocket connect and reconnect
 - UI-Service communication
@@ -378,6 +397,7 @@ CheckForTampering() {
 ### Manual Testing
 
 **Critical Paths:**
+
 - Installation and first run
 - Authentication flow
 - Lock enforcement
@@ -415,12 +435,14 @@ See [TESTING.md](TESTING.md) for detailed test procedures.
 ### Phase 2: WFP Driver
 
 **Windows Filtering Platform Driver:**
+
 - Kernel-level packet filtering
 - Can't be bypassed
 - Block by IP, port, domain, URL
 - Requires driver signing certificate ($$$)
 
 **Implementation:**
+
 - C++ WFP driver
 - C# wrapper for driver control
 - Integrate with existing service
@@ -430,11 +452,13 @@ See [TESTING.md](TESTING.md) for detailed test procedures.
 ### Phase 3: Machine Learning
 
 **Smart Blocking:**
+
 - Detect productivity vs distraction patterns
 - Suggest whitelist additions
 - Adaptive time budgets
 
 **Requirements:**
+
 - Usage telemetry
 - ML model training
 - Privacy considerations
@@ -442,11 +466,13 @@ See [TESTING.md](TESTING.md) for detailed test procedures.
 ### Phase 4: Browser Extension
 
 **Selective URL Blocking:**
+
 - Block youtube.com/watch but allow youtube.com/education
 - Block facebook.com/news but allow facebook.com/marketplace
 - Inject warnings before time expires
 
 **Challenges:**
+
 - Must work with driver/hosts file
 - Extension store approval
 - Keep in sync with service
@@ -456,6 +482,7 @@ See [TESTING.md](TESTING.md) for detailed test procedures.
 ### Enable Verbose Logging
 
 Modify `appsettings.json` (create if missing):
+
 ```json
 {
   "Logging": {
@@ -476,6 +503,7 @@ Modify `appsettings.json` (create if missing):
 ### Debug Service in Console Mode
 
 Temporarily run as console app:
+
 ```csharp
 // In Program.cs
 #if DEBUG
@@ -501,9 +529,10 @@ Then run: `CellBlock.Service.exe --console` (requires code change)
 ### Test WebSocket Locally
 
 Use browser DevTools console:
+
 ```javascript
 const socket = io('http://localhost:3000', {
-  auth: { token: 'your-jwt-token' }
+  auth: { token: 'your-jwt-token' },
 });
 
 socket.on('connect', () => console.log('Connected'));
@@ -531,6 +560,7 @@ socket.emit('heartbeat', { deviceId: 'test', isWhitelistedApp: false });
 ### Publish Profiles (Future)
 
 Create publish profiles for:
+
 - Standalone (includes .NET runtime)
 - Framework-dependent (requires .NET installed)
 - Single-file (all in one EXE)
@@ -540,6 +570,7 @@ Create publish profiles for:
 ### Code Style
 
 Follow `.editorconfig` settings:
+
 - 4 spaces for indentation
 - CRLF line endings
 - UTF-8 encoding

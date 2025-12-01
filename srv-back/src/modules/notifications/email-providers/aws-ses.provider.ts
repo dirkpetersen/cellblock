@@ -1,10 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  IEmailProvider,
-  EmailMessage,
-  EmailSendResult,
-} from './email-provider.interface';
+import { IEmailProvider, EmailMessage, EmailSendResult } from './email-provider.interface';
 
 @Injectable()
 export class AwsSesProvider implements IEmailProvider {
@@ -19,8 +15,7 @@ export class AwsSesProvider implements IEmailProvider {
     this.accessKeyId = this.configService.get<string>('AWS_ACCESS_KEY_ID');
     this.secretAccessKey = this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
     this.fromEmail =
-      this.configService.get<string>('AWS_SES_FROM_EMAIL') ||
-      'noreply@cellblock.app';
+      this.configService.get<string>('AWS_SES_FROM_EMAIL') || 'noreply@cellblock.app';
   }
 
   async sendEmail(message: EmailMessage): Promise<EmailSendResult> {
@@ -76,9 +71,7 @@ export class AwsSesProvider implements IEmailProvider {
         messageId: result.MessageId,
       };
     } catch (error) {
-      this.logger.error(
-        `Failed to send email via AWS SES: ${(error as Error).message}`
-      );
+      this.logger.error(`Failed to send email via AWS SES: ${(error as Error).message}`);
       return {
         success: false,
         error: (error as Error).message,
@@ -92,9 +85,7 @@ export class AwsSesProvider implements IEmailProvider {
       const result = await this.sesApiCall('GetSendQuota', {});
       return !result.error;
     } catch (error) {
-      this.logger.error(
-        `AWS SES connection verification failed: ${(error as Error).message}`
-      );
+      this.logger.error(`AWS SES connection verification failed: ${(error as Error).message}`);
       return false;
     }
   }

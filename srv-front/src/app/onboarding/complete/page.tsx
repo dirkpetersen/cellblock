@@ -47,7 +47,10 @@ export default function OnboardingCompletePage() {
           <div className="flex justify-center mb-6">
             <div className="relative">
               <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-accent-500 animate-pulse" />
-              <Sparkles className="absolute -bottom-2 -left-2 w-5 h-5 text-accent-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
+              <Sparkles
+                className="absolute -bottom-2 -left-2 w-5 h-5 text-accent-500 animate-pulse"
+                style={{ animationDelay: '0.5s' }}
+              />
               <div className="w-20 h-20 bg-success-100 dark:bg-success-900/30 rounded-full flex items-center justify-center">
                 <CheckCircle2 className="w-12 h-12 text-success-600 dark:text-success-400" />
               </div>
@@ -102,8 +105,8 @@ export default function OnboardingCompletePage() {
           {/* Key Reminders */}
           <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4 mb-8 text-left max-w-md mx-auto">
             <p className="text-sm text-primary-800 dark:text-primary-200">
-              <strong>Remember:</strong> CellBlock works best when you're honest with yourself
-              and lean on your warden for support. We're here to help you build healthier digital
+              <strong>Remember:</strong> CellBlock works best when you're honest with yourself and
+              lean on your warden for support. We're here to help you build healthier digital
               habits, not punish you.
             </p>
           </div>

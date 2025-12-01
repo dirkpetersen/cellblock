@@ -251,41 +251,45 @@ export class NotificationsService implements OnModuleInit {
             totalSent++;
 
             // Log successful notification
-            await this.prisma.notification.create({
-              data: {
-                userId: pushData.userId,
-                type: 'push',
-                channel: platform,
-                recipient: tokenRecord.token,
-                subject: pushData.title,
-                body: pushData.body,
-                data: pushData.data,
-                status: 'sent',
-                sentAt: new Date(),
-              },
-            }).catch((err) => {
-              this.logger.error(`Failed to log notification: ${err.message}`);
-            });
+            await this.prisma.notification
+              .create({
+                data: {
+                  userId: pushData.userId,
+                  type: 'push',
+                  channel: platform,
+                  recipient: tokenRecord.token,
+                  subject: pushData.title,
+                  body: pushData.body,
+                  data: pushData.data,
+                  status: 'sent',
+                  sentAt: new Date(),
+                },
+              })
+              .catch((err) => {
+                this.logger.error(`Failed to log notification: ${err.message}`);
+              });
           } else {
             totalFailed++;
 
             // Log failed notification
-            await this.prisma.notification.create({
-              data: {
-                userId: pushData.userId,
-                type: 'push',
-                channel: platform,
-                recipient: tokenRecord.token,
-                subject: pushData.title,
-                body: pushData.body,
-                data: pushData.data,
-                status: 'failed',
-                failedReason: result.error,
-                retryCount: 0,
-              },
-            }).catch((err) => {
-              this.logger.error(`Failed to log notification: ${err.message}`);
-            });
+            await this.prisma.notification
+              .create({
+                data: {
+                  userId: pushData.userId,
+                  type: 'push',
+                  channel: platform,
+                  recipient: tokenRecord.token,
+                  subject: pushData.title,
+                  body: pushData.body,
+                  data: pushData.data,
+                  status: 'failed',
+                  failedReason: result.error,
+                  retryCount: 0,
+                },
+              })
+              .catch((err) => {
+                this.logger.error(`Failed to log notification: ${err.message}`);
+              });
 
             // Mark token for deactivation if expired
             if (result.shouldDeactivateToken) {
@@ -294,9 +298,7 @@ export class NotificationsService implements OnModuleInit {
           }
         }
       } catch (error) {
-        this.logger.error(
-          `Error sending push to ${platform}: ${(error as Error).message}`
-        );
+        this.logger.error(`Error sending push to ${platform}: ${(error as Error).message}`);
         totalFailed += platformTokens.length;
       }
     }
@@ -308,9 +310,7 @@ export class NotificationsService implements OnModuleInit {
         data: { isActive: false },
       });
 
-      this.logger.log(
-        `Deactivated ${tokensToDeactivate.length} expired push token(s)`
-      );
+      this.logger.log(`Deactivated ${tokensToDeactivate.length} expired push token(s)`);
     }
 
     this.logger.log(
@@ -377,11 +377,7 @@ export class NotificationsService implements OnModuleInit {
   /**
    * Send break glass notification to wardens
    */
-  async sendBreakGlassNotification(
-    wardenEmails: string[],
-    inmateName: string,
-    comment?: string
-  ) {
+  async sendBreakGlassNotification(wardenEmails: string[], inmateName: string, comment?: string) {
     const html = await this.emailTemplateService.renderTemplate('break-glass', {
       inmateName,
       comment: comment || 'No reason provided',

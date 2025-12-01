@@ -63,7 +63,9 @@ describe('TimeService - Time Calculation', () => {
 
       (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (prismaService.timeBudget.findFirst as jest.Mock).mockResolvedValue(mockBudget);
-      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({ _sum: { secondsUsed: 0 } });
+      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({
+        _sum: { secondsUsed: 0 },
+      });
       (prismaService.paroleGrant.findFirst as jest.Mock).mockResolvedValue(null);
 
       const result = await timeService.processHeartbeat(userId, deviceId, heartbeat);
@@ -93,7 +95,9 @@ describe('TimeService - Time Calculation', () => {
 
       (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (prismaService.timeBudget.findFirst as jest.Mock).mockResolvedValue(mockBudget);
-      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({ _sum: { secondsUsed: 0 } });
+      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({
+        _sum: { secondsUsed: 0 },
+      });
       (prismaService.paroleGrant.findFirst as jest.Mock).mockResolvedValue(null);
       (prismaService.device.update as jest.Mock).mockResolvedValue({});
       (prismaService.usageLog.create as jest.Mock).mockResolvedValue({});
@@ -130,7 +134,9 @@ describe('TimeService - Time Calculation', () => {
       (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (prismaService.timeBudget.findFirst as jest.Mock).mockResolvedValue(mockBudget);
       // User has already used 60 minutes today
-      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({ _sum: { secondsUsed: 3600 } });
+      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({
+        _sum: { secondsUsed: 3600 },
+      });
       (prismaService.paroleGrant.findFirst as jest.Mock).mockResolvedValue(null);
       (prismaService.device.update as jest.Mock).mockResolvedValue({});
       (prismaService.device.findMany as jest.Mock).mockResolvedValue([{ id: deviceId }]);
@@ -176,7 +182,9 @@ describe('TimeService - Time Calculation', () => {
       (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (prismaService.timeBudget.findFirst as jest.Mock).mockResolvedValue(mockBudget);
       // User has exhausted daily budget
-      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({ _sum: { secondsUsed: 3600 } });
+      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({
+        _sum: { secondsUsed: 3600 },
+      });
       (prismaService.paroleGrant.findFirst as jest.Mock).mockResolvedValue(mockParole);
       (prismaService.usageLog.create as jest.Mock).mockResolvedValue({});
       (prismaService.device.update as jest.Mock).mockResolvedValue({});
@@ -209,7 +217,9 @@ describe('TimeService - Time Calculation', () => {
 
       (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (prismaService.timeBudget.findFirst as jest.Mock).mockResolvedValue(mockBudget);
-      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({ _sum: { secondsUsed: 0 } });
+      (prismaService.usageLog.aggregate as jest.Mock).mockResolvedValue({
+        _sum: { secondsUsed: 0 },
+      });
       (prismaService.paroleGrant.findFirst as jest.Mock).mockResolvedValue(null);
       (prismaService.device.update as jest.Mock).mockResolvedValue({});
       (prismaService.usageLog.create as jest.Mock).mockResolvedValue({});

@@ -275,10 +275,7 @@ describe('Auth API Integration Tests', () => {
         .expect(200);
 
       // Try to use refresh token (should fail)
-      await request(API_URL)
-        .post(`${API_PREFIX}/auth/refresh`)
-        .send({ refreshToken })
-        .expect(401);
+      await request(API_URL).post(`${API_PREFIX}/auth/refresh`).send({ refreshToken }).expect(401);
     });
   });
 

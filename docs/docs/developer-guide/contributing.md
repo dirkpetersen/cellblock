@@ -230,7 +230,7 @@ npm run format
 async function getUserTimeRemaining(userId: string): Promise<number> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: { timeBudget: true }
+    include: { timeBudget: true },
   });
 
   if (!user) {
@@ -242,9 +242,9 @@ async function getUserTimeRemaining(userId: string): Promise<number> {
 
 // Bad
 async function getTime(id) {
-  let u = await prisma.user.findUnique({ where: { id: id }, include: { timeBudget: true } })
-  if (!u) throw new Error("not found")
-  return calculateRemainingTime(u.timeBudget)
+  let u = await prisma.user.findUnique({ where: { id: id }, include: { timeBudget: true } });
+  if (!u) throw new Error('not found');
+  return calculateRemainingTime(u.timeBudget);
 }
 ```
 
@@ -338,7 +338,7 @@ describe('TimeBudgetService', () => {
     it('should calculate remaining time correctly', () => {
       const budget = {
         dailyLimitMinutes: 120,
-        usedMinutesToday: 45
+        usedMinutesToday: 45,
       };
 
       const remaining = service.calculateRemainingTime(budget);
@@ -349,7 +349,7 @@ describe('TimeBudgetService', () => {
     it('should return 0 for negative remaining time', () => {
       const budget = {
         dailyLimitMinutes: 120,
-        usedMinutesToday: 150
+        usedMinutesToday: 150,
       };
 
       const remaining = service.calculateRemainingTime(budget);
@@ -374,7 +374,7 @@ describe('WhitelistController (e2e)', () => {
       .send({
         name: 'Work Slack',
         windowsDomain: 'slack.com',
-        category: 'custom'
+        category: 'custom',
       })
       .expect(201);
 
@@ -510,27 +510,34 @@ Before submitting a PR, ensure:
 
 ```markdown
 ## Description
+
 Brief description of changes.
 
 ## Motivation
+
 Why is this change needed? What problem does it solve?
 
 ## Changes Made
+
 - Change 1
 - Change 2
 - Change 3
 
 ## Testing
+
 How was this tested? Include test cases.
 
 ## Screenshots (if applicable)
+
 Add screenshots for UI changes.
 
 ## Related Issues
+
 Closes #123
 Related to #456
 
 ## Checklist
+
 - [ ] Tests pass
 - [ ] Documentation updated
 - [ ] No breaking changes (or documented if unavoidable)

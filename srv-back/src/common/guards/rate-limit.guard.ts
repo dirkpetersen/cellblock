@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 /**
@@ -55,8 +61,7 @@ export class RateLimitGuard implements CanActivate {
         {
           statusCode: HttpStatus.TOO_MANY_REQUESTS,
           message:
-            rateLimitOptions.message ||
-            `Rate limit exceeded. Try again in ${retryAfter} seconds.`,
+            rateLimitOptions.message || `Rate limit exceeded. Try again in ${retryAfter} seconds.`,
           retryAfter,
         },
         HttpStatus.TOO_MANY_REQUESTS

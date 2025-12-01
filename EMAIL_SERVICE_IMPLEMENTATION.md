@@ -53,6 +53,7 @@ Three provider implementations with a common interface:
 11. **lockdown-warning.html** - Lockdown warning with grace period
 
 **Template Features:**
+
 - Responsive design (mobile-friendly)
 - Inline CSS for maximum email client compatibility
 - CellBlock brand colors (Teal #0D9488, Slate #475569)
@@ -67,6 +68,7 @@ Three provider implementations with a common interface:
 **Location:** `/srv-back/src/modules/notifications/email-template.service.ts`
 
 Custom template engine with:
+
 - Variable substitution
 - Conditional rendering
 - Loop iteration
@@ -80,6 +82,7 @@ Custom template engine with:
 **Updated:** `/srv-back/src/modules/notifications/notifications.service.ts`
 
 Enhanced NotificationsService with:
+
 - Auto-detection of email provider based on environment
 - Priority: SendGrid > AWS SES > Console (fallback)
 - Provider verification on startup
@@ -89,6 +92,7 @@ Enhanced NotificationsService with:
 - Comprehensive error logging
 
 **Email Methods:**
+
 ```typescript
 sendEmail(emailData: EmailData)
 sendVerificationEmail(email: string, token: string)
@@ -122,6 +126,7 @@ sendMonthlyReport(wardenEmail: string, inmateName: string, usageData: any)
 **Updated:** `/srv-back/.env.example`
 
 Comprehensive email configuration with:
+
 - Clear provider selection instructions
 - Auto-detection explanation
 - SendGrid configuration (recommended)
@@ -135,6 +140,7 @@ Comprehensive email configuration with:
 **Created:** `/srv-back/src/modules/notifications/EMAIL_SERVICE_README.md`
 
 Complete documentation including:
+
 - Architecture overview
 - Provider setup guides
 - Usage examples
@@ -338,6 +344,7 @@ SENDGRID_FROM_EMAIL=noreply@cellblock.app
 ```
 
 Restart server. You'll see:
+
 ```
 [NotificationsService] Email provider: SendGrid (verified)
 ```
@@ -356,6 +363,7 @@ AWS_SES_FROM_EMAIL=noreply@cellblock.app
 ```
 
 Restart server. You'll see:
+
 ```
 [NotificationsService] Email provider: AWS SES (verified)
 ```
@@ -477,6 +485,7 @@ LIMIT 20;
 ## No Additional Dependencies Required
 
 The implementation uses **zero additional npm packages**. Everything is built with:
+
 - Native `fetch` API (Node.js 18+)
 - File system operations (built-in `fs`)
 - TypeScript/NestJS built-in features
@@ -537,6 +546,7 @@ The email service is production-ready with:
 For issues:
 
 1. Check logs for provider initialization:
+
    ```
    [NotificationsService] Email provider: ...
    ```
@@ -544,6 +554,7 @@ For issues:
 2. Verify credentials in `.env`
 
 3. Check database for failed notifications:
+
    ```sql
    SELECT * FROM "Notification"
    WHERE status = 'failed'
@@ -557,6 +568,7 @@ For issues:
 ## Summary
 
 The CellBlock email service is now fully operational with:
+
 - Production-ready provider implementations (SendGrid, AWS SES)
 - 11 beautiful, responsive email templates
 - Automatic provider detection and failover

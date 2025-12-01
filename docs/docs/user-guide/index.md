@@ -41,20 +41,25 @@ If someone has invited you to be their warden:
 Before diving in, understand these core concepts:
 
 ### Default Deny
+
 CellBlock blocks everything by default. You explicitly choose what's allowed, rather than what's blocked.
 
 ### Shared Time Budget
+
 Your daily time budget is shared across all devices. Use 30 minutes on iPhone = 30 minutes less on Windows.
 
 ### Whitelist Categories
+
 - **Utility Apps** - Essential apps (Maps, Banking) - always allowed
 - **Healthy Apps** - Less distracting content (Spotify, Audible) - allowed by default
 - **Custom Apps** - Apps you add yourself - require warden approval
 
 ### Warden Relationship
+
 Up to 4 wardens can supervise you (1 primary + 3 backups). Any warden can approve requests.
 
 ### Time Zones
+
 Your daily reset happens at midnight in your configured timezone. You can change this in settings.
 
 ## Need Help?

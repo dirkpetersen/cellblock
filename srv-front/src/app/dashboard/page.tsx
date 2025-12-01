@@ -7,14 +7,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Plus,
-  Trash2,
-  Shield,
-  AlertTriangle,
-  Smartphone,
-  UserPlus,
-} from 'lucide-react';
+import { Plus, Trash2, Shield, AlertTriangle, Smartphone, UserPlus } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useTimeStatus } from '@/lib/hooks/useTime';
 import { useWhitelist, useToggleHealthyApp, useAddWhitelistItem } from '@/lib/hooks/useWhitelist';
@@ -73,9 +66,7 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3">
               <Shield className="h-8 w-8 text-primary-600" />
               <div>
-                <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                  CellBlock
-                </h1>
+                <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">CellBlock</h1>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
                   Welcome back, {user?.displayName || user?.email}
                 </p>
@@ -107,8 +98,8 @@ export default function DashboardPage() {
                       timeStatus?.activeParole
                         ? 'parole'
                         : timeStatus?.isLocked
-                        ? 'locked'
-                        : 'active'
+                          ? 'locked'
+                          : 'active'
                     }
                   />
                 </div>
@@ -236,8 +227,8 @@ export default function DashboardPage() {
                       Emergency Access
                     </h3>
                     <p className="text-sm text-danger-700 dark:text-danger-300 mt-1">
-                      Break glass to immediately disable all restrictions. This will notify
-                      all wardens.
+                      Break glass to immediately disable all restrictions. This will notify all
+                      wardens.
                     </p>
                   </div>
                 </div>
@@ -391,11 +382,7 @@ function DevicesSection({ devices, showToast }: { devices: any[]; showToast: any
   };
 
   if (devices.length === 0) {
-    return (
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        No devices registered yet.
-      </p>
-    );
+    return <p className="text-sm text-zinc-600 dark:text-zinc-400">No devices registered yet.</p>;
   }
 
   return (
@@ -413,11 +400,7 @@ function DevicesSection({ devices, showToast }: { devices: any[]; showToast: any
               {device.platform} • {device.osVersion}
             </p>
           </div>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => handleRemove(device.id)}
-          >
+          <Button size="sm" variant="ghost" onClick={() => handleRemove(device.id)}>
             <Trash2 className="h-4 w-4 text-danger-500" />
           </Button>
         </div>
@@ -514,11 +497,7 @@ function BreakGlassModal({
         <Button variant="ghost" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          variant="danger"
-          onClick={handleBreakGlass}
-          isLoading={breakGlass.isPending}
-        >
+        <Button variant="danger" onClick={handleBreakGlass} isLoading={breakGlass.isPending}>
           <AlertTriangle className="h-4 w-4 mr-2" />
           Break Glass
         </Button>

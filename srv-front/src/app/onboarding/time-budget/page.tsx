@@ -90,8 +90,8 @@ export default function OnboardingTimeBudgetPage() {
               <li className="flex items-start gap-2">
                 <span className="text-primary-600 dark:text-primary-400 mt-0.5">•</span>
                 <span>
-                  This limit applies to <strong>recreational apps</strong> like social media,
-                  games, and entertainment.
+                  This limit applies to <strong>recreational apps</strong> like social media, games,
+                  and entertainment.
                 </span>
               </li>
               <li className="flex items-start gap-2">
@@ -130,9 +130,7 @@ export default function OnboardingTimeBudgetPage() {
               <div className="text-2xl font-bold text-primary-600 dark:text-primary-400 mb-1">
                 1h
               </div>
-              <div className="text-xs text-zinc-600 dark:text-zinc-400">
-                Minimal distractions
-              </div>
+              <div className="text-xs text-zinc-600 dark:text-zinc-400">Minimal distractions</div>
             </button>
 
             <button

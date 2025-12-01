@@ -47,10 +47,7 @@ export function UsageGraph({ data, title, period, className }: UsageGraphProps) 
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData}>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              className="stroke-zinc-200 dark:stroke-zinc-700"
-            />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-zinc-200 dark:stroke-zinc-700" />
             <XAxis
               dataKey="name"
               className="text-xs text-zinc-600 dark:text-zinc-400"
@@ -66,17 +63,9 @@ export function UsageGraph({ data, title, period, className }: UsageGraphProps) 
                 style: { textAnchor: 'middle' },
               }}
             />
-            <Tooltip
-              content={<CustomTooltip />}
-              cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
-            />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }} />
             <Legend />
-            <Bar
-              dataKey="minutes"
-              fill="#0D9488"
-              name="Usage (minutes)"
-              radius={[4, 4, 0, 0]}
-            />
+            <Bar dataKey="minutes" fill="#0D9488" name="Usage (minutes)" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
@@ -91,9 +80,7 @@ function CustomTooltip({ active, payload }: any) {
 
   return (
     <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-3 shadow-lg">
-      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
-        {data.name}
-      </p>
+      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-1">{data.name}</p>
       <p className="text-sm text-zinc-600 dark:text-zinc-400">
         {data.minutes} minutes ({data.hours} hours)
       </p>

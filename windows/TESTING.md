@@ -18,17 +18,21 @@ This document provides comprehensive testing procedures for the CellBlock Window
 ### Prerequisites
 
 1. **Backend Server Running**
+
    ```bash
    cd cellblock/srv-back
    npm run dev
    ```
+
    Backend should be accessible at `http://localhost:3000`
 
 2. **Frontend Dashboard Running**
+
    ```bash
    cd cellblock/srv-front
    npm run dev
    ```
+
    Dashboard should be accessible at `http://localhost:3001`
 
 3. **Test User Account**
@@ -53,6 +57,7 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify service installs and starts correctly
 
 **Steps:**
+
 1. Open Command Prompt as Administrator
 2. Navigate to build output directory
 3. Install service:
@@ -66,11 +71,12 @@ dotnet build CellBlock.sln --configuration Debug
    ```
 
 **Expected Result:**
+
 - Service installs without errors
 - Status shows "RUNNING"
 - Event Viewer shows "CellBlock Service starting" log
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -79,16 +85,18 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify UI launches and tray icon appears
 
 **Steps:**
+
 1. Double-click `CellBlock.UI.exe`
 2. Check system tray for CellBlock icon
 3. Left-click tray icon to open main window
 
 **Expected Result:**
+
 - UI launches without errors
 - Tray icon appears in system tray
 - Main window opens showing status
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -97,17 +105,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify Named Pipe IPC works
 
 **Steps:**
+
 1. Ensure service is running
 2. Launch UI application
 3. Click "Refresh" button in main window
 4. Observe status updates
 
 **Expected Result:**
+
 - Status shows "Service not responding" → "Authenticated" or "Not Logged In"
 - No error messages
 - Connection indicator updates
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -116,6 +126,7 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify unique device ID is generated
 
 **Steps:**
+
 1. With service running, check registry:
    ```cmd
    reg query HKLM\SOFTWARE\CellBlock
@@ -125,12 +136,13 @@ dotnet build CellBlock.sln --configuration Debug
 4. Check fingerprint again
 
 **Expected Result:**
+
 - Fingerprint is 32+ character alphanumeric string
 - Format: `[16-char-hash]-[machine-guid]`
 - Fingerprint persists across restarts
 - New fingerprint generated if registry cleared
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -139,6 +151,7 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify authentication token storage
 
 **Steps:**
+
 1. Log in via web dashboard
 2. Get JWT tokens from browser DevTools (localStorage or network tab)
 3. In UI, go to Settings
@@ -146,11 +159,12 @@ dotnet build CellBlock.sln --configuration Debug
 5. Verify service shows "Authenticated"
 
 **Expected Result:**
+
 - Tokens stored in encrypted registry
 - Service status changes to "Authenticated"
 - WebSocket connection attempt starts
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -159,17 +173,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify WebSocket connects to backend
 
 **Steps:**
+
 1. Ensure backend is running
 2. Authenticate service (Test 5)
 3. Check Event Viewer for WebSocket logs
 4. Verify in backend logs that device connected
 
 **Expected Result:**
+
 - Event Viewer shows "WebSocket connected"
 - Backend logs show new connection
 - Heartbeats sent every 60 seconds
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -178,12 +194,14 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify domains get blocked
 
 **Steps:**
+
 1. Manually trigger lock (via backend API or test script)
 2. Open `C:\Windows\System32\drivers\etc\hosts` in Notepad (as Admin)
 3. Check for CellBlock entries
 4. Try to access blocked domain in browser
 
 **Expected Result:**
+
 - Hosts file contains entries like:
   ```
   # CellBlock Managed - START
@@ -194,7 +212,7 @@ dotnet build CellBlock.sln --configuration Debug
 - Blocked domains redirect to 127.0.0.1
 - Browser shows "Can't reach this page" or blocked.html
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -203,17 +221,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify whitelisted domains remain accessible
 
 **Steps:**
+
 1. Add `google.com` to whitelist via dashboard
 2. Trigger lock
 3. Check hosts file
 4. Try to access google.com
 
 **Expected Result:**
+
 - google.com NOT in hosts file
 - google.com remains accessible
 - Non-whitelisted sites still blocked
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -222,17 +242,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify lock command from backend
 
 **Steps:**
+
 1. With WebSocket connected, trigger lock via backend
 2. Check service logs
 3. Verify hosts file updated
 4. Try to access blocked site
 
 **Expected Result:**
+
 - Service receives lock command
 - Hosts file immediately updated
 - Sites become inaccessible within 5 seconds
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -241,17 +263,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify unlock command clears blocks
 
 **Steps:**
+
 1. With device locked (Test 9)
 2. Trigger unlock via backend (parole grant)
 3. Check hosts file
 4. Try to access previously blocked site
 
 **Expected Result:**
+
 - Service receives unlock command
 - CellBlock entries removed from hosts file
 - Sites become accessible again
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -260,6 +284,7 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify tamper detection
 
 **Steps:**
+
 1. With service running, delete registry key:
    ```cmd
    reg delete HKLM\SOFTWARE\CellBlock /f
@@ -268,10 +293,11 @@ dotnet build CellBlock.sln --configuration Debug
 3. Check if registry key recreated
 
 **Expected Result:**
+
 - Registry key automatically recreated
 - Event Viewer shows "Registry key deleted - possible tampering detected"
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -280,17 +306,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify service survives UI termination
 
 **Steps:**
+
 1. Launch both service and UI
 2. Kill UI via Task Manager
 3. Check service status
 4. Verify hosts file blocking still active
 
 **Expected Result:**
+
 - Service continues running
 - Blocking remains active
 - Service logs show no interruption
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -299,17 +327,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify auto-start functionality
 
 **Steps:**
+
 1. Install service and UI startup task
 2. Restart computer
 3. After login, check service status
 4. Verify UI tray icon appears
 
 **Expected Result:**
+
 - Service starts automatically
 - UI starts on login
 - WebSocket reconnects automatically
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -318,16 +348,18 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify DNS cache clears after hosts modification
 
 **Steps:**
+
 1. Access a domain (e.g., facebook.com)
 2. Trigger lock
 3. Immediately try to access same domain
 
 **Expected Result:**
+
 - DNS cache flushed automatically
 - Domain becomes inaccessible within seconds
 - No cached IP allows access
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -336,17 +368,19 @@ dotnet build CellBlock.sln --configuration Debug
 **Objective:** Verify time remaining displayed correctly
 
 **Steps:**
+
 1. With WebSocket connected, check main window
 2. Note time remaining
 3. Wait for heartbeat (60 seconds)
 4. Check if time decremented
 
 **Expected Result:**
+
 - Time displayed in readable format (e.g., "120 min")
 - Updates after each heartbeat
 - Weekly time also shown
 
-**Pass/Fail:** ___________
+**Pass/Fail:** ****\_\_\_****
 
 ---
 
@@ -448,6 +482,7 @@ Should show `SERVICE_START_NAME: LocalSystem`.
 
 **Test:** Monitor RAM usage over 1 hour
 **Expected:**
+
 - Service: <100 MB
 - UI: <150 MB
 

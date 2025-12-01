@@ -36,7 +36,9 @@ export async function loginUser(credentials: LoginCredentials): Promise<AuthToke
 /**
  * Register a new user and return the created user
  */
-export async function registerUser(credentials: LoginCredentials & { displayName?: string }): Promise<User> {
+export async function registerUser(
+  credentials: LoginCredentials & { displayName?: string }
+): Promise<User> {
   const response = await request(API_BASE_URL)
     .post('/api/v1/auth/register')
     .send({
@@ -62,20 +64,14 @@ export function getAuthHeaders(accessToken: string): Record<string, string> {
  * Verify email for a user (for testing)
  */
 export async function verifyUserEmail(userId: string, token: string): Promise<void> {
-  await request(API_BASE_URL)
-    .post('/api/v1/auth/verify-email')
-    .send({ token })
-    .expect(200);
+  await request(API_BASE_URL).post('/api/v1/auth/verify-email').send({ token }).expect(200);
 }
 
 /**
  * Request password reset
  */
 export async function requestPasswordReset(email: string): Promise<void> {
-  await request(API_BASE_URL)
-    .post('/api/v1/auth/forgot-password')
-    .send({ email })
-    .expect(200);
+  await request(API_BASE_URL).post('/api/v1/auth/forgot-password').send({ email }).expect(200);
 }
 
 /**

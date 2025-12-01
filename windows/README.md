@@ -100,6 +100,7 @@ See [BUILD.md](BUILD.md) for detailed build instructions.
 ### Install
 
 1. **Install Service** (as Administrator):
+
    ```cmd
    sc create CellBlockService binPath= "C:\Path\To\CellBlock.Service.exe" start= auto
    sc start CellBlockService
@@ -120,6 +121,7 @@ See [INSTALL.md](INSTALL.md) for detailed installation instructions.
 ### Service Configuration (Registry)
 
 Stored in `HKLM\SOFTWARE\CellBlock`:
+
 - `ApiBaseUrl`: Backend API URL (default: `http://localhost:3000`)
 - `WebSocketUrl`: WebSocket URL (default: `ws://localhost:3000`)
 - `DashboardUrl`: Frontend URL (default: `http://localhost:3001`)
@@ -132,6 +134,7 @@ Stored in `HKLM\SOFTWARE\CellBlock`:
 Location: `C:\Windows\System32\drivers\etc\hosts`
 
 CellBlock entries are marked with `# CellBlock Managed`:
+
 ```
 # CellBlock Managed - START
 127.0.0.1 facebook.com # CellBlock Managed
@@ -181,11 +184,13 @@ CellBlock.UI (WPF App)
 ## Testing
 
 Run comprehensive manual tests:
+
 ```bash
 # See TESTING.md for procedures
 ```
 
 Run unit tests (when available):
+
 ```bash
 dotnet test CellBlock.sln
 ```
@@ -201,6 +206,7 @@ See [TESTING.md](TESTING.md) for detailed testing procedures.
 5. **No Active Window**: Can't detect whitelisted apps
 
 **Future Enhancements** (Phase 2):
+
 - Windows Filtering Platform (WFP) driver for robust blocking
 - Built-in login window
 - Active window detection

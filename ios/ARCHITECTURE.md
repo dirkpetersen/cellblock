@@ -17,6 +17,7 @@ This document explains the iOS client architecture, design decisions, and implem
 ## Overview
 
 CellBlock iOS is built with:
+
 - **Swift 5.9+**
 - **SwiftUI** for declarative UI
 - **Combine** for reactive programming
@@ -74,10 +75,12 @@ CellBlock iOS is built with:
 **Purpose**: Define data structures matching backend API
 
 **Key Files**:
+
 - `User.swift`: User, Device, TimeBudget, TimeStatus models
 - `APIModels.swift`: Request/response models for API calls
 
 **Design Notes**:
+
 - All models conform to `Codable` for JSON serialization
 - Use `AnyCodable` wrapper for dynamic JSON data
 - Date handling uses ISO8601 format
@@ -85,6 +88,7 @@ CellBlock iOS is built with:
 ### 2. Services (`Sources/Services/`)
 
 #### AuthService
+
 **Responsibility**: Authentication and token management
 
 ```swift
@@ -100,11 +104,13 @@ class AuthService: ObservableObject {
 ```
 
 **Key Features**:
+
 - JWT token storage in UserDefaults
 - Automatic token refresh on 401
 - Centralized auth state management
 
 #### WebSocketService
+
 **Responsibility**: Real-time communication with backend
 
 ```swift
@@ -119,12 +125,14 @@ class WebSocketService: ObservableObject {
 ```
 
 **Implementation**:
+
 - Uses native `URLSessionWebSocketTask`
 - Socket.IO protocol parsing
 - Auto-reconnect on disconnect
 - Event-driven architecture
 
 #### HeartbeatService
+
 **Responsibility**: Send periodic heartbeat to backend
 
 ```swift
@@ -138,12 +146,14 @@ class HeartbeatService: ObservableObject {
 ```
 
 **Behavior**:
+
 - Sends heartbeat every 60 seconds
 - Pauses when app is backgrounded
 - Resumes on foreground
 - Dual transport: WebSocket + REST API
 
 #### ScreenTimeService
+
 **Responsibility**: Screen Time API integration
 
 ```swift
@@ -159,16 +169,19 @@ class ScreenTimeService: ObservableObject {
 ```
 
 **Phase 1 (MVP)**:
+
 - Block "Social Networking" category only
 - Simple on/off toggle
 - No persistent monitoring
 
 **Phase 2 (Full)**:
+
 - Block all apps except whitelist
 - DeviceActivityMonitorExtension
 - Persistent blocking even when app is killed
 
 #### TimeTrackingService
+
 **Responsibility**: Manage time status and countdown
 
 ```swift
@@ -184,12 +197,14 @@ class TimeTrackingService: ObservableObject {
 ```
 
 **Features**:
+
 - Local countdown timer (optimistic update)
 - WebSocket sync for accuracy
 - Lock/unlock event handling
 - Time formatting utilities
 
 #### WhitelistService
+
 **Responsibility**: Manage whitelist items
 
 ```swift
@@ -205,6 +220,7 @@ class WhitelistService: ObservableObject {
 ```
 
 #### DeviceService
+
 **Responsibility**: Device registration and fingerprinting
 
 ```swift
@@ -218,11 +234,13 @@ class DeviceService: ObservableObject {
 ```
 
 **Fingerprinting**:
+
 - Uses `UIDevice.current.identifierForVendor`
 - Stable across app launches
 - Resets on app uninstall
 
 #### NotificationService
+
 **Responsibility**: Push and local notifications
 
 ```swift
@@ -240,35 +258,41 @@ class NotificationService: ObservableObject {
 ### 3. Views (`Sources/Views/`)
 
 #### LoginView
+
 - Email/password authentication
 - Signup flow
 - Input validation
 - Error handling
 
 #### DashboardView
+
 - Time remaining countdown
 - Progress ring visualization
 - Status indicators
 - Quick actions
 
 #### WhitelistView
+
 - List of whitelisted apps
 - Add/remove functionality
 - Common apps presets
 - Category badges
 
 #### WardenView
+
 - Warden relationship management
 - Invite warden flow
 - Status indicators
 
 #### SettingsView
+
 - User profile
 - Device information
 - Permissions management
 - Logout
 
 #### ContentView
+
 - Root navigation container
 - Tab bar navigation
 - Lock banner overlay
@@ -346,11 +370,13 @@ Show lock banner in UI
 **Goal**: Block social media apps when time expires
 
 **Steps**:
+
 1. Request authorization: `AuthorizationCenter.requestAuthorization(for: .individual)`
 2. Configure shield: `ManagedSettingsStore().shield.applicationCategories`
 3. Block social category: `ActivityCategoryToken.category(.socialNetworking)`
 
 **Code Example**:
+
 ```swift
 func enableBlocking() async {
     let socialCategory = ActivityCategoryToken.category(.socialNetworking)
@@ -359,6 +385,7 @@ func enableBlocking() async {
 ```
 
 **Limitations**:
+
 - Only blocks predefined categories
 - Cannot create custom whitelist
 - Blocking not persistent if app is killed
@@ -368,16 +395,19 @@ func enableBlocking() async {
 **Goal**: Block all apps except whitelist
 
 **Requirements**:
+
 - Family Controls entitlement
 - DeviceActivityMonitorExtension target
 
 **Steps**:
+
 1. Create monitor extension
 2. Configure device activity schedule
 3. Shield all apps: `store.shield.applications = .all()`
 4. Exempt whitelist: `store.shield.applications = .all(except: whitelistTokens)`
 
 **Benefits**:
+
 - Blocking persists even when app is killed
 - Works across device reboots
 - More granular control
@@ -404,6 +434,7 @@ Foreground → Background → Suspended
 ### Heartbeat in Background
 
 **Challenges**:
+
 - iOS aggressively suspends apps
 - WebSocket connections drop
 - Timers stop firing
@@ -411,6 +442,7 @@ Foreground → Background → Suspended
 **Solutions**:
 
 1. **BGAppRefreshTask**: Schedule periodic background refresh
+
    ```swift
    BGTaskScheduler.shared.register(
        forTaskWithIdentifier: "com.cellblock.heartbeat",
@@ -433,6 +465,7 @@ Foreground → Background → Suspended
 ### Foreground Transition
 
 When app returns to foreground:
+
 1. Reconnect WebSocket
 2. Fetch latest time status
 3. Resume heartbeat timer
@@ -468,6 +501,7 @@ KeychainWrapper.standard.set(accessToken, forKey: "accessToken")
 ### Memory Management
 
 1. **Weak References**: Prevent retain cycles
+
    ```swift
    timer = Timer.scheduledTimer(...) { [weak self] _ in
        self?.sendHeartbeat()
@@ -600,16 +634,19 @@ extension MyService {
 ### Common Issues
 
 **WebSocket Not Connecting**:
+
 - Check backend URL
 - Verify token is valid
 - Check network permissions
 
 **Screen Time Not Working**:
+
 - Must use physical device
 - Check authorization status
 - Verify entitlements
 
 **Time Not Updating**:
+
 - Check heartbeat is running
 - Verify WebSocket connection
 - Check backend logs

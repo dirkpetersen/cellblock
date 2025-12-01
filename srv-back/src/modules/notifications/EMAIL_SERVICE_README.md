@@ -57,30 +57,35 @@ All templates are responsive, mobile-friendly, and follow CellBlock's brand guid
 The system automatically selects a provider in this priority order:
 
 ### 1. Development/Test Mode
+
 ```bash
 NODE_ENV=development  # Uses ConsoleEmailProvider
 NODE_ENV=test         # Uses ConsoleEmailProvider
 ```
 
 ### 2. SendGrid (Recommended)
+
 ```bash
 SENDGRID_API_KEY=SG.xxxxxxxxx
 SENDGRID_FROM_EMAIL=noreply@cellblock.app
 ```
 
 **Pros:**
+
 - Easy setup with API key
 - Reliable delivery
 - Good analytics
 - Generous free tier
 
 **Setup:**
+
 1. Sign up at https://sendgrid.com
 2. Create API key at https://app.sendgrid.com/settings/api_keys
 3. Verify sender email address
 4. Add credentials to `.env`
 
 ### 3. AWS SES
+
 ```bash
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your-access-key
@@ -89,11 +94,13 @@ AWS_SES_FROM_EMAIL=noreply@cellblock.app
 ```
 
 **Pros:**
+
 - Very low cost
 - High deliverability
 - Integrated with AWS ecosystem
 
 **Setup:**
+
 1. Enable SES in AWS console
 2. Verify sender email/domain
 3. Request production access (remove sandbox mode)
@@ -101,6 +108,7 @@ AWS_SES_FROM_EMAIL=noreply@cellblock.app
 5. Add credentials to `.env`
 
 ### 4. Console (Fallback)
+
 - Used when no provider is configured
 - Logs emails to console instead of sending
 - Perfect for local development
@@ -189,14 +197,17 @@ FRONTEND_URL=https://app.cellblock.com
 The system automatically switches providers based on available credentials:
 
 **To use SendGrid:**
+
 - Set `SENDGRID_API_KEY`
 - Remove or unset AWS credentials
 
 **To use AWS SES:**
+
 - Set AWS credentials
 - Remove or unset `SENDGRID_API_KEY`
 
 **To use Console (development):**
+
 - Set `NODE_ENV=development`
 - Or remove all email provider credentials
 
@@ -301,6 +312,7 @@ ORDER BY count DESC;
 ### Emails not sending
 
 1. Check provider initialization logs:
+
    ```
    [NotificationsService] Email provider: SendGrid (verified)
    ```
@@ -320,11 +332,13 @@ ORDER BY count DESC;
 ### Provider verification fails
 
 **SendGrid:**
+
 - Verify API key is correct
 - Check API key has "Mail Send" permission
 - Verify sender email address
 
 **AWS SES:**
+
 - Ensure SES is enabled in region
 - Verify IAM credentials have SES permissions
 - Check email/domain is verified

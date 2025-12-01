@@ -1,10 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  PushProvider,
-  PushNotificationPayload,
-  PushSendResult,
-} from './push-provider.interface';
+import { PushProvider, PushNotificationPayload, PushSendResult } from './push-provider.interface';
 
 /**
  * Console Push Provider
@@ -23,8 +19,7 @@ export class ConsoleProvider extends PushProvider {
 
     // Enable console provider in development mode or if explicitly enabled
     const nodeEnv = this.configService.get<string>('NODE_ENV');
-    const explicitlyEnabled =
-      this.configService.get<string>('PUSH_CONSOLE_ENABLED') === 'true';
+    const explicitlyEnabled = this.configService.get<string>('PUSH_CONSOLE_ENABLED') === 'true';
 
     this.enabled = nodeEnv === 'development' || explicitlyEnabled;
 
@@ -45,10 +40,7 @@ export class ConsoleProvider extends PushProvider {
   /**
    * Send push notification to console
    */
-  async sendToToken(
-    token: string,
-    payload: PushNotificationPayload
-  ): Promise<PushSendResult> {
+  async sendToToken(token: string, payload: PushNotificationPayload): Promise<PushSendResult> {
     if (!this.enabled) {
       return {
         success: false,
@@ -103,13 +95,9 @@ export class ConsoleProvider extends PushProvider {
     tokens: string[],
     payload: PushNotificationPayload
   ): Promise<PushSendResult[]> {
-    this.logger.log(
-      `Sending push notification to ${tokens.length} device(s) (console)`
-    );
+    this.logger.log(`Sending push notification to ${tokens.length} device(s) (console)`);
 
-    const results = await Promise.all(
-      tokens.map((token) => this.sendToToken(token, payload))
-    );
+    const results = await Promise.all(tokens.map((token) => this.sendToToken(token, payload)));
 
     return results;
   }

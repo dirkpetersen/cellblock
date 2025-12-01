@@ -418,7 +418,7 @@ export class TimeService {
   /**
    * Get day of week (0=Sunday, 6=Saturday) in user's timezone
    */
-  private getDayOfWeek(timezone: string): number {
+  private getDayOfWeek(_timezone: string): number {
     const now = new Date();
     // TODO: Use proper timezone library (date-fns-tz or luxon)
     // For now, use UTC
@@ -428,7 +428,7 @@ export class TimeService {
   /**
    * Get start of day in user's timezone
    */
-  private getStartOfDay(timezone: string): Date {
+  private getStartOfDay(_timezone: string): Date {
     const now = new Date();
     // TODO: Use proper timezone library
     // For now, use UTC midnight
@@ -438,7 +438,7 @@ export class TimeService {
   /**
    * Get start of week (Sunday 00:00) in user's timezone
    */
-  private getStartOfWeek(timezone: string): Date {
+  private getStartOfWeek(_timezone: string): Date {
     const now = new Date();
     const dayOfWeek = now.getUTCDay();
     const diff = dayOfWeek; // Days since Sunday

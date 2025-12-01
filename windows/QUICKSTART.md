@@ -5,17 +5,21 @@ Get CellBlock running on your Windows 11 machine in 10 minutes.
 ## Prerequisites
 
 1. **Backend Running** (in WSL2)
+
    ```bash
    cd ~/gh/cellblock/srv-back
    npm run dev
    ```
+
    Should be accessible at `http://localhost:3000`
 
 2. **Frontend Running** (in WSL2)
+
    ```bash
    cd ~/gh/cellblock/srv-front
    npm run dev
    ```
+
    Should be accessible at `http://localhost:3001`
 
 3. **.NET 8 SDK** installed on Windows
@@ -50,6 +54,7 @@ dotnet build --configuration Debug
 ```
 
 **Expected Output:**
+
 ```
 Build succeeded.
     0 Warning(s)
@@ -57,6 +62,7 @@ Build succeeded.
 ```
 
 **Common Issues:**
+
 - "dotnet not found" → Install .NET 8 SDK
 - "Access denied" → Don't run as admin for build
 
@@ -70,6 +76,7 @@ cd C:\Users\$env:USERNAME\cellblock-windows\CellBlock.Service\bin\Debug\net8.0-w
 ```
 
 **Expected Output:**
+
 ```
 info: CellBlock.Service[0]
       CellBlock Service starting at: 11/30/2024 10:00:00 AM
@@ -84,6 +91,7 @@ info: CellBlock.Service.Services.NamedPipeServer[0]
 **To Stop:** Press `Ctrl+C`
 
 **If It Fails:**
+
 - Check .NET 8 Runtime installed: `dotnet --list-runtimes`
 - Check Windows version: `winver` (must be Windows 10 1809+ or Windows 11)
 - Check Event Viewer: `eventvwr.msc` → Windows Logs → Application
@@ -98,11 +106,13 @@ cd C:\Users\$env:USERNAME\cellblock-windows\CellBlock.UI\bin\Debug\net8.0-window
 ```
 
 **Expected Result:**
+
 - System tray icon appears (bottom-right of screen)
 - May need to click up arrow to see hidden icons
 - Left-click icon opens status window
 
 **If Tray Icon Doesn't Appear:**
+
 - Check Windows Settings → Personalization → Taskbar
 - Ensure "Select which icons appear" is enabled
 - Icon will be default Windows icon (square) until you add `icon.ico`
@@ -118,6 +128,7 @@ With both service and UI running:
    - **Gray**: "Service not responding" (if service isn't running)
 
 **To Test IPC:**
+
 ```powershell
 # In another PowerShell, test pipe connection
 [System.IO.Pipes.NamedPipeClientStream]$pipe = [System.IO.Pipes.NamedPipeClientStream]::new(".", "CellBlockPipe", [System.IO.Pipes.PipeDirection]::InOut)
@@ -147,11 +158,13 @@ sc.exe query CellBlockService
 ```
 
 **Expected Output:**
+
 ```
 STATE              : 4  RUNNING
 ```
 
 **To Stop/Remove:**
+
 ```powershell
 sc.exe stop CellBlockService
 sc.exe delete CellBlockService
@@ -162,11 +175,13 @@ sc.exe delete CellBlockService
 With service running as Windows Service (or console with admin):
 
 1. **Check Current Hosts File:**
+
    ```powershell
    notepad C:\Windows\System32\drivers\etc\hosts
    ```
 
 2. **Manually Trigger Lock** (via backend API):
+
    ```bash
    # In WSL, use curl or Postman
    curl -X POST http://localhost:3000/api/v1/devices/lock \
@@ -189,10 +204,12 @@ With service running as Windows Service (or console with admin):
 To start UI on login:
 
 **Option 1: Startup Folder**
+
 1. Press `Win+R`, type `shell:startup`, press Enter
 2. Create shortcut to `CellBlock.UI.exe` in this folder
 
 **Option 2: Task Scheduler**
+
 1. Open Task Scheduler (`taskschd.msc`)
 2. Create new task
 3. Trigger: At log on
@@ -217,10 +234,12 @@ To start UI on login:
 ### Build Errors
 
 **"The command 'dotnet' is not recognized"**
+
 - Install .NET 8 SDK from Microsoft
 - Restart PowerShell after install
 
 **"Package restore failed"**
+
 ```powershell
 dotnet nuget locals all --clear
 dotnet restore --force
@@ -229,21 +248,25 @@ dotnet restore --force
 ### Runtime Errors
 
 **"Unable to load DLL 'hostfxr.dll'"**
+
 - Install .NET 8 Runtime (Desktop)
 - Download from same link as SDK
 
 **"Access to the path is denied"**
+
 - For service: Run PowerShell as Administrator
 - For UI: Should run as regular user
 
 ### Service Issues
 
 **"Service failed to start"**
+
 1. Check Event Viewer: `eventvwr.msc`
 2. Look in: Windows Logs → Application
 3. Filter by source: "CellBlock Service"
 
 **"The service did not respond in a timely fashion"**
+
 - Service may be crashing on startup
 - Run in console mode to see errors
 - Check dependencies installed
@@ -251,6 +274,7 @@ dotnet restore --force
 ### UI Issues
 
 **"Tray icon not appearing"**
+
 - Check Task Manager → Details for `CellBlock.UI.exe`
 - If running but no icon, restart Explorer:
   ```powershell
@@ -259,6 +283,7 @@ dotnet restore --force
   ```
 
 **"Service not responding"**
+
 - Verify service is running: `sc.exe query CellBlockService`
 - Check Named Pipe permissions
 - Restart both service and UI
@@ -314,6 +339,7 @@ dotnet --list-runtimes
 ## Success!
 
 If you've completed the checklist, you now have:
+
 - ✅ CellBlock service running
 - ✅ UI application in system tray
 - ✅ Communication between service and UI

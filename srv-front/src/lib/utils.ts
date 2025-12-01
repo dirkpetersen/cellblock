@@ -24,16 +24,12 @@ export function formatTime(seconds: number): string {
 
   if (days > 0) {
     const remainingHours = hours % 24;
-    return remainingHours > 0
-      ? `${days}d ${remainingHours}h left`
-      : `${days}d left`;
+    return remainingHours > 0 ? `${days}d ${remainingHours}h left` : `${days}d left`;
   }
 
   if (hours > 0) {
     const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0
-      ? `${hours}h ${remainingMinutes}m left`
-      : `${hours}h left`;
+    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m left` : `${hours}h left`;
   }
 
   return `${minutes} min left`;

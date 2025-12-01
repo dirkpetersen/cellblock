@@ -7,6 +7,7 @@ Complete push notification system implemented for CellBlock with support for iOS
 ## Files Created
 
 ### Push Providers
+
 1. **push-providers/push-provider.interface.ts**
    - Base interface and abstract class for all push providers
    - Defines `PushNotificationPayload`, `PushSendResult`, `PushProvider`
@@ -36,6 +37,7 @@ Complete push notification system implemented for CellBlock with support for iOS
    - Barrel export for all push providers
 
 ### Documentation
+
 6. **PUSH_NOTIFICATIONS.md**
    - Complete documentation for push notification system
    - Configuration guide
@@ -57,6 +59,7 @@ Complete push notification system implemented for CellBlock with support for iOS
 ## Files Modified
 
 ### Services
+
 1. **notifications.service.ts**
    - Added push provider integration
    - Implemented `onModuleInit()` to initialize providers
@@ -78,12 +81,14 @@ Complete push notification system implemented for CellBlock with support for iOS
    - Added push notifications to `triggerLockdown()`
 
 ### Controllers
+
 4. **devices.controller.ts**
    - Added `POST /devices/:id/push-token` - register token
    - Added `DELETE /devices/:id/push-token/:platform` - remove token
    - Added `GET /devices/:id/push-tokens` - get tokens
 
 ### Gateways
+
 5. **websocket.gateway.ts**
    - Added NotificationsService injection
    - Added `sendPushIfOffline()` helper method
@@ -91,6 +96,7 @@ Complete push notification system implemented for CellBlock with support for iOS
    - Sends push only if user is offline (not connected via WebSocket)
 
 ### Modules
+
 6. **notifications.module.ts**
    - Added ApnsProvider, WnsProvider, ConsoleProvider
    - Added ConfigModule and PrismaModule imports
@@ -103,6 +109,7 @@ Complete push notification system implemented for CellBlock with support for iOS
    - Added NotificationsModule import (with forwardRef)
 
 ### Configuration
+
 9. **.env.example**
    - Added `PUSH_CONSOLE_ENABLED` flag
    - Added `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_TOPIC`
@@ -183,6 +190,7 @@ GET    /devices/:id/push-tokens
 ### Step 3: Enable Console Provider (Development)
 
 Add to `.env`:
+
 ```env
 PUSH_CONSOLE_ENABLED=true
 NODE_ENV=development
@@ -195,6 +203,7 @@ npm run start:dev
 ```
 
 Check logs for:
+
 ```
 [NotificationsService] Initializing push notification providers...
 [NotificationsService] ios push provider registered
@@ -239,6 +248,7 @@ WHERE is_active = true;
 ### 3. Test with Real Devices
 
 #### iOS (APNs)
+
 1. Build app with provisioning profile
 2. Get device token from app
 3. Register token via API
@@ -246,6 +256,7 @@ WHERE is_active = true;
 5. Check device
 
 #### Windows (WNS)
+
 1. Build app with Store association
 2. Get channel URI from app
 3. Register URI via API
@@ -255,6 +266,7 @@ WHERE is_active = true;
 ### 4. Manual Testing Script
 
 See `push-providers/push-test.example.ts` for:
+
 - Unit test examples
 - Manual testing functions
 - Sample payloads
@@ -262,15 +274,18 @@ See `push-providers/push-test.example.ts` for:
 ## Integration Points
 
 ### 1. WebSocketGateway
+
 - Sends push notifications for time warnings (15 min, 5 min)
 - Only sends if user is offline (not connected via WebSocket)
 
 ### 2. WardenService
+
 - Sends push for request approvals/denials
 - Sends push for parole grants
 - Sends push for lockdowns
 
 ### 3. NotificationsService
+
 - Central service for all push notifications
 - Handles break glass alerts
 - Manages provider initialization
@@ -279,6 +294,7 @@ See `push-providers/push-test.example.ts` for:
 ## Database Schema
 
 ### push_tokens Table
+
 - `id` - UUID
 - `user_id` - UUID (FK to users)
 - `device_id` - UUID (FK to devices)
@@ -290,7 +306,9 @@ See `push-providers/push-test.example.ts` for:
 - Unique constraint: `(device_id, platform)`
 
 ### notifications Table
+
 Used to log all push notifications:
+
 - `type` = 'push'
 - `channel` = 'ios', 'windows', 'console'
 - `recipient` = push token
@@ -301,18 +319,21 @@ Used to log all push notifications:
 ## Maintenance
 
 ### Daily Tasks
+
 ```typescript
 // Clean up expired push tokens (90+ days old)
 await devicesService.cleanupExpiredPushTokens();
 ```
 
 ### Monitoring
+
 - Check provider initialization on server start
 - Monitor failed notification rate
 - Track token activation/deactivation
 - Alert on provider authentication failures
 
 ### Security
+
 - Never log full push tokens (only first 8 chars)
 - Secure APNs .p8 key file (restrict permissions)
 - Rotate WNS client secrets regularly
@@ -352,16 +373,19 @@ await devicesService.cleanupExpiredPushTokens();
 ## Troubleshooting
 
 ### APNs Issues
+
 - **Key file not found**: Check path and permissions
 - **Authentication failed**: Verify key ID, team ID, topic
 - **Wrong environment**: Use sandbox for dev, production for release
 
 ### WNS Issues
+
 - **Authentication failed**: Check Package SID and secret
 - **Channel expired**: Tokens expire every 30 days
 - **No toast shown**: Check app manifest and capabilities
 
 ### General Issues
+
 - **No providers enabled**: Check configuration in .env
 - **Notifications not sending**: Check database logs and server logs
 - **Tokens not deactivating**: Check provider error handling
@@ -375,6 +399,7 @@ await devicesService.cleanupExpiredPushTokens();
 ## Support
 
 For issues or questions:
+
 1. Check logs: `docker logs cellblock-backend`
 2. Check database: `SELECT * FROM notifications WHERE type = 'push'`
 3. Enable debug logging: Set LOG_LEVEL=debug
@@ -383,6 +408,7 @@ For issues or questions:
 ## Summary
 
 The push notification system is now fully implemented with:
+
 - 3 providers (APNs, WNS, Console)
 - 5 notification types
 - Complete token management

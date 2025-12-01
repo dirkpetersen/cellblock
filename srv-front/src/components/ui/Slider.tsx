@@ -102,14 +102,14 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
                     colors.bg === 'bg-success-500'
                       ? '#10B981'
                       : colors.bg === 'bg-accent-500'
-                      ? '#F59E0B'
-                      : '#F43F5E'
+                        ? '#F59E0B'
+                        : '#F43F5E'
                   } 0%, ${
                     colors.bg === 'bg-success-500'
                       ? '#10B981'
                       : colors.bg === 'bg-accent-500'
-                      ? '#F59E0B'
-                      : '#F43F5E'
+                        ? '#F59E0B'
+                        : '#F43F5E'
                   } ${percentage}%, rgb(228 228 231) ${percentage}%, rgb(228 228 231) 100%)`
                 : undefined,
             }}

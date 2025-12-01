@@ -22,7 +22,12 @@ export default function PrivacyPolicyPage() {
             <div>
               <h1 className="text-3xl md:text-4xl font-bold">Privacy Policy</h1>
               <p className="text-zinc-600 dark:text-zinc-400 text-sm">
-                Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                Last updated:{' '}
+                {new Date().toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
               </p>
             </div>
           </div>
@@ -77,7 +82,9 @@ export default function PrivacyPolicyPage() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4">3. How We Use Your Information</h2>
-            <p className="text-zinc-600 dark:text-zinc-400 mb-4">We use collected information to:</p>
+            <p className="text-zinc-600 dark:text-zinc-400 mb-4">
+              We use collected information to:
+            </p>
             <ul className="list-disc pl-6 text-zinc-600 dark:text-zinc-400 space-y-2">
               <li>Provide and maintain the CellBlock service</li>
               <li>Enforce time budgets and whitelist restrictions</li>
@@ -180,8 +187,8 @@ export default function PrivacyPolicyPage() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4">9. International Users</h2>
             <p className="text-zinc-600 dark:text-zinc-400 mb-4">
-              Your information may be transferred to and processed in countries other than your
-              own. We ensure appropriate safeguards are in place for international data transfers.
+              Your information may be transferred to and processed in countries other than your own.
+              We ensure appropriate safeguards are in place for international data transfers.
             </p>
           </section>
 

@@ -43,7 +43,11 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "rootDir": ".",
-    "moduleFileExtensions": ["js", "json", "ts"],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1",
       "^@fixtures/(.*)$": "<rootDir>/fixtures/$1",
@@ -64,7 +68,11 @@
       "!../srv-back/src/**/*.dto.ts"
     ],
     "coverageDirectory": "./coverage",
-    "coverageReporters": ["text", "lcov", "html"],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 70,
@@ -73,7 +81,9 @@
         "statements": 80
       }
     },
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.ts"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.ts"
+    ],
     "testTimeout": 30000
   }
 }

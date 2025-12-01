@@ -1,10 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  PushProvider,
-  PushNotificationPayload,
-  PushSendResult,
-} from './push-provider.interface';
+import { PushProvider, PushNotificationPayload, PushSendResult } from './push-provider.interface';
 import * as jwt from 'jsonwebtoken';
 import * as https from 'https';
 import * as fs from 'fs';
@@ -43,15 +39,10 @@ export class ApnsProvider extends PushProvider {
       this.keyId = keyId;
       this.teamId = teamId;
       this.topic = topic;
-      this.production =
-        this.configService.get<string>('APNS_PRODUCTION') === 'true';
-      this.apnsHost = this.production
-        ? 'api.push.apple.com'
-        : 'api.sandbox.push.apple.com';
+      this.production = this.configService.get<string>('APNS_PRODUCTION') === 'true';
+      this.apnsHost = this.production ? 'api.push.apple.com' : 'api.sandbox.push.apple.com';
 
-      this.logger.log(
-        `APNs provider enabled (${this.production ? 'production' : 'sandbox'})`
-      );
+      this.logger.log(`APNs provider enabled (${this.production ? 'production' : 'sandbox'})`);
     } else {
       this.logger.warn(
         'APNs provider disabled - missing configuration (APNS_KEY_ID, APNS_TEAM_ID, or APNS_TOPIC)'
@@ -89,9 +80,7 @@ export class ApnsProvider extends PushProvider {
       }
 
       if (!keyLoaded) {
-        this.logger.error(
-          `APNs key file not found. Tried: ${keyPaths.join(', ')}`
-        );
+        this.logger.error(`APNs key file not found. Tried: ${keyPaths.join(', ')}`);
         throw new Error('APNs key file not found');
       }
 
@@ -99,9 +88,7 @@ export class ApnsProvider extends PushProvider {
       this.generateToken();
       this.logger.log('APNs provider initialized successfully');
     } catch (error) {
-      this.logger.error(
-        `Failed to initialize APNs provider: ${(error as Error).message}`
-      );
+      this.logger.error(`Failed to initialize APNs provider: ${(error as Error).message}`);
       throw error;
     }
   }
@@ -109,10 +96,7 @@ export class ApnsProvider extends PushProvider {
   /**
    * Send push notification to a single device token
    */
-  async sendToToken(
-    token: string,
-    payload: PushNotificationPayload
-  ): Promise<PushSendResult> {
+  async sendToToken(token: string, payload: PushNotificationPayload): Promise<PushSendResult> {
     if (!this.enabled || !this.authKey) {
       return {
         success: false,
@@ -141,9 +125,7 @@ export class ApnsProvider extends PushProvider {
           platform: this.platform,
         };
       } else {
-        this.logger.warn(
-          `Failed to send push to iOS device: ${response.error}`
-        );
+        this.logger.warn(`Failed to send push to iOS device: ${response.error}`);
         return {
           success: false,
           token,
@@ -153,9 +135,7 @@ export class ApnsProvider extends PushProvider {
         };
       }
     } catch (error) {
-      this.logger.error(
-        `Error sending push to iOS device: ${(error as Error).message}`
-      );
+      this.logger.error(`Error sending push to iOS device: ${(error as Error).message}`);
       return {
         success: false,
         token,
@@ -280,7 +260,7 @@ export class ApnsProvider extends PushProvider {
         path: `/3/device/${deviceToken}`,
         method: 'POST',
         headers: {
-          'authorization': `bearer ${authToken}`,
+          authorization: `bearer ${authToken}`,
           'apns-topic': this.topic,
           'apns-push-type': 'alert',
           'apns-priority': payload.priority === 'high' ? '10' : '5',

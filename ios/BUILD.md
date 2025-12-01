@@ -5,12 +5,14 @@ This document provides instructions for building and running the CellBlock iOS c
 ## Prerequisites
 
 ### Required
+
 - **macOS** 13.0 or later (Ventura+)
 - **Xcode** 15.0 or later
 - **iOS 16.0+** device or simulator
 - **Apple Developer Account** (for physical device testing)
 
 ### Optional
+
 - CocoaPods or Swift Package Manager (SPM)
 - TestFlight account for beta testing
 
@@ -41,12 +43,14 @@ ios/
 ### Option 1: Using Xcode (Recommended)
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/yourusername/cellblock.git
    cd cellblock/ios
    ```
 
 2. **Open in Xcode:**
+
    ```bash
    open CellBlock.xcodeproj
    # OR if using SPM:
@@ -156,11 +160,13 @@ The app requires the following permissions (configured in `Info.plist`):
 ### Simulator Testing
 
 Most features work in the simulator except:
+
 - Push notifications (requires physical device)
 - Screen Time API (requires physical device with iOS 16+)
 - Device-specific identifiers
 
 To test in simulator:
+
 ```bash
 # List available simulators
 xcrun simctl list devices
@@ -199,11 +205,13 @@ xcodebuild -scheme CellBlock \
 ## Screen Time API Implementation
 
 ### Phase 1 (Current - MVP)
+
 - Uses `ManagedSettings` framework
 - Blocks "Social Networking" category only
 - No Family Controls entitlement required for testing
 
 ### Phase 2 (Full Enforcement)
+
 - Requires Family Controls entitlement
 - Block all apps except whitelist
 - DeviceActivityMonitorExtension for persistence
@@ -220,6 +228,7 @@ xcodebuild -scheme CellBlock \
 ### Testing Without Entitlement
 
 During development, you can test basic functionality:
+
 - Authorization request flow
 - UI components
 - Shield configuration (limited categories)
@@ -231,27 +240,32 @@ Full blocking requires the entitlement on a physical device.
 ### Common Issues
 
 **1. Code Signing Failed**
+
 - Solution: Check that your Apple ID is added in Xcode Preferences
 - Solution: Select correct development team
 - Solution: Update bundle identifier to unique value
 
 **2. Screen Time Authorization Fails**
+
 - Cause: Missing entitlement or not on physical device
 - Solution: Test on real device with iOS 16+
 - Solution: Ensure entitlements file is included
 
 **3. WebSocket Connection Fails**
+
 - Cause: Backend not running or wrong URL
 - Solution: Check backend is running on specified port
 - Solution: Update `baseURL` in services
 - Solution: Check network permissions in Info.plist
 
 **4. Push Notifications Don't Work**
+
 - Cause: Must use physical device
 - Solution: Test on real iPhone/iPad
 - Solution: Check APNs certificate in backend
 
 **5. Build Fails - Missing Dependencies**
+
 - Solution: Run `xcodebuild -resolvePackageDependencies`
 - Solution: Clean build folder (Cmd + Shift + K)
 - Solution: Delete derived data
@@ -295,6 +309,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions...)
 ### Network Debugging
 
 Use **Charles Proxy** or **Proxyman** to inspect network traffic:
+
 1. Install proxy tool
 2. Configure iOS device to use proxy
 3. Install SSL certificate on device
@@ -313,6 +328,7 @@ Use **Charles Proxy** or **Proxyman** to inspect network traffic:
    - Build Settings > Swift Compilation Mode: `Whole Module`
 
 3. **Archive:**
+
    ```bash
    xcodebuild -scheme CellBlock \
      -configuration Release \
@@ -387,6 +403,7 @@ jobs:
 ## Support
 
 For issues or questions:
+
 - GitHub Issues: https://github.com/yourusername/cellblock/issues
 - Documentation: See ARCHITECTURE.md
 - Backend Setup: See ../srv-back/README.md
