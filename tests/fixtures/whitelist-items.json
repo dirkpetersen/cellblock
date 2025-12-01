@@ -1,0 +1,141 @@
+{
+  "essentials": [
+    {
+      "name": "Google Maps",
+      "iosBundleId": "com.google.Maps",
+      "windowsDomain": "maps.google.com",
+      "androidPackageName": "com.google.android.apps.maps",
+      "category": "essential"
+    },
+    {
+      "name": "Apple Maps",
+      "iosBundleId": "com.apple.Maps",
+      "windowsDomain": null,
+      "androidPackageName": null,
+      "category": "essential"
+    },
+    {
+      "name": "Chase Banking",
+      "iosBundleId": "com.chase.mobile",
+      "windowsDomain": "chase.com",
+      "androidPackageName": "com.chase.mobile",
+      "category": "essential"
+    },
+    {
+      "name": "Bank of America",
+      "iosBundleId": "com.bankofamerica.mobile",
+      "windowsDomain": "bankofamerica.com",
+      "androidPackageName": "com.infonow.bofa",
+      "category": "essential"
+    },
+    {
+      "name": "Calculator",
+      "iosBundleId": "com.apple.calculator",
+      "windowsDomain": "calculator.windows.com",
+      "androidPackageName": "com.android.calculator2",
+      "category": "essential"
+    },
+    {
+      "name": "Calendar",
+      "iosBundleId": "com.apple.mobilecal",
+      "windowsDomain": "calendar.google.com",
+      "androidPackageName": "com.google.android.calendar",
+      "category": "essential"
+    },
+    {
+      "name": "Phone",
+      "iosBundleId": "com.apple.mobilephone",
+      "windowsDomain": null,
+      "androidPackageName": "com.google.android.dialer",
+      "category": "essential"
+    },
+    {
+      "name": "Messages",
+      "iosBundleId": "com.apple.MobileSMS",
+      "windowsDomain": "messages.google.com",
+      "androidPackageName": "com.google.android.apps.messaging",
+      "category": "essential"
+    }
+  ],
+  "healthy": [
+    {
+      "name": "Spotify",
+      "iosBundleId": "com.spotify.client",
+      "windowsDomain": "spotify.com",
+      "androidPackageName": "com.spotify.music",
+      "category": "healthy"
+    },
+    {
+      "name": "Apple Music",
+      "iosBundleId": "com.apple.Music",
+      "windowsDomain": "music.apple.com",
+      "androidPackageName": null,
+      "category": "healthy"
+    },
+    {
+      "name": "Audible",
+      "iosBundleId": "com.audible.iphone",
+      "windowsDomain": "audible.com",
+      "androidPackageName": "com.audible.application",
+      "category": "healthy"
+    },
+    {
+      "name": "Apple Podcasts",
+      "iosBundleId": "com.apple.podcasts",
+      "windowsDomain": "podcasts.apple.com",
+      "androidPackageName": null,
+      "category": "healthy"
+    },
+    {
+      "name": "Overcast",
+      "iosBundleId": "com.overcast.overcast",
+      "windowsDomain": "overcast.fm",
+      "androidPackageName": null,
+      "category": "healthy"
+    },
+    {
+      "name": "Kindle",
+      "iosBundleId": "com.amazon.Lassen",
+      "windowsDomain": "read.amazon.com",
+      "androidPackageName": "com.amazon.kindle",
+      "category": "healthy"
+    }
+  ],
+  "work": [
+    {
+      "name": "Slack",
+      "iosBundleId": "com.tinyspeck.chatlyio",
+      "windowsDomain": "slack.com",
+      "androidPackageName": "com.Slack",
+      "category": "custom"
+    },
+    {
+      "name": "Microsoft Teams",
+      "iosBundleId": "com.microsoft.teams",
+      "windowsDomain": "teams.microsoft.com",
+      "androidPackageName": "com.microsoft.teams",
+      "category": "custom"
+    },
+    {
+      "name": "Zoom",
+      "iosBundleId": "us.zoom.videomeetings",
+      "windowsDomain": "zoom.us",
+      "androidPackageName": "us.zoom.videomeetings",
+      "category": "custom"
+    },
+    {
+      "name": "Gmail",
+      "iosBundleId": "com.google.Gmail",
+      "windowsDomain": "mail.google.com",
+      "androidPackageName": "com.google.android.gm",
+      "category": "custom"
+    },
+    {
+      "name": "Outlook",
+      "iosBundleId": "com.microsoft.Office.Outlook",
+      "windowsDomain": "outlook.office.com",
+      "androidPackageName": "com.microsoft.office.outlook",
+      "category": "custom"
+    }
+  ]
+}

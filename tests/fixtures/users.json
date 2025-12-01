@@ -1,0 +1,41 @@
+{
+  "inmates": [
+    {
+      "email": "inmate1@test.com",
+      "password": "TestPassword123!",
+      "displayName": "Test Inmate 1",
+      "timezone": "America/Los_Angeles",
+      "isEmailVerified": true
+    },
+    {
+      "email": "inmate2@test.com",
+      "password": "TestPassword123!",
+      "displayName": "Test Inmate 2",
+      "timezone": "America/New_York",
+      "isEmailVerified": true
+    },
+    {
+      "email": "unverified@test.com",
+      "password": "TestPassword123!",
+      "displayName": "Unverified User",
+      "timezone": "UTC",
+      "isEmailVerified": false
+    }
+  ],
+  "wardens": [
+    {
+      "email": "warden1@test.com",
+      "password": "TestPassword123!",
+      "displayName": "Test Warden 1",
+      "timezone": "America/Los_Angeles",
+      "isEmailVerified": true
+    },
+    {
+      "email": "warden2@test.com",
+      "password": "TestPassword123!",
+      "displayName": "Test Warden 2",
+      "timezone": "Europe/London",
+      "isEmailVerified": true
+    }
+  ]
+}

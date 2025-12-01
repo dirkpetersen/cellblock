@@ -8,10 +8,6 @@
     --font-mono: 'JetBrains Mono', monospace;
   }
 
-  * {
-    @apply border-border;
-  }
-
   body {
     @apply bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100;
   }

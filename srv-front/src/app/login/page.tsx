@@ -19,7 +19,11 @@ export default function LoginPage() {
     setError('');
 
     try {
-      await login({ email, password });
+      const result = await login({ email, password });
+      // Store access token for WebSocket connection
+      if (result.accessToken) {
+        localStorage.setItem('cellblock_access_token', result.accessToken);
+      }
       router.push('/dashboard');
     } catch (err) {
       setError((err as Error).message || 'Login failed. Please try again.');

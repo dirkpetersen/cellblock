@@ -1,0 +1,172 @@
+/* CellBlock Documentation Custom Styles */
+
+:root {
+  --cb-primary: #0D9488;
+  --cb-secondary: #475569;
+  --cb-accent: #F59E0B;
+  --cb-success: #10B981;
+  --cb-danger: #F43F5E;
+}
+
+/* Better code block styling */
+.highlight {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Custom admonition colors */
+.md-typeset .admonition.warning {
+  border-color: var(--cb-accent);
+}
+
+.md-typeset .admonition.danger {
+  border-color: var(--cb-danger);
+}
+
+.md-typeset .admonition.success {
+  border-color: var(--cb-success);
+}
+
+/* Grid cards styling */
+.grid.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.grid.cards > div {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.grid.cards > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Better table styling */
+.md-typeset table:not([class]) {
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.9em;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--cb-primary);
+  color: white;
+  font-weight: 600;
+}
+
+/* API endpoint styling */
+.md-typeset h3 code {
+  background-color: var(--cb-primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+/* Status badge styling */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-success {
+  background-color: var(--cb-success);
+  color: white;
+}
+
+.badge-warning {
+  background-color: var(--cb-accent);
+  color: white;
+}
+
+.badge-danger {
+  background-color: var(--cb-danger);
+  color: white;
+}
+
+/* Better navigation spacing */
+.md-nav__item--nested > .md-nav__link {
+  font-weight: 600;
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+  background-color: transparent !important;
+}
+
+/* Improve readability */
+.md-typeset {
+  line-height: 1.7;
+}
+
+.md-typeset p {
+  margin: 1em 0;
+}
+
+/* Custom list styling */
+.md-typeset ul li {
+  margin-bottom: 0.5em;
+}
+
+/* Code inline styling */
+.md-typeset code {
+  background-color: var(--md-code-bg-color);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
+
+/* Better header spacing */
+.md-typeset h2 {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset h2:first-of-type {
+  border-top: none;
+  margin-top: 0;
+}
+
+/* Tab styling */
+.tabbed-set {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Search highlight */
+.md-search-result__article--document {
+  border-left: 3px solid var(--cb-primary);
+}
+
+/* Mobile improvements */
+@media screen and (max-width: 76.1875em) {
+  .md-typeset table:not([class]) {
+    font-size: 0.8em;
+  }
+
+  .grid.cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Print styles */
+@media print {
+  .md-header,
+  .md-sidebar,
+  .md-footer {
+    display: none;
+  }
+
+  .md-content {
+    margin: 0;
+  }
+}
