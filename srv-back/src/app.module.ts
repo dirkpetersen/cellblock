@@ -7,6 +7,8 @@ import { UsersModule } from './modules/users/users.module';
 import { DevicesModule } from './modules/devices/devices.module';
 import { TimeModule } from './modules/time/time.module';
 import { WebsocketModule } from './modules/websocket/websocket.module';
+import { WhitelistModule } from './modules/whitelist/whitelist.module';
+import { WardenModule } from './modules/warden/warden.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -30,10 +32,10 @@ import { AppService } from './app.service';
     DevicesModule,
     TimeModule,
     WebsocketModule,
+    WhitelistModule,
+    WardenModule,
 
     // TODO: Add remaining modules
-    // WhitelistModule,
-    // WardenModule,
     // NotificationsModule,
   ],
   controllers: [AppController],
