@@ -1,10 +1,11 @@
 import { Controller, Get, Put, Body, Query, UseGuards, Req } from '@nestjs/common';
 import { TimeService } from './time.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RateLimitGuard, RateLimit } from '../../common/guards/rate-limit.guard';
 import { TimeBudgetConfigSchema, GetUsageLogsSchema } from '@cellblock/contracts';
 
 @Controller('time')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RateLimitGuard)
 export class TimeController {
   constructor(private timeService: TimeService) {}
 
@@ -18,8 +19,10 @@ export class TimeController {
 
   /**
    * Update time budget configuration
+   * Rate limited: 5 requests per hour
    */
   @Put('budget')
+  @RateLimit({ maxRequests: 5, windowMs: 60 * 60 * 1000 })
   async updateBudget(@Req() req: any, @Body() body: any) {
     const data = TimeBudgetConfigSchema.parse(body);
     return this.timeService.updateTimeBudget(req.user.id, data);

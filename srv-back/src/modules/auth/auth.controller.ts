@@ -14,6 +14,7 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { RateLimitGuard, RateLimit } from '../../common/guards/rate-limit.guard';
 import {
   SignupSchema,
   LoginSchema,
@@ -23,13 +24,16 @@ import {
 } from '@cellblock/contracts';
 
 @Controller('auth')
+@UseGuards(RateLimitGuard)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   /**
    * Sign up with email and password
+   * Rate limited: 5 requests per 15 minutes per IP
    */
   @Post('signup')
+  @RateLimit({ maxRequests: 5, windowMs: 15 * 60 * 1000 })
   async signup(@Body() body: any) {
     const data = SignupSchema.parse(body);
     return this.authService.signup(data);
@@ -37,9 +41,11 @@ export class AuthController {
 
   /**
    * Login with email and password
+   * Rate limited: 5 login attempts per 15 minutes per IP/user
    */
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @RateLimit({ maxRequests: 5, windowMs: 15 * 60 * 1000 })
   async login(@Body() body: any, @Res({ passthrough: true }) res: Response) {
     const data = LoginSchema.parse(body);
     const result = await this.authService.login(data);
