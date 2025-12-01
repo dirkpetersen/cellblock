@@ -1,0 +1,73 @@
+# .NET Build Outputs
+bin/
+obj/
+out/
+publish/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Build Results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Application-specific
+*.log
+*.tmp
+CellBlock.UI/Resources/icon.ico
+appsettings.Development.json
+appsettings.Local.json
+
+# Publish profiles
+PublishProfiles/
+*.pubxml
+*.pubxml.user
+
+# VS Code
+.ionide/
+
+# Rider
+.idea/

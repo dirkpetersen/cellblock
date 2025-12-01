@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Blocked - CellBlock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%);
+            color: #1F2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 48px;
+            text-align: center;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: #FEE2E2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: #DC2626;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0D9488;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            font-size: 18px;
+            color: #6B7280;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .time-remaining {
+            background: #F0FDFA;
+            border: 2px solid #0D9488;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .time-remaining .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0F766E;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .time-remaining .time {
+            font-size: 48px;
+            font-weight: 700;
+            color: #0D9488;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #0D9488;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #14B8A6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #0D9488;
+            border: 2px solid #0D9488;
+        }
+
+        .btn-secondary:hover {
+            background: #F0FDFA;
+        }
+
+        .footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #E5E7EB;
+            font-size: 14px;
+            color: #9CA3AF;
+        }
+
+        .tips {
+            margin-top: 32px;
+            text-align: left;
+            background: #F9FAFB;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .tips h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .tips ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips li {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 8px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .tips li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #0D9488;
+            font-weight: bold;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .time-remaining .time {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+        </div>
+
+        <h1>This Site is Blocked</h1>
+
+        <p class="message">
+            You've reached your screen time limit for today. This site is blocked by CellBlock
+            to help you maintain a healthy digital balance.
+        </p>
+
+        <div class="time-remaining">
+            <div class="label">Time Remaining Today</div>
+            <div class="time" id="timeDisplay">0 min</div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="openDashboard()">
+                Open Dashboard
+            </button>
+            <button class="btn btn-secondary" onclick="window.close()">
+                Close This Page
+            </button>
+        </div>
+
+        <div class="tips">
+            <h3>What You Can Do:</h3>
+            <ul>
+                <li>Use whitelisted apps and websites (Maps, Banking, etc.)</li>
+                <li>Your time budget resets at midnight</li>
+                <li>Contact your Warden if you need emergency access</li>
+                <li>Check the dashboard for detailed usage statistics</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            Protected by CellBlock - Digital Wellbeing Control
+        </div>
+    </div>
+
+    <script>
+        function openDashboard() {
+            window.location.href = 'http://localhost:3001';
+        }
+
+        function updateTime() {
+            // In production, this would fetch actual time from the service
+            // For now, just show a placeholder
+            const timeDisplay = document.getElementById('timeDisplay');
+            timeDisplay.textContent = '0 min';
+        }
+
+        // Update time on load
+        updateTime();
+
+        // Optional: Update every 30 seconds
+        setInterval(updateTime, 30000);
+    </script>
+</body>
+</html>

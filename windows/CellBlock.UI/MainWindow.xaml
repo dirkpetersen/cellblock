@@ -1,0 +1,146 @@
+<Window x:Class="CellBlock.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CellBlock"
+        Height="500"
+        Width="700"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize"
+        Background="{StaticResource Background}">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="CellBlock"
+                      FontSize="32"
+                      FontWeight="Bold"
+                      Foreground="{StaticResource BrandTeal}"/>
+            <TextBlock Text="Digital Wellbeing Control Center"
+                      FontSize="14"
+                      Foreground="{StaticResource TextSecondary}"/>
+        </StackPanel>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="ContentPanel">
+
+                <!-- Status Card -->
+                <Border Background="{StaticResource BackgroundSecondary}"
+                       CornerRadius="8"
+                       Padding="20"
+                       Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Status"
+                                      FontSize="18"
+                                      FontWeight="SemiBold"
+                                      Foreground="{StaticResource TextPrimary}"
+                                      Margin="0,0,0,12"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Ellipse x:Name="StatusIndicator"
+                                        Width="12"
+                                        Height="12"
+                                        Fill="Gray"
+                                        Margin="0,0,8,0"/>
+                                <TextBlock x:Name="StatusText"
+                                          Text="Checking..."
+                                          FontSize="14"
+                                          Foreground="{StaticResource TextSecondary}"/>
+                            </StackPanel>
+
+                            <TextBlock x:Name="ConnectionStatus"
+                                      Text="Not connected"
+                                      FontSize="12"
+                                      Foreground="{StaticResource TextSecondary}"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="1"
+                               x:Name="RefreshButton"
+                               Content="Refresh"
+                               Style="{StaticResource SecondaryButton}"
+                               Click="RefreshButton_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- Time Remaining Card -->
+                <Border Background="{StaticResource BackgroundSecondary}"
+                       CornerRadius="8"
+                       Padding="20"
+                       Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Time Remaining Today"
+                                  FontSize="18"
+                                  FontWeight="SemiBold"
+                                  Foreground="{StaticResource TextPrimary}"
+                                  Margin="0,0,0,12"/>
+
+                        <TextBlock x:Name="TimeRemainingText"
+                                  Text="--"
+                                  FontSize="48"
+                                  FontWeight="Bold"
+                                  Foreground="{StaticResource BrandTeal}"
+                                  HorizontalAlignment="Center"
+                                  Margin="0,8"/>
+
+                        <TextBlock x:Name="WeeklyRemainingText"
+                                  Text="Weekly: --"
+                                  FontSize="14"
+                                  Foreground="{StaticResource TextSecondary}"
+                                  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Quick Actions -->
+                <Border Background="{StaticResource BackgroundSecondary}"
+                       CornerRadius="8"
+                       Padding="20"
+                       Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Quick Actions"
+                                  FontSize="18"
+                                  FontWeight="SemiBold"
+                                  Foreground="{StaticResource TextPrimary}"
+                                  Margin="0,0,0,12"/>
+
+                        <Button x:Name="OpenDashboardButton"
+                               Content="Open Web Dashboard"
+                               Style="{StaticResource PrimaryButton}"
+                               Click="OpenDashboardButton_Click"
+                               Margin="0,0,0,8"/>
+
+                        <Button x:Name="SettingsButton"
+                               Content="Settings"
+                               Style="{StaticResource SecondaryButton}"
+                               Click="SettingsButton_Click"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <StackPanel Grid.Row="2" Margin="0,20,0,0">
+            <Separator Margin="0,0,0,12"/>
+            <TextBlock Text="CellBlock v1.0.0"
+                      FontSize="12"
+                      Foreground="{StaticResource TextSecondary}"
+                      HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
