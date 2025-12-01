@@ -23,6 +23,7 @@ C# .NET 8 Windows client for CellBlock digital wellbeing application.
 ## Planned Features
 
 ### Phase 1 (MVP)
+
 - Modified hosts file for domain blocking
 - System tray application
 - Windows Service (runs as SYSTEM)
@@ -30,6 +31,7 @@ C# .NET 8 Windows client for CellBlock digital wellbeing application.
 - Local "Blocked" page
 
 ### Phase 2 (Full Enforcement)
+
 - Windows Filtering Platform (WFP) driver
 - Packet-level filtering
 - Enhanced tamper detection
@@ -55,12 +57,14 @@ C# .NET 8 Windows client for CellBlock digital wellbeing application.
 ### Communication
 
 Inter-process communication between UI and Service:
+
 - Named Pipes (recommended)
 - Or localhost HTTP API
 
 ## Device Identification
 
 Uses combination of:
+
 - MAC address hash (primary network adapter)
 - Windows Machine GUID
 - Stored as single `device_fingerprint`
@@ -76,6 +80,7 @@ CellBlockInstaller.msi
 ```
 
 The installer will:
+
 1. Install UI application
 2. Register Windows Service
 3. Create firewall exceptions
@@ -92,6 +97,7 @@ The installer will:
 ## Blocked Page
 
 When user tries to access blocked domain, they see:
+
 - "This site is blocked by CellBlock"
 - Remaining time display
 - Link to open web dashboard

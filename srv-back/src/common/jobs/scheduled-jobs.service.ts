@@ -86,7 +86,9 @@ export class ScheduledJobsService {
       for (const rel of relationships) {
         // TODO: Get usage data for inmate
         // TODO: Send monthly report email
-        this.logger.log(`Monthly report sent for inmate ${rel.inmate.email} to warden ${rel.warden.email}`);
+        this.logger.log(
+          `Monthly report sent for inmate ${rel.inmate.email} to warden ${rel.warden.email}`
+        );
       }
 
       this.logger.log(`Sent ${relationships.length} monthly reports`);

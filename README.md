@@ -12,6 +12,7 @@
 ## Features
 
 ### For Users (Inmates)
+
 - ⏱️ Cross-device time budget synchronization
 - 📱 Support for iOS and Windows (Android/macOS coming later)
 - ✅ Whitelist utility apps (Maps, Banking, etc.)
@@ -21,6 +22,7 @@
 - ⚠️ 15-minute and 5-minute warnings before lockdown
 
 ### For Wardens
+
 - 👥 Supervise unlimited inmates from unified dashboard
 - ✔️ Approve/deny whitelist and time budget requests
 - 🆘 Grant emergency time (parole)
@@ -65,17 +67,20 @@ cellblock/
 ### Installation
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/dirkpetersen/cellblock.git
 cd cellblock
 ```
 
 2. **Install dependencies:**
+
 ```bash
 npm install
 ```
 
 3. **Set up environment variables:**
+
 ```bash
 # Backend
 cp srv-back/.env.example srv-back/.env
@@ -87,6 +92,7 @@ cp srv-front/.env.example srv-front/.env.local
 ```
 
 4. **Set up database:**
+
 ```bash
 cd srv-back
 npx prisma generate
@@ -95,6 +101,7 @@ npx prisma db seed
 ```
 
 5. **Start development servers:**
+
 ```bash
 # Terminal 1 - Backend (port 3000)
 cd srv-back
@@ -106,6 +113,7 @@ npm run dev
 ```
 
 Visit:
+
 - Frontend: http://localhost:3001
 - Backend API: http://localhost:3000/api/v1
 - API Health: http://localhost:3000/api/v1/health
@@ -134,6 +142,7 @@ npm run format
 ### Individual Packages
 
 See README files in each workspace:
+
 - [Backend README](srv-back/README.md)
 - [Frontend README](srv-front/README.md)
 - [iOS README](ios/README.md)
@@ -150,11 +159,13 @@ See README files in each workspace:
 ## Deployment
 
 ### Local Testing (Current)
+
 - Backend and frontend run on Ubuntu 24.04 (WSL2)
 - PostgreSQL in Docker or native
 - Windows client tested on Windows 11 host
 
 ### Production (Future)
+
 - Backend: AWS EC2 instance with PostgreSQL
 - Frontend: GitHub Pages (static export)
 - Clients: Direct downloads from website
@@ -162,6 +173,7 @@ See README files in each workspace:
 ## Development Roadmap
 
 ### Phase 1: MVP (Trust Model) ✅ In Progress
+
 - [x] Repository setup and documentation
 - [x] Database schema design
 - [x] Backend API foundation
@@ -174,6 +186,7 @@ See README files in each workspace:
 - [ ] Basic iOS client (Screen Time API)
 
 ### Phase 2: Enforcement Model (Future)
+
 - [ ] iOS Family Controls entitlement
 - [ ] iOS strict mode (block all except whitelist)
 - [ ] Windows WFP driver for robust blocking
@@ -187,6 +200,7 @@ CellBlock is open source (MIT License). Contributions welcome!
 All development is currently managed by Claude Code (AI-powered development).
 
 See [CLAUDE.md](CLAUDE.md) for:
+
 - Architecture decisions
 - Development workflow
 - Multi-agent coordination strategy

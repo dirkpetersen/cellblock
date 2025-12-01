@@ -27,7 +27,11 @@ export class TimeService {
    * Process heartbeat and update time budget
    * This is called every 30-60 seconds from clients
    */
-  async processHeartbeat(userId: string, deviceId: string, heartbeat: HeartbeatInput): Promise<TimeStatus> {
+  async processHeartbeat(
+    userId: string,
+    deviceId: string,
+    heartbeat: HeartbeatInput
+  ): Promise<TimeStatus> {
     // If whitelisted app, don't deduct time
     if (heartbeat.isWhitelistedApp) {
       const status = await this.getTimeStatus(userId);
@@ -66,7 +70,9 @@ export class TimeService {
 
     if (recentDeviceIds.length > 1) {
       // Multiple devices active - use wall clock time (already calculated)
-      this.logger.log(`Simultaneous devices detected for user ${userId}: ${recentDeviceIds.length} devices`);
+      this.logger.log(
+        `Simultaneous devices detected for user ${userId}: ${recentDeviceIds.length} devices`
+      );
     }
 
     // Get user's timezone for daily budget calculation
@@ -91,10 +97,7 @@ export class TimeService {
     // Calculate remaining time for this week
     const weekStart = this.getStartOfWeek(user?.timezone || 'UTC');
     const weekUsage = await this.getWeekUsage(userId, weekStart);
-    const weeklyRemaining = Math.max(
-      0,
-      (timeBudget.weeklyMaxMinutes || 840) * 60 - weekUsage
-    );
+    const weeklyRemaining = Math.max(0, (timeBudget.weeklyMaxMinutes || 840) * 60 - weekUsage);
 
     // Deduct time if budget available
     if (dailyRemaining > 0 && weeklyRemaining > 0) {
@@ -142,10 +145,7 @@ export class TimeService {
     // Calculate this week's remaining time
     const weekStart = this.getStartOfWeek(timezone);
     const weekUsage = await this.getWeekUsage(userId, weekStart);
-    const weeklyRemaining = Math.max(
-      0,
-      (timeBudget.weeklyMaxMinutes || 840) * 60 - weekUsage
-    );
+    const weeklyRemaining = Math.max(0, (timeBudget.weeklyMaxMinutes || 840) * 60 - weekUsage);
 
     // Check for active parole
     const activeParole = await this.getActiveParole(userId);

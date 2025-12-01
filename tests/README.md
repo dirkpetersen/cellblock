@@ -16,6 +16,7 @@ Automated testing infrastructure for CellBlock.
 ## Test Categories
 
 ### 1. Unit Tests
+
 Located in `/tests/unit/` - mirrors source structure
 
 - Backend business logic
@@ -24,6 +25,7 @@ Located in `/tests/unit/` - mirrors source structure
 - Time calculation algorithms
 
 ### 2. Integration Tests
+
 Located in `/tests/integration/`
 
 - API endpoints
@@ -32,9 +34,11 @@ Located in `/tests/integration/`
 - Authentication flows
 
 ### 3. End-to-End Tests
+
 Located in `/tests/e2e/`
 
 Critical user flows:
+
 - User signup and email verification
 - Warden invitation and acceptance
 - Time budget countdown and lockdown
@@ -45,6 +49,7 @@ Critical user flows:
 ## Test Data
 
 ### Fixtures
+
 Located in `/tests/fixtures/`
 
 - Mock user accounts (inmates and wardens)
@@ -53,6 +58,7 @@ Located in `/tests/fixtures/`
 - Sample usage history
 
 ### Seeds
+
 Located in `/tests/seeds/`
 
 - Development database seed scripts
@@ -84,11 +90,13 @@ npm run test:cov
 ## Playwright Configuration
 
 Browsers tested:
+
 - Chromium
 - Firefox
 - WebKit (Safari)
 
 Viewports:
+
 - Desktop (1280x720)
 - Tablet (768x1024)
 - Mobile (375x667)
@@ -102,6 +110,7 @@ Viewports:
 ## Test Utilities
 
 Reusable test utilities will include:
+
 - User factory (create test users)
 - Device factory (create test devices)
 - Time manipulation helpers
@@ -111,6 +120,7 @@ Reusable test utilities will include:
 ## CI/CD Integration
 
 Tests run automatically on:
+
 - All pull requests to `dev` and `main`
 - Before merging to `main`
 - Scheduled nightly runs

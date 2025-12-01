@@ -16,11 +16,7 @@ export const metadata: Metadata = {
   keywords: ['digital wellbeing', 'screen time', 'accountability', 'parental control'],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="font-sans antialiased">

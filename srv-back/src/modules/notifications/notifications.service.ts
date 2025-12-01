@@ -83,7 +83,9 @@ export class NotificationsService {
       });
     }
 
-    this.logger.log(`Push notifications queued for ${tokens.length} devices (user: ${pushData.userId})`);
+    this.logger.log(
+      `Push notifications queued for ${tokens.length} devices (user: ${pushData.userId})`
+    );
 
     // TODO: Implement actual push notification sending (APNs, WNS)
   }

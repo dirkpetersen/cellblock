@@ -74,16 +74,17 @@ export const UpdateTimeBudgetSchema = TimeBudgetConfigSchema.extend({
 // Whitelist Schemas
 // ============================================================================
 
-export const AddWhitelistItemSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
-  iosBundleId: z.string().max(255).optional(),
-  windowsDomain: z.string().max(255).optional(),
-  androidPackageName: z.string().max(255).optional(),
-  comment: z.string().max(500).optional(),
-}).refine(
-  (data) => data.iosBundleId || data.windowsDomain || data.androidPackageName,
-  { message: 'At least one platform identifier is required' }
-);
+export const AddWhitelistItemSchema = z
+  .object({
+    name: z.string().min(1, 'Name is required').max(255),
+    iosBundleId: z.string().max(255).optional(),
+    windowsDomain: z.string().max(255).optional(),
+    androidPackageName: z.string().max(255).optional(),
+    comment: z.string().max(500).optional(),
+  })
+  .refine((data) => data.iosBundleId || data.windowsDomain || data.androidPackageName, {
+    message: 'At least one platform identifier is required',
+  });
 
 export const RemoveWhitelistItemSchema = z.object({
   itemId: z.string().uuid(),

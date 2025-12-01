@@ -26,6 +26,7 @@ cp .env.example .env.local
 ```
 
 Edit `.env.local`:
+
 - `NEXT_PUBLIC_API_URL`: Backend API URL (default: `http://localhost:3000/api/v1`)
 - `NEXT_PUBLIC_WS_URL`: WebSocket server URL (default: `http://localhost:3000`)
 
@@ -88,6 +89,7 @@ Dark mode is automatically detected from system preferences and can be toggled m
 ## Key Features
 
 ### Inmate Dashboard
+
 - Real-time countdown timer (updates every minute)
 - Time budget configuration (daily/weekly)
 - Whitelist management with request system
@@ -96,6 +98,7 @@ Dark mode is automatically detected from system preferences and can be toggled m
 - Break glass emergency unlock
 
 ### Warden Dashboard
+
 - Unified view of all supervised inmates
 - Real-time status indicators
 - Pending requests inbox with quick actions
@@ -106,16 +109,19 @@ Dark mode is automatically detected from system preferences and can be toggled m
 ## State Management
 
 ### Server State (TanStack Query)
+
 - API data fetching and caching
 - Automatic refetching and invalidation
 - Optimistic updates
 
 ### Client State (Zustand)
+
 - UI state (modals, sidebars)
 - User preferences
 - Dark mode toggle
 
 ### WebSocket (Socket.io)
+
 - Real-time time updates
 - Lock/unlock commands
 - Configuration changes
@@ -133,6 +139,7 @@ Dark mode is automatically detected from system preferences and can be toggled m
 ## Responsive Design
 
 Mobile-first approach with breakpoints:
+
 - `sm`: 640px
 - `md`: 768px
 - `lg`: 1024px
@@ -146,17 +153,18 @@ Tests will be implemented with Playwright for E2E testing and React Testing Libr
 ## Deployment
 
 The frontend can be deployed as:
+
 1. **Static Export:** `npm run build` → Deploy to GitHub Pages
 2. **Server:** `npm run build && npm run start` → Deploy to Vercel/Netlify
 3. **Docker:** Build container and deploy anywhere
 
 ## Environment Variables
 
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `NEXT_PUBLIC_API_URL` | Backend API URL | Yes | http://localhost:3000/api/v1 |
-| `NEXT_PUBLIC_WS_URL` | WebSocket URL | Yes | http://localhost:3000 |
-| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Google OAuth client ID | No | - |
+| Variable                       | Description            | Required | Default                      |
+| ------------------------------ | ---------------------- | -------- | ---------------------------- |
+| `NEXT_PUBLIC_API_URL`          | Backend API URL        | Yes      | http://localhost:3000/api/v1 |
+| `NEXT_PUBLIC_WS_URL`           | WebSocket URL          | Yes      | http://localhost:3000        |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Google OAuth client ID | No       | -                            |
 
 ## Contributing
 

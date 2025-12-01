@@ -27,6 +27,7 @@ cp .env.example .env
 ```
 
 Edit `.env` and configure:
+
 - `DATABASE_URL`: Your PostgreSQL connection string
 - `JWT_SECRET`: Random secret key for JWT signing
 - `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`: From Google OAuth console
@@ -83,6 +84,7 @@ srv-back/
 ## API Documentation
 
 Once the server is running, visit:
+
 - Health check: `GET /api/v1/health`
 - API info: `GET /api/v1`
 
@@ -93,6 +95,7 @@ Full API documentation will be available at `/api/v1/docs` (OpenAPI/Swagger) onc
 See [DBSCHEMA.md](../DBSCHEMA.md) for complete database schema documentation.
 
 Key tables:
+
 - `users` - User accounts (inmates and wardens)
 - `devices` - Registered devices
 - `time_budgets` - Daily/weekly time allowances
@@ -127,16 +130,16 @@ See [deployment documentation](../docs/developer-guide/deployment.md) for produc
 
 ## Environment Variables Reference
 
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `NODE_ENV` | Environment mode | No | development |
-| `PORT` | Server port | No | 3000 |
-| `DATABASE_URL` | PostgreSQL connection string | Yes | - |
-| `JWT_SECRET` | JWT signing secret | Yes | - |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID | Yes | - |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth secret | Yes | - |
-| `SENDGRID_API_KEY` | SendGrid API key | No* | - |
-| `APNS_KEY_ID` | Apple Push Notification key | No* | - |
-| `WNS_CLIENT_ID` | Windows Push Notification client | No* | - |
+| Variable               | Description                      | Required | Default     |
+| ---------------------- | -------------------------------- | -------- | ----------- |
+| `NODE_ENV`             | Environment mode                 | No       | development |
+| `PORT`                 | Server port                      | No       | 3000        |
+| `DATABASE_URL`         | PostgreSQL connection string     | Yes      | -           |
+| `JWT_SECRET`           | JWT signing secret               | Yes      | -           |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client ID           | Yes      | -           |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth secret              | Yes      | -           |
+| `SENDGRID_API_KEY`     | SendGrid API key                 | No\*     | -           |
+| `APNS_KEY_ID`          | Apple Push Notification key      | No\*     | -           |
+| `WNS_CLIENT_ID`        | Windows Push Notification client | No\*     | -           |
 
-*Required for production features
+\*Required for production features

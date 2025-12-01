@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **CellBlock** is a cross-platform digital wellbeing app with high-accountability enforcement. It implements a "Default Deny" policy where internet access is blocked by default, with only specific exceptions allowed.
 
 **Core Principles:**
+
 - **Whitelist-First:** Block everything; allow only essentials (e.g., Maps, Work Tools)
 - **Shared Budget:** Time usage synchronizes across all devices (60 minutes on iOS reduces Windows time)
 - **Friend Enforcement:** A "Warden" (secondary user) approves settings changes and emergency unlocks
@@ -16,6 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Hub-and-Spoke Model:** Backend is the source of truth for time budgets.
 
 ### Tech Stack
+
 - **iOS Client:** Swift (SwiftUI + Screen Time API)
 - **Windows Client:** C# .NET 8 (WPF/WinUI + Packet Filtering)
 - **Backend:** Node.js/TypeScript (Express or NestJS)
@@ -24,6 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Communication:** WebSockets for heartbeats (enables real-time bidirectional communication, lower latency than polling, server can push LOCK_CMD immediately)
 
 ### Repository Structure
+
 ```
 /ios          - Swift iOS client (iOS 16.0+)
 /windows      - C# .NET 8 Windows client
@@ -37,6 +40,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Core Design Decisions
 
 ### Time Tracking & Synchronization
+
 - **Authoritative Time:** Server time (UTC/GMT) is the only source of truth; client timestamps are ignored to prevent clock manipulation
 - **Offline Handling:** Offline devices do not accrue time; time is only deducted when server receives heartbeats
 - **Connection Drops:** Clients must implement automatic reconnection logic with exponential backoff
@@ -44,6 +48,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Backend Failure Mode:** If server is down, clients default to OPEN (fail-safe, preserves utility app access)
 
 ### Time Budget Rules
+
 - **Timezone:**
   - Default: Inmate's phone timezone (detected from device)
   - Can be manually changed in settings
@@ -65,6 +70,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Parole Timezone:** When warden grants parole "until [datetime]", the datetime is interpreted in the inmate's configured timezone
 
 ### Warden System
+
 - **Multiple Wardens:** Users can have up to 4 wardens (1 primary + 3 backups)
 - **Request Expiration:** If no warden responds within 3 days, requests automatically expire (not approved)
 - **Approval Requirements:** ANY warden can approve; only one approval needed
@@ -85,7 +91,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - Request type: `budget_change` in requests table
 
 ### Whitelist Data Model
+
 **Schema Decision:** Use platform-specific columns in a unified whitelist table:
+
 ```
 whitelist_items {
   id: uuid
@@ -99,11 +107,13 @@ whitelist_items {
   created_at: timestamp
 }
 ```
+
 - At least one platform field must be non-null
 - Clients filter by their platform-specific column
 - Keep it simple: No time-based exceptions, no URL path filtering
 
 **Whitelist Categories:**
+
 1. **Utility Apps** (category: `utility`)
    - Always allowed, cannot be disabled
    - Examples: Google Maps, Waze, Calculator, Weather apps, Banking apps
@@ -126,10 +136,12 @@ whitelist_items {
 
 **Default Whitelist Seeding:**
 On account creation, automatically populate:
+
 - All utility apps for each platform (always enabled)
 - All healthy apps for each platform (enabled by default)
 
 ### Known Limitations
+
 - **Windows Tamper Resistance:** Safe Mode bypass, new admin account creation, and Live USB boot are acknowledged limitations and will not be prevented
 - **iOS Phase 1:** Use Screen Time API only; Family Controls entitlement not required for MVP
 - **Whitelist Granularity:** Domain/Bundle ID level only; no sub-path filtering
@@ -137,7 +149,9 @@ On account creation, automatically populate:
 ## User Flows & Experience
 
 ### Initial Setup Flow
+
 **Default Time Budget:**
+
 - Default: 2 hours recreational screen time per day
 - Maximum allowed: 5 hours per day (enforced by app)
 - UI: Slider with color coding:
@@ -146,6 +160,7 @@ On account creation, automatically populate:
   - 5 hours = Red
 
 **Warden Assignment:**
+
 - Optional during signup (users can start without a warden)
 - If no warden assigned:
   - Daily email reminders for first 7 days
@@ -153,24 +168,30 @@ On account creation, automatically populate:
   - Subject: "Add a Warden to enforce your CellBlock limits"
 
 **Whitelist Management:**
+
 - Before warden accepts: Users can add/remove whitelist items themselves
 - After warden accepts: All whitelist changes require warden approval
 - Wardens can also directly add/remove whitelist items for their inmates
 
 ### Warden Invitation & Relationship
+
 **Invitation Process:**
+
 - Inmate sends email invitation to warden
 - Email contains accept/decline links
 - Warden cannot see inmate's data until they accept
 - Reciprocal relationships allowed (A is warden for B, B is warden for A)
 
 **Relationship States:**
+
 - `pending` - Invitation sent, not yet accepted
 - `active` - Warden has accepted and is actively monitoring
 - `cancelled` - Relationship terminated (see Uninstall Behavior)
 
 ### Device Management
+
 **Device Limits:**
+
 - Maximum 12 devices per user account
 - Device Identification: Use combination of platform-specific IDs:
   - iOS: `identifierForVendor` (UUID)
@@ -178,6 +199,7 @@ On account creation, automatically populate:
   - Store as `device_fingerprint` in database
 
 **Device Registration:**
+
 - Automatic on first heartbeat from new device
 - Stores: device name, platform, fingerprint, first_seen, last_seen
 - Users can remove old/unused devices from dashboard
@@ -185,12 +207,14 @@ On account creation, automatically populate:
 ### Emergency Access & Warnings
 
 **Time Warnings:**
+
 - 15-minute warning when `remainingSeconds == 900`
 - 5-minute warning when `remainingSeconds == 300`
 - Push notification + in-app banner
 - After warnings expire: Immediate lockdown
 
 **Break Glass Feature:**
+
 - User can trigger "Break Glass" to immediately unlock
 - Sends notification to ALL wardens: "X has broken glass and is no longer under your supervision"
 - Optional comment field for user to explain emergency
@@ -199,6 +223,7 @@ On account creation, automatically populate:
 - **Pending Requests:** All pending requests (whitelist, budget changes) are automatically CANCELLED when break glass is triggered
 
 **Warden Parole (Emergency Time):**
+
 - Warden can grant unlimited emergency time
 - Two formats:
   - "Open until [date/time]" - suspends all blocking until specified time
@@ -209,6 +234,7 @@ On account creation, automatically populate:
 - Last parole grant always replaces previous ones (not cumulative)
 
 **Warden Lockdown:**
+
 - Immediately sets daily and weekly remaining time to 0
 - Option 1: Immediate lockdown (no grace period)
 - Option 2: Lockdown with grace period (e.g., "Lockdown in 30 minutes")
@@ -217,48 +243,61 @@ On account creation, automatically populate:
   - Lockdown executes after grace period expires
 
 ### Network & VPN Handling
+
 **Default Policy:**
+
 - VPNs and proxies are BLOCKED by default
 - Exception: Cisco Secure Client is whitelisted by default (enterprise use)
 - Users can request to whitelist other VPNs (requires warden approval after warden accepts)
 
 **Detection Strategy:**
+
 - iOS: Check for VPN status via `NEVPNManager`
 - Windows: Detect TAP adapters, check routing table for VPN gateways
 
 ### Uninstall & Tamper Behavior
+
 **App Uninstall:**
+
 - Backend detects missing heartbeats from device
 - After 30 minutes of silence: Send warden notification "Device X may be offline or app uninstalled"
 - After 7 days of silence: Automatically cancel warden relationship
 - Send final notification to warden: "CellBlock uninstalled from X's device. Your supervision has ended."
 
 **iOS Uninstall:**
+
 - Screen Time shields may persist even after app deletion (depends on iOS version)
 - Shield removal requires going through iOS Settings → Screen Time
 
 **Windows Uninstall:**
+
 - Service uninstaller should attempt to notify server before removing
 - If uninstaller is bypassed (force delete), backend will detect via missing heartbeats (see above)
 
 ### Historical Data & Reporting
+
 **Data Retention:**
+
 - Usage logs (heartbeat history) retained for 12 months
 - After 12 months, data is automatically purged
 
 **Warden Visibility:**
+
 - Wardens can view last month + current month usage data
 - Monthly notification sent to wardens: "Review [Inmate]'s usage this month" with link to dashboard
 - Encourages warden-inmate discussion about usage patterns
 
 **Dashboard Analytics:**
+
 - Daily usage breakdown (time spent per day)
 - Weekly totals and trends
 - Parole grant history
 - Whitelist change history
 
 ### Notifications & Communication
+
 **Warden Notifications:**
+
 - Cannot configure granularity (receive all notification types)
 - Notification types:
   - Whitelist change requests (push + email)
@@ -268,30 +307,36 @@ On account creation, automatically populate:
   - Warden relationship changes (email)
 
 **Inmate Notifications:**
+
 - Email notification when warden approves/denies requests
 - Email notification when warden grants parole
 - Email notification when warden triggers lockdown
 - Time warnings (15min, 5min) via push notification + in-app banner
 
 **Request Comments:**
+
 - Inmates can add comment when requesting whitelist additions (e.g., "Need Zoom for work meetings")
 - Wardens can add comment when denying requests (e.g., "This violates our agreement")
 - Comments stored in database and visible in request history
 
 ### Account Management
+
 **Inmate Account Deletion:**
+
 - User can delete their account from settings
 - Sends notification to ALL wardens: "[Inmate] has broken out of jail and deleted their account. Your supervision services are no longer required."
 - All warden relationships terminated
 - Data retained for 30 days (soft delete) then permanently purged
 
 **Warden Account Deletion:**
+
 - Warden can delete their account
 - Sends email to ALL inmates they supervise: "[Warden] has deleted their account. You may optionally re-invite them when they return."
 - Inmates prompted to promote backup warden to primary (if available)
 - If inmate has no backup wardens, they enter "no warden" mode with email reminders
 
 **Warden Resignation:**
+
 - Warden can resign from supervising specific inmate
 - Inmate immediately promoted backup warden to primary (if available)
 - Both parties notified via email
@@ -300,17 +345,20 @@ On account creation, automatically populate:
 ## Key Technical Requirements
 
 ### Time Budgeting System
+
 - **Cross-Device Sync:** Clients send heartbeats every 30-60 seconds; server deducts time from daily allowance
 - **Wall Clock Time:** If multiple devices are active simultaneously, only 1 minute is deducted per wall clock minute
 - **Daily Limits:** Different time allowances per day of week (e.g., Mon: 60m, Sat: 240m)
 - **Lockout:** When `time_remaining <= 0`, server sends `LOCK_CMD` and clients engage strict mode
 
 ### Whitelist Exceptions
+
 - Usage of whitelisted apps/URLs does NOT count toward time budget
 - When time budget hits 0, whitelisted items remain accessible
 - Everything else is blocked
 
 ### Warden Authorization Flow
+
 - Inmate (user) pairs with Warden (friend) via email invite
 - Changing time budgets or whitelist requires Warden push notification approval
 - Warden can remotely trigger "Lockdown" or "Grant Parole" (emergency time)
@@ -318,31 +366,39 @@ On account creation, automatically populate:
 ## Platform-Specific Implementation Notes
 
 ### iOS (`/ios`)
+
 **Phase 1 APIs (Screen Time - No Entitlement Required):**
+
 - `DeviceActivity` - Detect device usage
 - `ManagedSettings` - Apply content shields
 - Block "Social" category only (simpler than full whitelist)
 
 **Phase 2 APIs (Full Enforcement - Requires Entitlement):**
+
 - `FamilyControls` - Authorization (requires Apple Developer entitlement application)
 - `DeviceActivityMonitorExtension` - Persist shields even if app is killed
 - Block ALL apps/websites except whitelist
 
 **Whitelist Implementation (Phase 2):**
+
 - Select specific Bundle IDs from database (e.g., `com.google.Maps`)
 - Block all other categories using `WebContent` and `Application` tokens
 
 ### Windows (`/windows`)
+
 **Blocking Engine:**
+
 - MVP: Modified hosts file approach
 - Production: Windows Filtering Platform (WFP) driver to silently drop packets
 
 **Whitelist Implementation:**
+
 - User inputs domains (e.g., `github.com`)
 - Client resolves IPs and allows traffic
 - All other HTTP/HTTPS traffic blocked/redirected to local "Blocked" page
 
 **Blocked Page (Local HTML):**
+
 - Simple, clean design with CellBlock branding
 - Shows: "This site is blocked by CellBlock"
 - Displays remaining time: "You have X minutes remaining today"
@@ -351,6 +407,7 @@ On account creation, automatically populate:
 - No option to request whitelist from blocked page (must use dashboard)
 
 **Anti-Tamper:**
+
 - Service runs as `SYSTEM`
 - Registry keys monitored for changes
 - Background service persists even if UI is killed via Task Manager
@@ -358,13 +415,16 @@ On account creation, automatically populate:
 **Limitation:** MVP operates at domain level only (cannot distinguish `youtube.com/watch?v=good` vs `youtube.com/watch?v=bad`)
 
 ### Backend API (`/srv-back`)
+
 **WebSocket Events:**
+
 - `heartbeat` (client->server) - Sends `{deviceId, isWhitelistedApp}`
 - `time_update` (server->client) - Returns `{remainingSeconds, weeklyRemaining}`
 - `lock_command` (server->client) - Triggers when `remainingSeconds <= 0`
 - `unlock_command` (server->client) - Sent when Warden grants parole
 
 **REST Endpoints:**
+
 - `POST /config/whitelist` - Request whitelist change (requires Warden approval after warden accepts invite)
   - Body: `{item_name, ios_bundle_id?, windows_domain?, comment?}`
 - `POST /warden/approve` - Warden approves pending request
@@ -381,6 +441,7 @@ On account creation, automatically populate:
 - `DELETE /account` - Delete user account (soft delete, 30-day retention)
 
 **Time Handling:**
+
 - All times stored and calculated in UTC/GMT
 - Daily reset at midnight GMT
 - Weekly budget tracking resets Sunday 00:00 GMT
@@ -388,25 +449,30 @@ On account creation, automatically populate:
 **Auth:** JWT-based authentication
 
 **API Versioning:**
+
 - URL-based versioning: `/api/v1/...`
 - Backward compatibility: Support previous version for 6 months after new version release
 - Client version check: Server can return `force_update: true` if client is too old
 - Minimum client version stored in server config
 
 **Notification Strategy:**
+
 - Push and email sent simultaneously for critical events (break glass, lockdown)
 - Email as primary for non-time-sensitive events (monthly reports, warden invitations)
 - Push notification failures: Retry 3 times, then fall back to email
 - Email failures: Retry with exponential backoff, log for manual review
 
 ### Frontend Dashboard (`/srv-front`)
+
 **UI/UX Requirements:**
+
 - Light and dark mode support (system preference detection + manual toggle)
 - Slick, modern, cool-looking color scheme (to be defined during design phase)
 - Fully responsive (desktop, tablet, mobile)
 - PWA capable
 
 **Inmate Dashboard:**
+
 - **Real-time countdown:** Remaining time updated every minute (live timer)
 - Request whitelist additions with comment field
 - View historic usage graphs (daily, weekly, monthly)
@@ -417,6 +483,7 @@ On account creation, automatically populate:
 - Break glass button (with confirmation and comment field)
 
 **Warden Dashboard:**
+
 - **Unified View:** All supervised inmates in one dashboard
 - **Real-time Status:** Show current state of each inmate (active, locked, offline)
 - **Notification Badges:** Pending request count badges
@@ -431,40 +498,50 @@ On account creation, automatically populate:
 ## Infrastructure & Deployment
 
 ### Hosting Strategy
+
 **Initial MVP:**
+
 - Single AWS EC2 instance hosting both backend and PostgreSQL
 - Expected scale: Hundreds of users initially, up to ~10,000 users
 - Vertical scaling as needed
 
 **Future Scaling:**
+
 - Migrate to AWS Aurora for database (read replicas, automatic failover)
 - Consider containerization (Docker + ECS/EKS)
 - CDN for frontend static assets
 
 ### Push Notifications & Email
+
 **Push Notifications:**
+
 - iOS: Apple Push Notification service (APNs) - requires Apple Developer account and certificates
 - Windows: Windows Push Notification Service (WNS) - requires Microsoft Store registration
 - Push notification library: Consider `node-pushnotifications` or platform-specific SDKs
 
 **Email Service:**
+
 - Use service with free tier supporting few thousand emails/month
 - Options: SendGrid (100 emails/day free), AWS SES (62k emails/month free tier), Mailgun (5k emails/month free)
 - Required emails: Verification, password reset, warden notifications, monthly reports
 
 ### Authentication & Security
+
 **Authentication Methods:**
+
 - Email + Password (with bcrypt hashing)
 - Google OAuth 2.0
 - Email verification required on signup (send verification link)
 - Standard password reset flow via email token
 
 **JWT Configuration:**
+
 - Access tokens: Short-lived (15 minutes)
 - Refresh tokens: Long-lived (7 days), stored in httpOnly cookies
 - Token rotation on refresh
 
 **Security Measures:**
+
 - Rate limiting on auth endpoints (e.g., 5 login attempts per 15 minutes per IP)
 - IP-based blocking for suspicious activity (configurable threshold)
 - TLS/HTTPS only (no HTTP)
@@ -472,16 +549,19 @@ On account creation, automatically populate:
 - Passwords hashed with bcrypt (cost factor 12)
 
 **Data Privacy:**
+
 - End-to-end encryption for sensitive data in transit (TLS 1.3)
 - Database encryption at rest for sensitive fields (passwords, tokens)
 - No GDPR compliance required (not targeting EU initially)
 - 30-day soft delete for account deletion (data recovery window)
 
 **API Security:**
+
 - No rate limiting on API endpoints initially (implement if abuse occurs)
 - No storage limits per user
 
 ### Business Model
+
 - **Current:** Open source and free for all users
 - **Future:** Potential freemium model (TBD)
 - No feature restrictions currently
@@ -489,7 +569,9 @@ On account creation, automatically populate:
 ## Platform-Specific Architecture Details
 
 ### Windows Client Architecture (`/windows`)
+
 **Component Structure:**
+
 - **UI Application** (WPF/WinUI):
   - System tray icon showing remaining time on hover
   - Settings panel for configuration
@@ -505,22 +587,27 @@ On account creation, automatically populate:
   - Monitors for tamper attempts
 
 **Communication:**
+
 - Inter-process communication via Named Pipes or localhost HTTP API
 - UI queries service for real-time status
 
 **Installation:**
+
 - MSI installer with admin privileges
 - Registers Windows Service
 - Creates firewall exceptions
 - Adds registry keys for auto-start
 
 **Security:**
+
 - Service binary signed with code signing certificate (future)
 - Service configuration stored in encrypted registry keys
 - API tokens stored using Windows DPAPI
 
 ### iOS Client Architecture (`/ios`)
+
 **Component Structure:**
+
 - **Main App** (SwiftUI):
   - Dashboard showing remaining time
   - Settings and configuration
@@ -534,28 +621,34 @@ On account creation, automatically populate:
   - Cannot be disabled without device passcode
 
 **Data Storage:**
+
 - JWT tokens stored in iOS Keychain (secure enclave)
 - Configuration cached locally (UserDefaults)
 - Does NOT work offline (requires server connection for all operations)
 
 **Permissions Required:**
+
 - Screen Time API access (user authorization)
 - Background refresh
 - Push notifications
 - Network access
 
 **Background Operation:**
+
 - Background refresh task runs every 15-30 minutes to sync with server
 - WebSocket reconnects automatically on app foreground
 - Push notifications wake app for critical updates
 
 ### Client Configuration Sync
+
 **WebSocket Push:**
+
 - Server pushes configuration changes immediately via WebSocket
 - Clients apply changes in real-time
 - Events: `config_update`, `whitelist_change`, `parole_granted`, `lockdown`
 
 **No Offline Operation:**
+
 - Clients require active server connection to function
 - If offline for >30 minutes, warden receives notification
 - No local caching of whitelist for offline use
@@ -563,10 +656,12 @@ On account creation, automatically populate:
 ## Development Workflow
 
 ### Multi-Agent Development Strategy
+
 **Coordination Model:**
 This project uses a **coordination agent** pattern with specialized sub-agents for each component.
 
 **Agent Roles:**
+
 1. **Coordination Agent** (Primary):
    - Reviews overall architecture and requirements
    - Coordinates work across components
@@ -620,18 +715,22 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
    - Written alongside development (not after)
 
 **Workflow:**
+
 - Coordination agent delegates tasks to specialized sub-agents
 - Sub-agents work independently within their component directories
 - Coordination agent reviews integration points and API contracts
 - Use conventional commits: `feat(ios): add shield logic`, `fix(backend): resolve race condition`
 
 **Communication:**
+
 - Shared contract: API endpoint definitions, WebSocket event schemas
 - Coordination agent maintains `/docs/api/contracts.md` with TypeScript interfaces
 - Sub-agents must adhere to contracts when implementing features
 
 ### Testing Strategy
+
 **Automated Testing (Required for MVP):**
+
 - **Unit Tests:** Backend business logic, utility functions
 - **Integration Tests:** API endpoints, database operations, WebSocket events
 - **End-to-End Tests:** Critical user flows using Playwright
@@ -643,23 +742,27 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
   - Parole grant flow
 
 **Test Data:**
+
 - Seed scripts for development database
 - Mock warden and inmate accounts
 - Pre-populated whitelist items
 - Sample usage history data
 
 **Test Execution:**
+
 - All tests must be runnable by Claude Code
 - Tests run in CI/CD pipeline (GitHub Actions)
 - Coverage reports generated for backend (target: >80%)
 
 **Testing Tools:**
+
 - Backend: Jest or Vitest
 - Frontend: React Testing Library + Playwright
 - API Testing: Supertest
 - E2E Testing: Playwright (cross-browser)
 
 **Repository Structure:**
+
 ```
 /tests
   /e2e          - Playwright end-to-end tests
@@ -670,7 +773,9 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 ```
 
 ### Logging & Error Handling
+
 **Logging Strategy:**
+
 - **Default Log Level:** Info
 - **Log Levels Used:**
   - `error`: Critical failures (DB connection lost, auth failures)
@@ -679,6 +784,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
   - `debug`: Detailed debugging (disabled in production)
 
 **What to Log:**
+
 - Authentication attempts (success and failures with IP)
 - Warden actions (parole grants, lockdowns, approvals)
 - Break glass events
@@ -688,22 +794,26 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 - Configuration changes
 
 **Log Storage:**
+
 - **Initial:** Local log files with rotation (daily rotation, 30-day retention)
 - **Future:** Centralized logging service (CloudWatch, Papertrail, Datadog)
 - **Backup:** Logs backed up to S3 or similar storage
 
 **Log Format:**
+
 - Structured JSON logs for easy parsing
 - Include: timestamp, level, message, user_id, device_id, request_id (for tracing)
 
 **Error Handling:**
 **Backend:**
+
 - User-friendly error messages sent to clients
 - Technical details logged server-side only
 - HTTP status codes: 400 (bad request), 401 (unauthorized), 403 (forbidden), 404 (not found), 500 (server error)
 - Validation errors include field-specific messages
 
 **Client Error Handling:**
+
 - **WebSocket Connection Failures:**
   - Retry with exponential backoff: 1s, 2s, 4s, 8s, 16s
   - Maximum 5 retry attempts
@@ -721,6 +831,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
   - Show warning banner: "Server unreachable - blocking temporarily disabled"
 
 ### MVP Requirements (Phase 1)
+
 **All features listed below are MUST-HAVES for MVP:**
 
 1. **Core Time Tracking:**
@@ -778,6 +889,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
     - API documentation (OpenAPI/Swagger)
 
 ### Phase 2: Enforcement Model (Post-MVP)
+
 1. Implement full iOS Family Controls entitlement
 2. iOS strict mode (block all except whitelist)
 3. Windows upgrade to WFP for robust blocking
@@ -785,43 +897,52 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 5. Additional analytics and reporting features
 
 ### Database Schema
+
 **See DBSCHEMA.md for detailed database schema including:**
+
 - Table definitions
 - Relationships and foreign keys
 - Indexes for performance optimization
 - Migration strategy
 
 ### Documentation Standards
+
 - Use `mkdocs-material` in `/docs`
 - Conventional Commits (e.g., `feat(ios): add shield logic`)
 - Written alongside development (not after)
 - User docs are primary focus, developer docs secondary
 
 ### Development Environment & Workflow
+
 **Local Development:**
+
 - Primary development on Ubuntu 24.04 (WSL2 on Windows 11 host)
 - Backend and frontend run locally for testing before deployment
 - Windows 11 host available for Windows client development and testing
 - iOS client requires macOS (development machine or CI runner)
 
 **Environment Configuration:**
+
 - **dev:** Local development (localhost)
 - **prod:** AWS EC2 instance
 - No staging environment for MVP
 
 **Secrets Management:**
+
 - `.env` files for all secrets (not committed to git)
 - `.env.example` templates committed for reference
 - Google OAuth credentials stored in `.env`
 - Separate `.env.dev` and `.env.prod` files
 
 **Branch Strategy:**
+
 - **main:** Production-ready code
 - **dev:** Active development branch
 - Feature branches off `dev`, merge back to `dev`
 - `dev` merged to `main` when ready for production release
 
 **Code Review Process:**
+
 - Fully automated (Claude Code is the only developer)
 - Automated checks via GitHub Actions:
   - Linting (ESLint, Prettier)
@@ -834,6 +955,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 ### Technology Stack Decisions
 
 **Backend Framework:**
+
 - **NestJS** (Node.js/TypeScript)
   - Structured, opinionated framework
   - Built-in dependency injection
@@ -842,6 +964,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
   - Better for large-scale applications
 
 **WebSocket Library:**
+
 - **Socket.io**
   - Automatic reconnection
   - Room support for user-specific channels
@@ -849,11 +972,13 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
   - Better DX than raw `ws`
 
 **Frontend State Management:**
+
 - **TanStack Query (React Query):** Server state management (API calls, caching, invalidation)
 - **Zustand:** Client state management (UI state, user preferences)
 - Lightweight, modern, and performant
 
 **Database ORM & Migrations:**
+
 - **Prisma**
   - Type-safe database access
   - Automatic TypeScript type generation from schema
@@ -862,12 +987,14 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
   - Works well with PostgreSQL
 
 **Type Sharing:**
+
 - **Monorepo structure** with shared packages
 - Shared types package: `/packages/types` (TypeScript interfaces, DTOs)
 - Backend and frontend import from shared package
 - Ensures type consistency across stack
 
 **Monorepo Structure:**
+
 ```
 /cellblock
   /packages
@@ -882,6 +1009,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 ```
 
 **Package Management:**
+
 - **pnpm workspaces** for monorepo management
   - Faster than npm, better disk space efficiency
   - Stricter dependency resolution (prevents phantom dependencies)
@@ -893,6 +1021,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 ### Development Order & Milestones
 
 **Build Order (Sequential):**
+
 1. **Database Schema & Backend API** (Foundation)
    - Set up Prisma schema from DBSCHEMA.md
    - Implement NestJS backend with all API endpoints
@@ -930,12 +1059,14 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
    - Continuous testing and refinement
 
 **No Incremental MVP Phases:**
+
 - Build all MVP features together in each component
 - Complete backend includes all features
 - Complete frontend includes all features
 - Testing happens continuously throughout development
 
 **Database & API Contract Development:**
+
 - Iterate both together (not one-then-the-other)
 - Start with Prisma schema (translates DBSCHEMA.md to `schema.prisma`)
 - Generate TypeScript types from Prisma
@@ -946,6 +1077,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 ### Branding & Design
 
 **Logo Concept:**
+
 - Primary icon: Stylized cell/prison bars forming a shield shape
 - The bars subtly form a "CB" monogram
 - Conveys: Protection, boundaries, structure
@@ -953,6 +1085,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 - File formats: SVG (scalable), PNG (various sizes), ICO (Windows)
 
 **Color Scheme:**
+
 - **Primary:** Deep Teal (#0D9488) - Trust, calm, digital wellness
 - **Secondary:** Slate Gray (#475569) - Professional, neutral
 - **Accent:** Amber (#F59E0B) - Warnings, attention
@@ -964,11 +1097,13 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 - **Text Dark:** Zinc 800 (#27272A)
 
 **Typography:**
+
 - Headings: Inter (clean, modern sans-serif)
 - Body: Inter
 - Monospace (code/times): JetBrains Mono
 
 **Design Principles:**
+
 - Clean, minimal interface
 - Generous whitespace
 - Clear visual hierarchy
@@ -978,12 +1113,14 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 ### UI/UX Implementation Details
 
 **Email Templates:**
+
 - HTML format with responsive design (mobile-friendly)
 - Include inline CSS for broad email client compatibility
 - Templates: Welcome, Email Verification, Password Reset, Warden Invitation, Monthly Report, Break Glass Alert
 - Use brand colors (teal primary, slate secondary)
 
 **Time Budget Slider:**
+
 - Two sliders: One for daily limit, one for weekly limit
 - Daily slider: 0-300 minutes (0-5 hours)
   - 0-120 min (2hr): Green
@@ -994,6 +1131,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 - Both sliders required for account setup
 
 **Windows System Tray:**
+
 - Icon: CellBlock logo (simple lock icon)
 - Tooltip on hover: "150 min left" (format: `{minutes} min left`)
 - Click opens status window
@@ -1004,6 +1142,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
   - "Exit" (disabled while locked)
 
 **Push Notification Content:**
+
 - **15-minute warning:** "⏰ 15 minutes remaining" / "You have 15 minutes of screen time left today."
 - **5-minute warning:** "⏰ 5 minutes remaining" / "Your screen time will expire in 5 minutes."
 - **Lockdown:** "🔒 Screen time expired" / "Your daily screen time has been used. Only whitelisted apps are available."
@@ -1013,6 +1152,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 - All notifications are actionable (tap to open relevant screen in app/dashboard)
 
 ### CI/CD
+
 - GitHub Actions for builds and tests
 - Automated checks on all PRs to `dev` and `main`:
   - Linting and formatting
@@ -1028,11 +1168,13 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
 ### Initial Repository Setup
 
 **Repository Information:**
+
 - GitHub: https://github.com/dirkpetersen/cellblock
 - Repository already created
 - Clone URL: `git@github.com:dirkpetersen/cellblock.git`
 
 **Initial Setup Tasks:**
+
 1. **Branch Setup:**
    - Create `dev` branch from `main`
    - Set `dev` as default branch for development
@@ -1087,6 +1229,7 @@ This project uses a **coordination agent** pattern with specialized sub-agents f
    - `/tests/README.md` (testing instructions)
 
 ### Initial Deployment Strategy
+
 1. **Phase 1:** Local development and testing
    - Backend runs on localhost (Ubuntu WSL2): `http://localhost:3000`
    - Frontend runs on localhost (Ubuntu WSL2): `http://localhost:3001`

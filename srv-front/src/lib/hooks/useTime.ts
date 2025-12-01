@@ -2,7 +2,7 @@
  * Time tracking hooks for CellBlock
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../api/client';
 
 export function useTimeStatus() {
@@ -20,7 +20,7 @@ export function useUsageLogs(params?: { startDate?: string; endDate?: string }) 
   });
 }
 
-export function useWebSocketHeartbeat(deviceId: string) {
+export function useWebSocketHeartbeat(_deviceId: string) {
   // TODO: Implement WebSocket heartbeat hook
   // This will send heartbeats every 30-60 seconds automatically
 }

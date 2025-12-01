@@ -47,8 +47,15 @@ export function useToggleHealthyApp() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ itemId, enabled, comment }: { itemId: string; enabled: boolean; comment?: string }) =>
-      apiClient.toggleHealthyApp(itemId, enabled, comment),
+    mutationFn: ({
+      itemId,
+      enabled,
+      comment,
+    }: {
+      itemId: string;
+      enabled: boolean;
+      comment?: string;
+    }) => apiClient.toggleHealthyApp(itemId, enabled, comment),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['whitelist'] });
     },

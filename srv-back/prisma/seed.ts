@@ -19,10 +19,18 @@ async function main() {
     { name: 'Cisco Secure Client', iosBundleId: 'com.cisco.secureclient', category: 'utility' },
     // Banking apps
     { name: 'Chase', iosBundleId: 'com.chase.sig.android', category: 'utility' },
-    { name: 'Bank of America', iosBundleId: 'com.bankofamerica.mobileapps.iphone', category: 'utility' },
+    {
+      name: 'Bank of America',
+      iosBundleId: 'com.bankofamerica.mobileapps.iphone',
+      category: 'utility',
+    },
     { name: 'Wells Fargo', iosBundleId: 'com.wf.wellsfargomobile', category: 'utility' },
     { name: 'Citi Mobile', iosBundleId: 'com.citi.citimobile', category: 'utility' },
-    { name: 'Capital One', iosBundleId: 'com.capitalone.enterprisemobilebanking', category: 'utility' },
+    {
+      name: 'Capital One',
+      iosBundleId: 'com.capitalone.enterprisemobilebanking',
+      category: 'utility',
+    },
     { name: 'US Bank', iosBundleId: 'com.usbank.mobilebanking', category: 'utility' },
     { name: 'PNC Mobile', iosBundleId: 'com.pnc.ecommerce.mobile', category: 'utility' },
     { name: 'TD Bank', iosBundleId: 'com.tdbank.myspend', category: 'utility' },
@@ -75,7 +83,12 @@ async function main() {
   ];
 
   // Insert all default items
-  for (const item of [...iosUtilityApps, ...iosHealthyApps, ...windowsUtilityDomains, ...windowsHealthyDomains]) {
+  for (const item of [
+    ...iosUtilityApps,
+    ...iosHealthyApps,
+    ...windowsUtilityDomains,
+    ...windowsHealthyDomains,
+  ]) {
     await prisma.defaultWhitelistItem.upsert({
       where: { id: item.iosBundleId || item.windowsDomain || 'dummy' },
       update: {},
@@ -83,7 +96,9 @@ async function main() {
     });
   }
 
-  console.log(`Seeded ${iosUtilityApps.length + iosHealthyApps.length + windowsUtilityDomains.length + windowsHealthyDomains.length} default whitelist items`);
+  console.log(
+    `Seeded ${iosUtilityApps.length + iosHealthyApps.length + windowsUtilityDomains.length + windowsHealthyDomains.length} default whitelist items`
+  );
 }
 
 main()

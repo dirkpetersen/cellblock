@@ -22,6 +22,7 @@ Swift iOS client for CellBlock digital wellbeing application.
 ## Planned Features
 
 ### Phase 1 (MVP)
+
 - Screen Time API integration
 - Block "Social" category only
 - WebSocket heartbeat system
@@ -29,6 +30,7 @@ Swift iOS client for CellBlock digital wellbeing application.
 - Push notifications (APNs)
 
 ### Phase 2 (Full Enforcement)
+
 - Family Controls entitlement
 - Full whitelist enforcement
 - DeviceActivity Monitor Extension

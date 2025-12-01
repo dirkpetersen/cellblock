@@ -175,7 +175,12 @@ export class WhitelistService {
           requesterId: userId,
           type: data.enabled ? 'whitelist_add' : 'whitelist_remove',
           status: 'pending',
-          requestData: { itemId: data.itemId, itemName: item.name, toggle: true, enabled: data.enabled },
+          requestData: {
+            itemId: data.itemId,
+            itemName: item.name,
+            toggle: true,
+            enabled: data.enabled,
+          },
           requesterComment: data.comment,
           expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
         },

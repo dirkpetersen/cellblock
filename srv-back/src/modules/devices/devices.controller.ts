@@ -1,11 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import {
-  RegisterDeviceSchema,
-  RemoveDeviceSchema,
-  UpdateDeviceSchema,
-} from '@cellblock/contracts';
+import { RegisterDeviceSchema, RemoveDeviceSchema, UpdateDeviceSchema } from '@cellblock/contracts';
 
 @Controller('devices')
 @UseGuards(JwtAuthGuard)

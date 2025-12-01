@@ -5,6 +5,7 @@ This document defines the PostgreSQL database schema for CellBlock.
 ## Overview
 
 The database uses PostgreSQL with the following design principles:
+
 - UUIDs for primary keys (better for distributed systems and security)
 - Timestamps in UTC for all time-related fields
 - Soft deletes where appropriate (30-day retention)
@@ -14,6 +15,7 @@ The database uses PostgreSQL with the following design principles:
 ## Tables
 
 ### users
+
 Stores user accounts (both inmates and wardens).
 
 ```sql
@@ -40,6 +42,7 @@ CREATE INDEX idx_users_oauth ON users(oauth_provider, oauth_provider_id);
 ```
 
 ### devices
+
 Stores registered devices for each user.
 
 ```sql
@@ -79,6 +82,7 @@ EXECUTE FUNCTION check_device_limit();
 ```
 
 ### warden_relationships
+
 Stores inmate-warden relationships.
 
 ```sql
@@ -121,6 +125,7 @@ EXECUTE FUNCTION check_warden_limit();
 ```
 
 ### time_budgets
+
 Stores daily time allowances per user (supports per-day and weekday/weekend modes).
 
 ```sql
@@ -140,6 +145,7 @@ CREATE INDEX idx_time_budgets_user_id ON time_budgets(user_id);
 ```
 
 ### whitelist_items
+
 Stores whitelisted apps/domains that don't count toward time budget.
 
 ```sql
@@ -164,11 +170,13 @@ CREATE INDEX idx_whitelist_category ON whitelist_items(category);
 ```
 
 **Category Definitions:**
+
 - `utility`: Essential apps (Maps, Calculator, Weather) - always enabled, cannot be disabled
 - `healthy`: Less distracting entertainment (Spotify, Audible) - enabled by default, can be toggled
 - `custom`: User-added items - requires warden approval after warden accepts
 
 ### usage_logs
+
 Stores time usage history (12-month retention).
 
 ```sql
@@ -198,6 +206,7 @@ $$ LANGUAGE plpgsql;
 ```
 
 ### parole_grants
+
 Stores emergency time grants from wardens.
 
 ```sql
@@ -222,6 +231,7 @@ CREATE INDEX idx_parole_expires ON parole_grants(expires_at);
 ```
 
 ### requests
+
 Stores whitelist change requests and time budget change requests.
 
 ```sql
@@ -256,6 +266,7 @@ $$ LANGUAGE plpgsql;
 ```
 
 ### events
+
 Stores audit log of important events (break glass, lockdowns, etc.).
 
 ```sql
@@ -277,6 +288,7 @@ CREATE INDEX idx_events_created_at ON events(created_at);
 ```
 
 ### sessions
+
 Stores active WebSocket sessions and JWT refresh tokens.
 
 ```sql
@@ -308,6 +320,7 @@ $$ LANGUAGE plpgsql;
 ```
 
 ### notifications
+
 Stores notification queue for email and push notifications.
 
 ```sql
@@ -333,6 +346,7 @@ CREATE INDEX idx_notifications_created_at ON notifications(created_at);
 ```
 
 ### push_tokens
+
 Stores push notification device tokens for APNs (iOS) and WNS (Windows).
 
 ```sql
@@ -354,6 +368,7 @@ CREATE INDEX idx_push_tokens_platform ON push_tokens(platform);
 ```
 
 ### default_whitelist_items
+
 Stores the master list of default whitelist items (utility and healthy apps) that get copied to new users.
 
 ```sql
@@ -486,6 +501,7 @@ default_whitelist_items - standalone reference table (no FK relationships)
 ## Data Retention & Cleanup
 
 **Automated Cleanup Jobs (Run Daily via Cron):**
+
 1. Delete `usage_logs` older than 12 months
 2. Expire `requests` older than 3 days (status=pending)
 3. Delete expired `sessions`
@@ -493,6 +509,7 @@ default_whitelist_items - standalone reference table (no FK relationships)
 5. Delete sent `notifications` older than 30 days
 
 **Implementation:**
+
 ```sql
 -- Run this via cron or background job scheduler
 SELECT delete_old_usage_logs();

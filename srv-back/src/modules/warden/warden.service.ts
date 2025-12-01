@@ -304,7 +304,9 @@ export class WardenService {
       },
     });
 
-    this.logger.log(`Parole granted: ${parole.id} by warden ${wardenId} to inmate ${data.inmateId}`);
+    this.logger.log(
+      `Parole granted: ${parole.id} by warden ${wardenId} to inmate ${data.inmateId}`
+    );
 
     // Log event
     await this.prisma.event.create({

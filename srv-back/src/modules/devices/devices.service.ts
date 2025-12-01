@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { RegisterDeviceInput } from '@cellblock/contracts';
 
@@ -61,7 +56,9 @@ export class DevicesService {
         },
       });
 
-      this.logger.log(`New device registered: ${device.id} (${device.platform}) for user ${userId}`);
+      this.logger.log(
+        `New device registered: ${device.id} (${device.platform}) for user ${userId}`
+      );
 
       // Log event
       await this.prisma.event.create({
@@ -177,9 +174,7 @@ export class DevicesService {
     });
 
     for (const device of offlineDevices) {
-      this.logger.warn(
-        `Device offline for 30+ minutes: ${device.id} (user: ${device.user.email})`
-      );
+      this.logger.warn(`Device offline for 30+ minutes: ${device.id} (user: ${device.user.email})`);
 
       // TODO: Send notification to wardens
     }

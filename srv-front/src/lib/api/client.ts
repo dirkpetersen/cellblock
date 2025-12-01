@@ -160,7 +160,12 @@ class ApiClient {
     return this.request('/time/status');
   }
 
-  async getUsageLogs(params?: { startDate?: string; endDate?: string; page?: number; limit?: number }) {
+  async getUsageLogs(params?: {
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    limit?: number;
+  }) {
     const query = new URLSearchParams(params as any).toString();
     return this.request(`/time/usage${query ? `?${query}` : ''}`);
   }

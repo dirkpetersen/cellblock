@@ -45,7 +45,12 @@ export default function SignupPage() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
           <h2 className="text-2xl font-bold mb-2">Account Created!</h2>
@@ -196,7 +201,10 @@ export default function SignupPage() {
           {/* Login Link */}
           <p className="mt-8 text-center text-sm text-zinc-600 dark:text-zinc-400">
             Already have an account?{' '}
-            <Link href="/login" className="text-primary-600 dark:text-primary-400 font-medium hover:underline">
+            <Link
+              href="/login"
+              className="text-primary-600 dark:text-primary-400 font-medium hover:underline"
+            >
               Sign in
             </Link>
           </p>
