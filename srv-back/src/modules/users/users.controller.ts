@@ -30,7 +30,7 @@ export class UsersController {
    */
   @Delete('me')
   async deleteAccount(@Req() req: any, @Body() body: any) {
-    const data = DeleteAccountSchema.parse(body);
+    DeleteAccountSchema.parse(body); // Validate input
     // TODO: Verify password before deletion
     return this.usersService.deleteAccount(req.user.id);
   }
